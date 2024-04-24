@@ -14,5 +14,16 @@ namespace ProyectoService.LogicaNegocio.Modelo
         public string  Modelo { get; set; }
 
 
+        public Producto(string marca, string modelo) 
+        {
+            this.Marca = marca;
+            this.Modelo = modelo;
+        
+        }
+
+
+
+
+
     }
 }
