@@ -5,7 +5,7 @@
 namespace ProyectoService.AccesoDatos.Migrations
 {
     /// <inheritdoc />
-    public partial class inicializacion : Migration
+    public partial class nuevabd : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

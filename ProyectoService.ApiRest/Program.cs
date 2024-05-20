@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using ProyectoService.AccesoDatos;
 using ProyectoService.AccesoDatos.EntityFramework;
+using ProyectoService.Aplicacion.CasosUso;
+using ProyectoService.Aplicacion.ICasosUso;
 using ProyectoService.LogicaNegocio.IRepositorios;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,9 +12,11 @@ builder.Services.AddDbContext<ProyectoServiceContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("ProyectoServiceContext"));
 });
 
-//repositorios y casos de uso
+//repositorios 
 builder.Services.AddScoped<IClienteRepositorio,ClienteEFRepositorio>();
-
+// casos de uso
+builder.Services.AddScoped<IAgregarClienteUC, AgregarClienteUC>();
+builder.Services.AddScoped<IObtenerTodosLosClientesUC,ObtenerTodosLosClientesUC>();
 // Add services to the container.
 
 builder.Services.AddControllers();

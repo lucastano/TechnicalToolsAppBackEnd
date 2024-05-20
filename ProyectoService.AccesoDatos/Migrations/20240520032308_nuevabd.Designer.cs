@@ -11,8 +11,8 @@ using ProyectoService.AccesoDatos;
 namespace ProyectoService.AccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoServiceContext))]
-    [Migration("20240519235414_inicializacion")]
-    partial class inicializacion
+    [Migration("20240520032308_nuevabd")]
+    partial class nuevabd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -22,10 +22,11 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         {
             //VALIDACIONES
             //TODO:EXCEPCIONES CLIENTE
+            
             if (entity.validarCi == null) { throw new Exception("cedula no valida"); }
             Cliente cliBuscado = GetClienteByCi(entity.Ci);
             if (cliBuscado != null) { throw new Exception("Cliente ya existe"); }
-            _context.Clientes.Add(cliBuscado);
+            _context.Clientes.Add(entity);
             _context.SaveChanges();
 
         }
