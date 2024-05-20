@@ -1,4 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+using ProyectoService.AccesoDatos;
+using ProyectoService.AccesoDatos.EntityFramework;
+using ProyectoService.LogicaNegocio.IRepositorios;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<ProyectoServiceContext>(option =>
+{
+    option.UseSqlServer(builder.Configuration.GetConnectionString("ProyectoServiceContext"));
+});
+
+//repositorios y casos de uso
+builder.Services.AddScoped<IClienteRepositorio,ClienteEFRepositorio>();
 
 // Add services to the container.
 
