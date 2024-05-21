@@ -22,7 +22,7 @@ namespace ProyectoService.ApiRest.Controllers
 
         [HttpPost]
 
-        public IActionResult AltaCliente(AgregarClienteDTO dto)
+        public ActionResult<ResponseAgregarClienteDTO> AltaCliente(AgregarClienteDTO dto)
         {
             //TODO:VER VALIDAR PASSWORD
             if (!ModelState.IsValid)
@@ -32,7 +32,10 @@ namespace ProyectoService.ApiRest.Controllers
 
             try
             {
-                Seguridad.CrearPasswordHash(dto.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                //passwordhash y salt no se crea con una password, ya que el cliente lo agrega el mismo tecnico, entonce se utiliza 
+                // la cedula del cliente para autogenerar el passwordhash y salt
+                //el cliente a futuro puede cambiar el password
+                Seguridad.CrearPasswordHash(dto.Ci, out byte[] passwordHash, out byte[] passwordSalt);
                 //TODO: ver controles necesarios en crear el cliente
                 Cliente cli = new Cliente()
                 {
@@ -46,33 +49,65 @@ namespace ProyectoService.ApiRest.Controllers
                     PasswordSalt=passwordSalt
 
                 };
+                
                 agregarClienteUC.Ejecutar(cli);
-                return Ok();
+                ResponseAgregarClienteDTO response = new ResponseAgregarClienteDTO()
+                {
+                    StatusCode = 201,
+                    Cliente = dto
+                };
+                return response;
 
 
             }
             catch(Exception ex)
             {
+                ResponseAgregarClienteDTO response = new ResponseAgregarClienteDTO()
+                {
+                    StatusCode = 500,
+                    Cliente = null
+                };
                 return StatusCode(500);
             }
             
         }
         [HttpGet]
 
-        public IEnumerable<ClienteDTO> GetClientes()
+        public  ActionResult<ResponseGetClientesDTO> GetClientes()
         {
-            var clientes = obtenerClientesUC.Ejecutar();
-            return clientes.Select(c => new ClienteDTO()
+            try
             {
-                Id=c.Id,
-                Nombre= c.Nombre,
-                Apellido= c.Apellido,
-                Telefono= c.Telefono,
-                Direccion = c.Direccion,
-                Email= c.Email,
-                Ci= c.Ci
+                var clientes =  obtenerClientesUC.Ejecutar();
+                IEnumerable<ClienteDTO> cli = clientes.Select(c => new ClienteDTO()
+                {
+                    Id = c.Id,
+                    Nombre = c.Nombre,
+                    Apellido = c.Apellido,
+                    Telefono = c.Telefono,
+                    Direccion = c.Direccion,
+                    Email = c.Email,
+                    Ci = c.Ci
 
-            });
+                });
+                ResponseGetClientesDTO response = new ResponseGetClientesDTO()
+                {
+                   StatusCode = 200,
+                   Clientes=cli.ToList(),
+
+                };
+                return response;
+            }
+            catch (Exception ex)
+            {
+                ResponseGetClientesDTO response = new ResponseGetClientesDTO()
+                {
+                    StatusCode = 200,
+                    Clientes = null
+
+                };
+                return StatusCode(500);
+            }
+
 
         }
     }
