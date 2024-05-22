@@ -15,6 +15,7 @@ namespace ProyectoService.ApiRest.DTOs
         public string Direccion { get; set; }
         
         public string Telefono { get; set; }
+        public string Rol {  get; set; }
         
         public string Ci { get; set; }
     }

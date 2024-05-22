@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoService.ApiRest.DTOs;
 using ProyectoService.Aplicacion.ICasosUso;
@@ -8,6 +9,7 @@ namespace ProyectoService.ApiRest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class ClientesController : ControllerBase
     {
         private readonly IAgregarClienteUC agregarClienteUC;
@@ -86,6 +88,7 @@ namespace ProyectoService.ApiRest.Controllers
                     Telefono = c.Telefono,
                     Direccion = c.Direccion,
                     Email = c.Email,
+                    Rol=c.Rol,
                     Ci = c.Ci
 
                 });

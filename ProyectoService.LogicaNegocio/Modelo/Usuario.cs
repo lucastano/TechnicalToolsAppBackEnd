@@ -14,6 +14,7 @@ namespace ProyectoService.LogicaNegocio.Modelo
         public string Email { get; set; }
         public Byte[] PasswordHash { get; set; }
         public Byte[] PasswordSalt { get; set; }
+        public string Rol {  get; set; }
 
         
 

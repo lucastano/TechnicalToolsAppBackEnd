@@ -7,12 +7,9 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.LogicaNegocio.IRepositorios
 {
-    public interface IClienteRepositorio:ICrudRepositorio<Cliente>
+    public interface ITecnicoRepositorio : ICrudRepositorio<Tecnico>
     {
+        Tecnico ObtenerTecnicoPorEmail(string email);
        
-        Cliente GetClienteByCi(string ci);
-        
-
-
     }
 }

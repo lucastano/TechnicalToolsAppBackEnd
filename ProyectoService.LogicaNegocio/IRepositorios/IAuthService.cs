@@ -7,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.LogicaNegocio.IRepositorios
 {
-    public interface IClienteRepositorio:ICrudRepositorio<Cliente>
+    public interface IAuthService
     {
-       
-        Cliente GetClienteByCi(string ci);
-        
-
-
+        Usuario Login(string email);
     }
 }

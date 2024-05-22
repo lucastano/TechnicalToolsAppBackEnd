@@ -13,6 +13,11 @@ namespace ProyectoService.LogicaNegocio.Modelo
         public string Ci { get; set; }
 
 
+        public Cliente() 
+        {
+            this.Rol = "Cliente";
+        }
+
 
         public  Boolean validarCi()
         {

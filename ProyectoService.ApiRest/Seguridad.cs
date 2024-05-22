@@ -1,4 +1,8 @@
-﻿using System.Security.Cryptography;
+﻿using Microsoft.IdentityModel.Tokens;
+using ProyectoService.LogicaNegocio.Modelo;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace ProyectoService.ApiRest
 {
@@ -23,6 +27,25 @@ namespace ProyectoService.ApiRest
                 return passwordHashCalculado.SequenceEqual(passwordHash);
                 
             }
+        }
+
+        internal static string CrearToken(Usuario usuarioActual, IConfiguration configuration)
+        {
+            List<Claim> claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Email,usuarioActual.Email),
+                new Claim(ClaimTypes.Role,usuarioActual.Rol)
+            };
+
+            //generar clave secreta
+            var claveSecreta = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings:SecretTokenKey").Value!));
+            //generar credenciales 
+            var credenciales = new SigningCredentials(claveSecreta, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(claims: claims, expires: DateTime.Now.AddDays(1), signingCredentials: credenciales);
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
         }
     }
 }

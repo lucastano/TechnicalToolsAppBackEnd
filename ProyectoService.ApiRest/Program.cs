@@ -23,9 +23,15 @@ public class Program
 
         //repositorios 
         builder.Services.AddScoped<IClienteRepositorio, ClienteEFRepositorio>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<ITecnicoRepositorio, TecnicoEFRepositorio>();
         // casos de uso
         builder.Services.AddScoped<IAgregarClienteUC, AgregarClienteUC>();
         builder.Services.AddScoped<IObtenerTodosLosClientesUC, ObtenerTodosLosClientesUC>();
+        builder.Services.AddScoped<IObtenerUsuario,ObtenerUsuario>();
+        builder.Services.AddScoped<IAgregarTecnico,AgregarTecnico>();
+        builder.Services.AddScoped<IObtenerTecnicoPorEmail,ObtenerTecnicoPorEmail>();
+        builder.Services.AddScoped<IObtenerTodosLosTecnicos,ObtenerTodosLosTecnicos>();
         // Add services to the container.
 
         builder.Services.AddControllers();
