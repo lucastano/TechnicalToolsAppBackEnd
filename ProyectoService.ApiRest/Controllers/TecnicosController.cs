@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoService.ApiRest.DTOs;
 using ProyectoService.Aplicacion.ICasosUso;
@@ -8,17 +9,20 @@ namespace ProyectoService.ApiRest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class TecnicosController : ControllerBase
     {
         private readonly IAgregarTecnico agregarTecnicoUc;
         private readonly IObtenerTodosLosTecnicos obtenerTodosLosTecnicosUc;
         private readonly IObtenerTecnicoPorEmail obtenerTecnicoPorEmailUc;
+        private readonly IValidarPassword validarPasswordUc;
 
-        public TecnicosController(IAgregarTecnico agregarTecnicoUc, IObtenerTodosLosTecnicos obtenerTodosLosTecnicosUc, IObtenerTecnicoPorEmail obtenerTecnicoPorEmailUc)
+        public TecnicosController(IAgregarTecnico agregarTecnicoUc, IObtenerTodosLosTecnicos obtenerTodosLosTecnicosUc, IObtenerTecnicoPorEmail obtenerTecnicoPorEmailUc, IValidarPassword validarPasswordUc)
         {
             this.agregarTecnicoUc = agregarTecnicoUc;
             this.obtenerTodosLosTecnicosUc = obtenerTodosLosTecnicosUc;
             this.obtenerTecnicoPorEmailUc = obtenerTecnicoPorEmailUc;
+            this.validarPasswordUc = validarPasswordUc;
         }
 
         [HttpPost]
@@ -29,6 +33,13 @@ namespace ProyectoService.ApiRest.Controllers
             {
                 return BadRequest(400);
             }
+            
+
+            if (!validarPasswordUc.Ejecutar(dto.Password))
+            {
+                return BadRequest("Password NO valido");
+            }
+            
             try
             {
                 Seguridad.CrearPasswordHash(dto.Password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -61,8 +72,35 @@ namespace ProyectoService.ApiRest.Controllers
 
         [HttpGet]
 
-        public ActionResult ObtenerClientes()
+        public ActionResult<ResponseObtenerTecnicosDTO> ObtenerTecnicos()
         {
+            try
+            {
+                var Tecnicos =obtenerTodosLosTecnicosUc.Ejecutar();
+
+                List<TecnicoDTO> tecnicos = Tecnicos.Select(t => new TecnicoDTO()
+                {
+                    Id= t.Id,
+                    Nombre= t.Nombre,
+                    Apellido= t.Apellido,
+                    Email = t.Email,
+                    Rol= t.Rol
+
+                }).ToList();
+
+                ResponseObtenerTecnicosDTO response = new ResponseObtenerTecnicosDTO()
+                {
+                    StatusCode= 200,
+                    Tecnicos = tecnicos
+
+                };
+
+                return response;
+
+            }catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
 
         }
     }

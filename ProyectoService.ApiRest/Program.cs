@@ -32,6 +32,7 @@ public class Program
         builder.Services.AddScoped<IAgregarTecnico,AgregarTecnico>();
         builder.Services.AddScoped<IObtenerTecnicoPorEmail,ObtenerTecnicoPorEmail>();
         builder.Services.AddScoped<IObtenerTodosLosTecnicos,ObtenerTodosLosTecnicos>();
+        builder.Services.AddScoped<IValidarPassword, ValidarPassword>();
         // Add services to the container.
 
         builder.Services.AddControllers();
