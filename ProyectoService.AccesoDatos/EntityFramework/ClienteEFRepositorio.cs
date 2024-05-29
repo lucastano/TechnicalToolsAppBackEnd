@@ -22,12 +22,24 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         {
             //VALIDACIONES
             //TODO:EXCEPCIONES CLIENTE
+            try
+            {
+                
+                if (entity.Ci == null) { throw new Exception("cedula no valida"); }
+                if (!entity.validarCi()) { throw new Exception("Número de documento inválido"); }
+                Cliente cliBuscado = GetClienteByCi(entity.Ci);
+                if (cliBuscado != null) { throw new Exception("Cliente ya existe"); }
+                _context.Clientes.Add(entity);
+                _context.SaveChanges();
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
             
-            if (entity.validarCi == null) { throw new Exception("cedula no valida"); }
-            Cliente cliBuscado = GetClienteByCi(entity.Ci);
-            if (cliBuscado != null) { throw new Exception("Cliente ya existe"); }
-            _context.Clientes.Add(entity);
-            _context.SaveChanges();
+           
 
         }
 
