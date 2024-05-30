@@ -19,7 +19,11 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         }
 
         public Usuario Login(string email)
-        {
+        { 
+        //validar formato de email, o deberia ser en el front ? 
+            //valido que no se le pase un email vacio
+            if(email==null) throw new Exception("Debe ingresar email");
+            
             Usuario usuario = _context.Clientes.FirstOrDefault(c => c.Email == email);
             if (usuario == null)
             {
