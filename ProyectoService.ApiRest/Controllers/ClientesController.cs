@@ -104,11 +104,11 @@ namespace ProyectoService.ApiRest.Controllers
             {
                 ResponseGetClientesDTO response = new ResponseGetClientesDTO()
                 {
-                    StatusCode = 200,
+                    StatusCode = 500,
                     Clientes = null
 
                 };
-                return StatusCode(500);
+                return response;
             }
 
 
