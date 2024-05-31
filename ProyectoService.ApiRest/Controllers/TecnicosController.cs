@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProyectoService.ApiRest.DTOs;
 using ProyectoService.Aplicacion.ICasosUso;
 using ProyectoService.LogicaNegocio.Modelo;
+using ProyectoService.LogicaNegocio.Modelo.ValueObjects;
 
 namespace ProyectoService.ApiRest.Controllers
 {
@@ -47,7 +48,7 @@ namespace ProyectoService.ApiRest.Controllers
                 {
                     Nombre = dto.Nombre,
                     Apellido = dto.Apellido,
-                    Email = dto.Email,
+                    Email = EmailVO.Crear(dto.Email),
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt
                 };
@@ -76,14 +77,14 @@ namespace ProyectoService.ApiRest.Controllers
         {
             try
             {
-                var Tecnicos =obtenerTodosLosTecnicosUc.Ejecutar();
+                var Tecnicos=obtenerTodosLosTecnicosUc.Ejecutar();
 
                 List<TecnicoDTO> tecnicos = Tecnicos.Select(t => new TecnicoDTO()
                 {
                     Id= t.Id,
                     Nombre= t.Nombre,
                     Apellido= t.Apellido,
-                    Email = t.Email,
+                    Email = t.Email.Value,
                     Rol= t.Rol
 
                 }).ToList();

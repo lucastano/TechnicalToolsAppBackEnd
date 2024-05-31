@@ -11,8 +11,8 @@ using ProyectoService.AccesoDatos;
 namespace ProyectoService.AccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoServiceContext))]
-    [Migration("20240522020238_se agrego rol a usuario")]
-    partial class seagregorolausuario
+    [Migration("20240531013908_nuevabd")]
+    partial class nuevabd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

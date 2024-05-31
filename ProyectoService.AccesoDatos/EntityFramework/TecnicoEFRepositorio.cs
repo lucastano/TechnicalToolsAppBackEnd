@@ -36,7 +36,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public Tecnico? ObtenerTecnicoPorEmail(string email)
         {
-            return _context.Tecnicos.FirstOrDefault(t => t.Email == email);
+            return _context.Tecnicos.FirstOrDefault(t => t.Email.Value.Equals(email));
         }
 
         public void Update(Tecnico entity)

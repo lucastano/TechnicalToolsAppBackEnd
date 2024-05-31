@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using ProyectoService.LogicaNegocio.Excepciones;
 
 namespace ProyectoService.AccesoDatos.EntityFramework
 {
@@ -20,15 +21,17 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         }
         public void Add(Cliente entity)
         {
-            //VALIDACIONES
-            //TODO:EXCEPCIONES CLIENTE
+            
             try
             {
-                
-                if (entity.Ci == null) { throw new Exception("cedula no valida"); }
-                if (!entity.validarCi()) { throw new Exception("Número de documento inválido"); }
+
+                if (entity.Nombre == null) throw new ClienteException("Debe ingresar nombre de cliente");
+                if (entity.Apellido == null) throw new ClienteException("Debe ingresar apellido de cliente");
+                if (entity.Telefono == null) throw new ClienteException("Debe ingresar telefono de cliente");
+                if (entity.Ci == null) { throw new ClienteException("cedula no valida"); }
+                if (!entity.validarCi()) { throw new ClienteException("Número de documento inválido"); }
                 Cliente cliBuscado = GetClienteByCi(entity.Ci);
-                if (cliBuscado != null) { throw new Exception("Cliente ya existe"); }
+                if (cliBuscado != null) { throw new ClienteException("Cliente ya existe"); }
                 _context.Clientes.Add(entity);
                 _context.SaveChanges();
 
@@ -58,7 +61,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         //PUEDE DEVOLVER NULL
         public Cliente? GetClienteByCi(string ci)
         {
-            return _context.Clientes.FirstOrDefault(c => c.Ci == ci);
+            return _context.Clientes.AsEnumerable().FirstOrDefault(c => c.Ci == ci);
         }
 
         public void Update(Cliente entity)

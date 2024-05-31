@@ -33,7 +33,7 @@ namespace ProyectoService.ApiRest
         {
             List<Claim> claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.Email,usuarioActual.Email),
+                new Claim(ClaimTypes.Email,usuarioActual.Email.Value),
                 new Claim(ClaimTypes.Role,usuarioActual.Rol)
             };
 

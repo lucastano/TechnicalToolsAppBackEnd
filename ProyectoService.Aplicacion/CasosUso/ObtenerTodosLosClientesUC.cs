@@ -17,7 +17,7 @@ namespace ProyectoService.Aplicacion.CasosUso
             this.repo = repo;
         }
 
-        public List<Cliente> Ejecutar()
+        public async Task<List<Cliente>> Ejecutar()
         {
             return repo.getAll();
         }

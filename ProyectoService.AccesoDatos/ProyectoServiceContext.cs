@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,6 +28,11 @@ namespace ProyectoService.AccesoDatos
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //value object configuration 
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+
+
             modelBuilder.Entity<Usuario>().UseTpcMappingStrategy();
             modelBuilder.Entity<Cliente>().ToTable("Clientes");
             modelBuilder.Entity<Tecnico>().ToTable("Tecnicos");

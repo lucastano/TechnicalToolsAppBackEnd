@@ -51,7 +51,7 @@ namespace ProyectoService.ApiRest.Controllers
                     usuarioLogeado.Direccion = cliente.Direccion;
                     usuarioLogeado.Telefono= cliente.Telefono;
                     usuarioLogeado.Ci=cliente.Ci;
-                    usuarioLogeado.Email= cliente.Email;
+                    usuarioLogeado.Email= cliente.Email.Value;
                     usuarioLogeado.Rol = cliente.Rol;
 
 
@@ -62,7 +62,7 @@ namespace ProyectoService.ApiRest.Controllers
                     Tecnico tecnico =(Tecnico)usuarioModel;
                     usuarioLogeado.Nombre = tecnico.Nombre;
                     usuarioLogeado.Apellido = tecnico.Apellido;
-                    usuarioLogeado.Email = tecnico.Email;
+                    usuarioLogeado.Email = tecnico.Email.Value;
                     usuarioLogeado.Rol = tecnico.Rol;
 
                 }
@@ -71,7 +71,7 @@ namespace ProyectoService.ApiRest.Controllers
                     Administrador administrador = (Administrador)usuarioModel;
                     usuarioLogeado.Nombre = administrador.Nombre;
                     usuarioLogeado.Apellido = administrador.Apellido;
-                    usuarioLogeado.Email = administrador.Email;
+                    usuarioLogeado.Email = administrador.Email.Value;
                     usuarioLogeado.Rol = administrador.Rol;
 
                 }

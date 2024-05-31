@@ -24,15 +24,15 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             //valido que no se le pase un email vacio
             if(email==null) throw new Exception("Debe ingresar email");
             
-            Usuario usuario = _context.Clientes.FirstOrDefault(c => c.Email == email);
+            Usuario usuario = _context.Clientes.FirstOrDefault(c => c.Email.Value.Equals(email));
             if (usuario == null)
             {
-                usuario = _context.Tecnicos.FirstOrDefault(c => c.Email == email);
+                usuario = _context.Tecnicos.FirstOrDefault(c => c.Email.Value.Equals(email));
             }
 
             if (usuario == null)
             {
-                usuario = _context.Administradores.FirstOrDefault(c => c.Email == email);
+                usuario = _context.Administradores.FirstOrDefault(c => c.Email.Value.Equals(email));
             }
 
             return usuario;

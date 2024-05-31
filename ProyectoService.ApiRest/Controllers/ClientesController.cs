@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProyectoService.ApiRest.DTOs;
 using ProyectoService.Aplicacion.ICasosUso;
 using ProyectoService.LogicaNegocio.Modelo;
+using ProyectoService.LogicaNegocio.Modelo.ValueObjects;
 
 namespace ProyectoService.ApiRest.Controllers
 {
@@ -24,9 +25,9 @@ namespace ProyectoService.ApiRest.Controllers
 
         [HttpPost]
 
-        public ActionResult<ResponseAgregarClienteDTO> AltaCliente(AgregarClienteDTO dto)
+        public async Task<ActionResult<ResponseAgregarClienteDTO>> AltaCliente(AgregarClienteDTO dto)
         {
-            //TODO:VER VALIDAR PASSWORD
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest("Datos invalidos");
@@ -44,7 +45,7 @@ namespace ProyectoService.ApiRest.Controllers
                     Nombre=dto.Nombre,
                     Apellido=dto.Apellido,
                     Telefono=dto.Telefono,
-                    Email=dto.Email,
+                    Email=EmailVO.Crear(dto.Email),
                     Direccion=dto.Direccion,
                     Ci=dto.Ci,
                     PasswordHash=passwordHash,
@@ -52,13 +53,13 @@ namespace ProyectoService.ApiRest.Controllers
 
                 };
                 
-                agregarClienteUC.Ejecutar(cli);
+               await agregarClienteUC.Ejecutar(cli);
                 ResponseAgregarClienteDTO response = new ResponseAgregarClienteDTO()
                 {
                     StatusCode = 201,
                     Cliente = dto
                 };
-                return response;
+                return StatusCode(200,response);
 
 
             }
@@ -69,17 +70,17 @@ namespace ProyectoService.ApiRest.Controllers
                     StatusCode = 500,
                     Cliente = null
                 };
-                return StatusCode(500);
+                return BadRequest(response);
             }
             
         }
         [HttpGet]
 
-        public  ActionResult<ResponseGetClientesDTO> GetClientes()
+        public async Task <ActionResult<ResponseGetClientesDTO>> GetClientes()
         {
             try
             {
-                var clientes =  obtenerClientesUC.Ejecutar();
+                var clientes = await obtenerClientesUC.Ejecutar();
                 IEnumerable<ClienteDTO> cli = clientes.Select(c => new ClienteDTO()
                 {
                     Id = c.Id,
@@ -87,7 +88,7 @@ namespace ProyectoService.ApiRest.Controllers
                     Apellido = c.Apellido,
                     Telefono = c.Telefono,
                     Direccion = c.Direccion,
-                    Email = c.Email,
+                    Email = c.Email.Value,
                     Rol=c.Rol,
                     Ci = c.Ci
 
@@ -108,7 +109,7 @@ namespace ProyectoService.ApiRest.Controllers
                     Clientes = null
 
                 };
-                return response;
+                return BadRequest(response);
             }
 
 

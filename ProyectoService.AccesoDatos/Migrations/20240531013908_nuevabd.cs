@@ -22,7 +22,8 @@ namespace ProyectoService.AccesoDatos.Migrations
                     Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Rol = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -39,6 +40,7 @@ namespace ProyectoService.AccesoDatos.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Rol = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Direccion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Telefono = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Ci = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -57,7 +59,8 @@ namespace ProyectoService.AccesoDatos.Migrations
                     Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Rol = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

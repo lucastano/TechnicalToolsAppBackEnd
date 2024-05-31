@@ -10,6 +10,7 @@ using ProyectoService.LogicaNegocio.Modelo;
 using Microsoft.EntityFrameworkCore.InMemory;
 using System.Security.Cryptography;
 using System.Security.Cryptography;
+using ProyectoService.LogicaNegocio.Modelo.ValueObjects;
 
 namespace ProyectoService.Test
 {
@@ -38,7 +39,7 @@ namespace ProyectoService.Test
             {
                 Nombre = "Juan",
                 Apellido = "Lopez",
-                Email = "juan@example.com",
+                Email = EmailVO.Crear("juan@example.com"),
                 PasswordHash = ObtenerHash("password", salt),
                 PasswordSalt = salt,
                 Rol = "Cliente",
@@ -51,7 +52,7 @@ namespace ProyectoService.Test
             {
                 Nombre = "Maria",
                 Apellido = "Gomez",
-                Email = "maria@example.com",
+                Email = EmailVO.Crear("maria@example.com"),               
                 PasswordHash = ObtenerHash("password", salt),
                 PasswordSalt = salt,
                 Rol = "Cliente",
@@ -72,7 +73,7 @@ namespace ProyectoService.Test
             {
                 Nombre = "Carlos",
                 Apellido = "Perez",
-                Email = "carlos@example.com",
+                Email = EmailVO.Crear("carlos@example.com"),
                 PasswordHash = ObtenerHash("password", ObtenerSalt()),
                 PasswordSalt = ObtenerSalt(),
                 Rol = "Cliente",
@@ -97,7 +98,7 @@ namespace ProyectoService.Test
             {
                 Nombre = "Roberto",
                 Apellido = "Gonzalez",
-                Email = "roberto@example.com",
+                Email = EmailVO.Crear("roberto@example.com"),
                 PasswordHash = ObtenerHash("password", ObtenerSalt()),
                 PasswordSalt = ObtenerSalt(),
                 Rol = "Cliente",
@@ -125,7 +126,7 @@ namespace ProyectoService.Test
             {
                 Nombre = "Roberto",
                 Apellido = "Gonzalez",
-                Email = "roberto@example.com",
+                Email =EmailVO.Crear("roberto@example.com"),
                 PasswordHash = ObtenerHash("password", ObtenerSalt()),
                 PasswordSalt = ObtenerSalt(),
                 Rol = "Cliente",

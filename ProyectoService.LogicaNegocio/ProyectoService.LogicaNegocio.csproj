@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ValueObjects\" />
-    <Folder Include="Validaciones\" />
+    <Compile Remove="Validaciones\**" />
+    <Compile Remove="ValueObjects\**" />
+    <EmbeddedResource Remove="Validaciones\**" />
+    <EmbeddedResource Remove="ValueObjects\**" />
+    <None Remove="Validaciones\**" />
+    <None Remove="ValueObjects\**" />
   </ItemGroup>
 
 </Project>
