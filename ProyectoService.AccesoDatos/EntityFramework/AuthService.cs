@@ -19,24 +19,43 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             _context = context;
         }
 
-        public async Task<Usuario> Login(string email)
+        public async Task<Usuario> Login(string email,string rol)
         { 
-        //validar formato de email, o deberia ser en el front ? 
-            //valido que no se le pase un email vacio
+       
             if(email==null) throw new Exception("Debe ingresar email");
+            if (rol == null || (rol!="Tecnico" && rol !="Administrador" && rol !="Cliente")) throw new Exception("debe ingresar un rol de usuario valido");
+            Usuario user = null;
+            if (rol == "Administrador")
+            {
+                var listaAdministradores = await _context.Administradores.ToListAsync();
+                
+                Administrador admin = listaAdministradores.FirstOrDefault(c => c.Email.Value.Equals(email));
+
+                if (admin == null) throw new Exception("Email  incorrectos");
+                user = admin;
+
+            }
+            if (rol == "Tecnico")
+            {
+                var listaTecnicos = await _context.Tecnicos.ToListAsync();
+                Tecnico tecnico = listaTecnicos.FirstOrDefault(c => c.Email.Value.Equals(email));
+                if (tecnico == null) throw new Exception("Email  incorrectos");
+                user= tecnico;
+            }
+
+            if (rol == "Cliente")
+            {
+                var listaClientes= await _context.Clientes.ToListAsync();
+                Cliente cliente = listaClientes.FirstOrDefault(c => c.Email.Value.Equals(email));
+                if (cliente == null) throw new Exception("Email incorrectos");
+                user= cliente;
+            }
+
+            if (user == null) throw new Exception("Usuario no existe o sus credenciales no coinciden");
+
+            return user;
             
-            Usuario usuario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email.Value.Equals(email));
-            if (usuario == null)
-            {
-                usuario =await _context.Tecnicos.FirstOrDefaultAsync(c => c.Email.Value.Equals(email));
-            }
-
-            if (usuario == null)
-            {
-                usuario = await _context.Administradores.FirstOrDefaultAsync(c => c.Email.Value.Equals(email));
-            }
-
-            return usuario;
+           
 
 
         }

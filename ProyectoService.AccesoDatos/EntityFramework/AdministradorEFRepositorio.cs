@@ -24,6 +24,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             if (entity == null) throw new AdministradorException("Administrador esta vacio");
             if (entity.Nombre == null) throw new AdministradorException("Debe ingresar nombre del administrador");
             if (entity.Apellido == null) throw new AdministradorException("Debe ingresar apellido del administrador");
+            
             Administrador adminBuscado = await ObtenerAdministradorPorEmail(entity.Email.Value);
             if (adminBuscado != null) throw new AdministradorException("Administrador ya existe");
             await _context.Administradores.AddAsync(entity);

@@ -31,15 +31,11 @@ namespace ProyectoService.ApiRest.Controllers
             }
             try
             {
-                Usuario usuarioModel = await ucObtenerUsuarioCU.Ejecutar(dto.Email);
-                if (usuarioModel == null)
-                {
-                    return Unauthorized("Email incorrecto");
-                }
-
+                Usuario usuarioModel = await ucObtenerUsuarioCU.Ejecutar(dto.Email,dto.rol);
+                
                 if (!Seguridad.VerificarPasswordHash(dto.Password, usuarioModel.PasswordHash, usuarioModel.PasswordSalt))
                 {
-                    return BadRequest("Las credenciales no son validas");
+                    return BadRequest("Password incorrecto");
                 }
                 string token = Seguridad.CrearToken(usuarioModel, configuration);
                 UsuarioLogeadoDTO usuarioLogeado = new UsuarioLogeadoDTO();
@@ -80,16 +76,24 @@ namespace ProyectoService.ApiRest.Controllers
                 {
                     StatusCode = 200,
                     Token = token,
-                    Usuario = usuarioLogeado
+                    Usuario = usuarioLogeado,
+                    Error=""
                 };
 
-                return response;
+                return Ok(response);
 
                
             }
             catch(Exception ex)
             {
-                return StatusCode(500);
+                ResponseLoginDTO response = new ResponseLoginDTO()
+                {
+                    StatusCode = 400,
+                    Token = null,
+                    Usuario = null,
+                    Error = ex.Message
+                };
+                return BadRequest(response);
 
             }
 

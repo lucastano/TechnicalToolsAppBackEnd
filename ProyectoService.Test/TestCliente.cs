@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore.InMemory;
 using System.Security.Cryptography;
 using System.Security.Cryptography;
 using ProyectoService.LogicaNegocio.Modelo.ValueObjects;
+using ProyectoService.LogicaNegocio.Excepciones;
 
 namespace ProyectoService.Test
 {
@@ -91,9 +92,8 @@ namespace ProyectoService.Test
         }
 
         [Test]
-        public void Add_ShouldThrowException_WhenInvalidCi()
-        {
-            // Arrange
+        public async Task Add_ShouldThrowException_WhenInvalidCi()
+        {// Arrange
             var cliente = new Cliente
             {
                 Nombre = "Roberto",
@@ -104,11 +104,12 @@ namespace ProyectoService.Test
                 Rol = "Cliente",
                 Direccion = "Avenida Norte",
                 Telefono = "444444444",
-                Ci = "123456" // CI inválida
+                Ci = "12345" // CI inválida
             };
 
             // Act & Assert
-            Assert.Throws<Exception>(() => _clienteRepositorio.Add(cliente));
+            var ex =  Assert.ThrowsAsync<ClienteException>(async () => await _clienteRepositorio.Add(cliente));
+            Assert.AreEqual("Número de documento inválido", ex.Message);
         }
 
         [Test]

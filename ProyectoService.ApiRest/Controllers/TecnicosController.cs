@@ -96,7 +96,7 @@ namespace ProyectoService.ApiRest.Controllers
 
                 };
 
-                return response;
+                return Ok(response);
 
             }catch (Exception ex)
             {
