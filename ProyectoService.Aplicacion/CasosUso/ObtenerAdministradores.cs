@@ -1,4 +1,5 @@
-﻿using ProyectoService.Aplicacion.ICasosUso;
+﻿
+using ProyectoService.Aplicacion.ICasosUso;
 using ProyectoService.LogicaNegocio.IRepositorios;
 using ProyectoService.LogicaNegocio.Modelo;
 using System;
@@ -9,15 +10,16 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.CasosUso
 {
-    public class ObtenerTodosLosClientesUC : IObtenerTodosLosClientesUC
+    public class ObtenerAdministradores : IObtenerAdministradores
     {
-        private readonly IClienteRepositorio repo;
-        public ObtenerTodosLosClientesUC(IClienteRepositorio repo)
+        private readonly IAdministradorRepositorio repo;
+
+        public ObtenerAdministradores(IAdministradorRepositorio repo)
         {
             this.repo = repo;
         }
 
-        public async Task<List<Cliente>> Ejecutar()
+        public async Task<List<Administrador>> Ejecutar()
         {
             return await repo.getAll();
         }

@@ -18,9 +18,9 @@ namespace ProyectoService.Aplicacion.CasosUso
             this.repo = repo;
         }
 
-        public void Ejecutar(Tecnico entity)
+        public async Task Ejecutar(Tecnico entity)
         {
-            repo.Add(entity);
+           await repo.Add(entity);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace ProyectoService.Aplicacion.CasosUso
         public async Task Ejecutar(Cliente cli)
         {
             //TODO:caso de uso agregar cliente, ver si es necesario controlar que se agrega
-             repo.Add(cli);
+              await repo.Add(cli);
         }
     }
 }

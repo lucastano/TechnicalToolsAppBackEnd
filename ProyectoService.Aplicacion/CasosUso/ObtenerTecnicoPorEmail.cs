@@ -18,9 +18,9 @@ namespace ProyectoService.Aplicacion.CasosUso
             this.repo = repo;
         }
 
-        public Tecnico Ejecutar(string email)
+        public async Task<Tecnico> Ejecutar(string email)
         {
-            return repo.ObtenerTecnicoPorEmail(email);
+            return await repo.ObtenerTecnicoPorEmail(email);
         }
     }
 }

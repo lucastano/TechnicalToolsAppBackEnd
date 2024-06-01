@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.CasosUso
 {
-    public class ObtenerTodosLosClientesUC : IObtenerTodosLosClientesUC
+    public class AgregarAdministrador : IAgregarAdministrador
     {
-        private readonly IClienteRepositorio repo;
-        public ObtenerTodosLosClientesUC(IClienteRepositorio repo)
+        private readonly IAdministradorRepositorio repo;
+        public AgregarAdministrador(IAdministradorRepositorio repo)
         {
             this.repo = repo;
         }
 
-        public async Task<List<Cliente>> Ejecutar()
+        public async Task Ejecutar(Administrador entity)
         {
-            return await repo.getAll();
+            await repo.Add(entity);
         }
     }
 }

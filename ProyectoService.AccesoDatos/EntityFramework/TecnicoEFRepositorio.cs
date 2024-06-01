@@ -1,4 +1,6 @@
-﻿using ProyectoService.LogicaNegocio.IRepositorios;
+﻿using Microsoft.EntityFrameworkCore;
+using ProyectoService.LogicaNegocio.Excepciones;
+using ProyectoService.LogicaNegocio.IRepositorios;
 using ProyectoService.LogicaNegocio.Modelo;
 using System;
 using System.Collections.Generic;
@@ -16,30 +18,39 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             _context = context;
         }
 
-        public void Add(Tecnico entity)
+        public async Task Add(Tecnico entity)
         {
             if (entity == null) throw new Exception("No ingreso los datos del tecnico");
-           //TODO: ver validaciones para tecnico.
-           _context.Tecnicos.Add(entity);
-            _context.SaveChanges();
+            if (entity.Nombre == null) throw new TecnicoException("Debe ingresar nombre del tecnico");
+            if (entity.Apellido == null) throw new TecnicoException("Debe ingresar apellido del tecnico");
+            if (entity.Email.Value == null) throw new TecnicoException("Debe ingresar email del tecnico");
+            Tecnico tecnicoBuscado= await ObtenerTecnicoPorEmail(entity.Email.Value);
+            if (tecnicoBuscado != null) throw new TecnicoException("Ya existe este tecnico");
+           
+           await _context.Tecnicos.AddAsync(entity);
+           await _context.SaveChangesAsync();
         }
 
-        public void Delete(Tecnico entity)
+        public async Task Delete(Tecnico entity)
         {
             throw new NotImplementedException();
         }
 
-        public List<Tecnico> getAll()
+        public async Task<List<Tecnico>> getAll()
         {
-            return _context.Tecnicos.ToList();
+             return await _context.Tecnicos.ToListAsync();
         }
 
-        public Tecnico? ObtenerTecnicoPorEmail(string email)
+        public async Task<Tecnico?> ObtenerTecnicoPorEmail(string email)
         {
-            return _context.Tecnicos.FirstOrDefault(t => t.Email.Value.Equals(email));
+            if (email == null) throw new TecnicoException("Debe ingresar un email");
+            //lo hice de esta forma porque daba error el equals en una query 
+            var tecnicos = await _context.Tecnicos.ToListAsync();
+            return tecnicos.FirstOrDefault(t=>t.Email.Value.Equals(email));
+
         }
 
-        public void Update(Tecnico entity)
+        public async Task Update(Tecnico entity)
         {
             throw new NotImplementedException();
         }

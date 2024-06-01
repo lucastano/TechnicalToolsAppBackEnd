@@ -17,9 +17,9 @@ namespace ProyectoService.Aplicacion.CasosUso
             _authService = authService;
         }
 
-        public Usuario Ejecutar(string email)
+        public async Task<Usuario> Ejecutar(string email)
         {
-            return _authService.Login(email);
+            return await _authService.Login(email);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ProyectoService.LogicaNegocio.Modelo;
+﻿
+using ProyectoService.LogicaNegocio.Modelo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.ICasosUso
 {
-    public interface IObtenerTecnicoPorEmail
+    public interface IObtenerAdministradores
     {
-        Task<Tecnico> Ejecutar(string email);
+        Task<List<Administrador>> Ejecutar();
     }
 }

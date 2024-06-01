@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.ICasosUso
 {
-    public interface IObtenerTecnicoPorEmail
+    public interface IAgregarAdministrador
     {
-        Task<Tecnico> Ejecutar(string email);
+        Task Ejecutar(Administrador entity);
     }
 }

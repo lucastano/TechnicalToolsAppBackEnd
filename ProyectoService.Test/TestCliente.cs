@@ -111,9 +111,31 @@ namespace ProyectoService.Test
             Assert.Throws<Exception>(() => _clienteRepositorio.Add(cliente));
         }
 
+        [Test]
+        public async Task Add_ShouldThrowException_WhenInvalidEmail()
+        {
+            var ex = Assert.Throws<Exception>(() =>
+            {
+                Cliente cliente = new Cliente
+                {
+                    Nombre = "Roberto",
+                    Apellido = "Gonzalez",
+                    Email = EmailVO.Crear("robertoexample.com"), // email invalido
+                    PasswordHash = ObtenerHash("password", ObtenerSalt()),
+                    PasswordSalt = ObtenerSalt(),
+                    Rol = "Cliente",
+                    Direccion = "Avenida Norte",
+                    Telefono = "444444444",
+                    Ci = "12345678"
+                };
+            });
+
+            Assert.AreEqual("Email no valido", ex.Message);
+        }
+
 
         [Test]
-        public void GetClienteByCi_ShouldReturnCorrectCliente()
+        public async Task GetClienteByCi_ShouldReturnCorrectCliente()
         {
             // Arrange
             var options = new DbContextOptionsBuilder<ProyectoServiceContext>()
@@ -146,7 +168,7 @@ namespace ProyectoService.Test
             using (var context = new ProyectoServiceContext(options))
             {
                 var repository = new ClienteEFRepositorio(context);
-                var actualCliente = repository.GetClienteByCi(ci);
+                var actualCliente = await repository.GetClienteByCi(ci);
 
                 // Assert
                 Assert.IsNotNull(actualCliente); // Verificar que el cliente devuelto no sea nulo

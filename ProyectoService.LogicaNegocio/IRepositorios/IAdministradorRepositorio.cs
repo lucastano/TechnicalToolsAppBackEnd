@@ -7,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.LogicaNegocio.IRepositorios
 {
-    public interface IClienteRepositorio:ICrudRepositorio<Cliente>
+    public interface IAdministradorRepositorio:ICrudRepositorio<Administrador>
     {
-       
-       Task<Cliente> GetClienteByCi(string ci);
-        
-
-
+        Task<Administrador> ObtenerAdministradorPorEmail(string email);
     }
 }

@@ -9,7 +9,7 @@ namespace ProyectoService.LogicaNegocio.IRepositorios
 {
     public interface ITecnicoRepositorio : ICrudRepositorio<Tecnico>
     {
-        Tecnico ObtenerTecnicoPorEmail(string email);
+        Task <Tecnico> ObtenerTecnicoPorEmail(string email);
        
     }
 }

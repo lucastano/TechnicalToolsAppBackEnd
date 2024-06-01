@@ -9,6 +9,6 @@ namespace ProyectoService.Aplicacion.ICasosUso
 {
     public interface IObtenerUsuario
     {
-        Usuario Ejecutar(string email);
+        Task<Usuario> Ejecutar(string email);
     }
 }

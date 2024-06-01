@@ -59,7 +59,7 @@ namespace ProyectoService.ApiRest.Controllers
                     StatusCode = 201,
                     Cliente = dto
                 };
-                return StatusCode(200,response);
+                return StatusCode(201,response);
 
 
             }
@@ -67,9 +67,12 @@ namespace ProyectoService.ApiRest.Controllers
             {
                 ResponseAgregarClienteDTO response = new ResponseAgregarClienteDTO()
                 {
-                    StatusCode = 500,
-                    Cliente = null
+                    StatusCode =400,
+                    Cliente = null,
+                    Error=ex.Message
+
                 };
+                //return BadRequest(response);
                 return BadRequest(response);
             }
             

@@ -25,6 +25,7 @@ public class Program
         builder.Services.AddScoped<IClienteRepositorio, ClienteEFRepositorio>();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<ITecnicoRepositorio, TecnicoEFRepositorio>();
+        builder.Services.AddScoped<IAdministradorRepositorio, AdministradorEFRepositorio>();
         // casos de uso
         builder.Services.AddScoped<IAgregarClienteUC, AgregarClienteUC>();
         builder.Services.AddScoped<IObtenerTodosLosClientesUC, ObtenerTodosLosClientesUC>();
@@ -33,6 +34,8 @@ public class Program
         builder.Services.AddScoped<IObtenerTecnicoPorEmail,ObtenerTecnicoPorEmail>();
         builder.Services.AddScoped<IObtenerTodosLosTecnicos,ObtenerTodosLosTecnicos>();
         builder.Services.AddScoped<IValidarPassword, ValidarPassword>();
+        builder.Services.AddScoped<IAgregarAdministrador,AgregarAdministrador>();
+        builder.Services.AddScoped<IObtenerAdministradores,ObtenerAdministradores>();
         // Add services to the container.
 
         builder.Services.AddControllers();

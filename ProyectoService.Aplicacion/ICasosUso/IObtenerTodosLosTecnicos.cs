@@ -9,6 +9,6 @@ namespace ProyectoService.Aplicacion.ICasosUso
 {
     public interface IObtenerTodosLosTecnicos
     {
-        IEnumerable<Tecnico> Ejecutar();
+        Task <IEnumerable<Tecnico>> Ejecutar();
     }
 }

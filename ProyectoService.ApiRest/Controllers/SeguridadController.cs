@@ -23,7 +23,7 @@ namespace ProyectoService.ApiRest.Controllers
 
         [HttpPost]
 
-        public ActionResult<ResponseLoginDTO> Login(LoginDTO dto)
+        public async Task<ActionResult<ResponseLoginDTO>> Login(LoginDTO dto)
         {
             if (!ModelState.IsValid)
             {
@@ -31,7 +31,7 @@ namespace ProyectoService.ApiRest.Controllers
             }
             try
             {
-                Usuario usuarioModel = ucObtenerUsuarioCU.Ejecutar(dto.Email);
+                Usuario usuarioModel = await ucObtenerUsuarioCU.Ejecutar(dto.Email);
                 if (usuarioModel == null)
                 {
                     return Unauthorized("Email incorrecto");

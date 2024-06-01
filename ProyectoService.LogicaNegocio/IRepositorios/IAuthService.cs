@@ -9,6 +9,6 @@ namespace ProyectoService.LogicaNegocio.IRepositorios
 {
     public interface IAuthService
     {
-        Usuario Login(string email);
+        Task<Usuario> Login(string email);
     }
 }

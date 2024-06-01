@@ -17,9 +17,9 @@ namespace ProyectoService.Aplicacion.CasosUso
             this.repo = repo;
         }
 
-        public IEnumerable<Tecnico> Ejecutar()
+        public async  Task<IEnumerable<Tecnico>> Ejecutar()
         {
-            return repo.getAll();
+            return await repo.getAll();
         }
     }
 }

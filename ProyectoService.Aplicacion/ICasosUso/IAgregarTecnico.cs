@@ -9,6 +9,6 @@ namespace ProyectoService.Aplicacion.ICasosUso
 {
     public interface IAgregarTecnico
     {
-        void Ejecutar(Tecnico entity);
+        Task Ejecutar(Tecnico entity);
     }
 }

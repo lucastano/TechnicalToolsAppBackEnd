@@ -28,7 +28,7 @@ namespace ProyectoService.ApiRest.Controllers
 
         [HttpPost]
 
-        public ActionResult<ResponseAgregarTecnicoDTO> AgregarTecnico(AgregarTecnicoDTO dto)
+        public async Task<ActionResult<ResponseAgregarTecnicoDTO>> AgregarTecnico(AgregarTecnicoDTO dto)
         {
             if(!ModelState.IsValid)
             {
@@ -52,7 +52,7 @@ namespace ProyectoService.ApiRest.Controllers
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt
                 };
-                agregarTecnicoUc.Ejecutar(tecnico);
+                await agregarTecnicoUc.Ejecutar(tecnico);
                 ResponseAgregarTecnicoDTO response = new ResponseAgregarTecnicoDTO()
                 {
                     statusCode = 201,
@@ -60,12 +60,12 @@ namespace ProyectoService.ApiRest.Controllers
 
                 };
 
-                return response;
+                return Ok(response);
 
             }
             catch (Exception ex)
             {
-                return StatusCode(500);
+                return StatusCode(400,ex.Message);
 
             }
 
@@ -73,11 +73,11 @@ namespace ProyectoService.ApiRest.Controllers
 
         [HttpGet]
 
-        public ActionResult<ResponseObtenerTecnicosDTO> ObtenerTecnicos()
+        public async  Task<ActionResult<ResponseObtenerTecnicosDTO>> ObtenerTecnicos()
         {
             try
             {
-                var Tecnicos=obtenerTodosLosTecnicosUc.Ejecutar();
+                var Tecnicos= await obtenerTodosLosTecnicosUc.Ejecutar();
 
                 List<TecnicoDTO> tecnicos = Tecnicos.Select(t => new TecnicoDTO()
                 {
