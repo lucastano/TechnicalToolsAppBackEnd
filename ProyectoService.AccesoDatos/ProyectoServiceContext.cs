@@ -16,7 +16,7 @@ namespace ProyectoService.AccesoDatos
         public DbSet<Cliente>Clientes { get; set; }
         public DbSet<Tecnico>Tecnicos { get; set; }
         public DbSet<Administrador>Administradores { get; set; }
-
+        public DbSet<Reparacion>Reparaciones { get; set; }
 
 
 

@@ -15,11 +15,12 @@ namespace ProyectoService.ApiRest.Controllers
     {
         private readonly IAgregarClienteUC agregarClienteUC;
         private readonly IObtenerTodosLosClientesUC obtenerClientesUC;
-        public ClientesController(IAgregarClienteUC agregarClienteUC, IObtenerTodosLosClientesUC obtenerClientesUC)
+        private readonly IObtenerClientePorCI obtenerClientePorCiUC;
+        public ClientesController(IAgregarClienteUC agregarClienteUC, IObtenerTodosLosClientesUC obtenerClientesUC, IObtenerClientePorCI obtenerClientePorCiUC)
         {
             this.agregarClienteUC = agregarClienteUC;
             this.obtenerClientesUC = obtenerClientesUC;
-
+            this.obtenerClientePorCiUC = obtenerClientePorCiUC;
         }
 
 
@@ -110,6 +111,50 @@ namespace ProyectoService.ApiRest.Controllers
                 {
                     StatusCode = 500,
                     Clientes = null
+
+                };
+                return BadRequest(response);
+            }
+
+
+        }
+
+        [HttpGet("ObtenerClientePorCi")]
+
+        public async Task<ActionResult<ResponseObtenerClientePorCiDTO>> ObtenerClientePorCi(string ci)
+        {
+            try
+            {
+                Cliente cliente = await obtenerClientePorCiUC.Ejecutar(ci);
+                ClienteDTO clienteDTO = new ClienteDTO()
+                {
+                    Id = cliente.Id,
+                    Nombre = cliente.Nombre,
+                    Apellido = cliente.Apellido,
+                    Telefono = cliente.Telefono,
+                    Direccion = cliente.Direccion,
+                    Email = cliente.Email.Value,
+                    Rol = cliente.Rol,
+                    Ci = cliente.Ci
+
+                };
+               
+                ResponseObtenerClientePorCiDTO response = new ResponseObtenerClientePorCiDTO()
+                {
+                    StatusCode = 200,
+                    cliente = clienteDTO,
+                    Error=""
+
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                ResponseObtenerClientePorCiDTO response = new ResponseObtenerClientePorCiDTO()
+                {
+                    StatusCode = 500,
+                    cliente = null,
+                    Error=ex.Message
 
                 };
                 return BadRequest(response);

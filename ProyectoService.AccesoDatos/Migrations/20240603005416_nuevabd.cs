@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -66,6 +67,50 @@ namespace ProyectoService.AccesoDatos.Migrations
                 {
                     table.PrimaryKey("PK_Tecnicos", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Reparaciones",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TecnicoId = table.Column<int>(type: "int", nullable: false),
+                    ClienteId = table.Column<int>(type: "int", nullable: false),
+                    Producto = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NumeroSerie = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DescripcionPresupuesto = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ManoDeObra = table.Column<double>(type: "float", nullable: false),
+                    CostoFinal = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reparaciones", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reparaciones_Clientes_ClienteId",
+                        column: x => x.ClienteId,
+                        principalTable: "Clientes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reparaciones_Tecnicos_TecnicoId",
+                        column: x => x.TecnicoId,
+                        principalTable: "Tecnicos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reparaciones_ClienteId",
+                table: "Reparaciones",
+                column: "ClienteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reparaciones_TecnicoId",
+                table: "Reparaciones",
+                column: "TecnicoId");
         }
 
         /// <inheritdoc />
@@ -73,6 +118,9 @@ namespace ProyectoService.AccesoDatos.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Administradores");
+
+            migrationBuilder.DropTable(
+                name: "Reparaciones");
 
             migrationBuilder.DropTable(
                 name: "Clientes");

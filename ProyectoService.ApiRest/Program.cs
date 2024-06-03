@@ -26,16 +26,24 @@ public class Program
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<ITecnicoRepositorio, TecnicoEFRepositorio>();
         builder.Services.AddScoped<IAdministradorRepositorio, AdministradorEFRepositorio>();
+        builder.Services.AddScoped<IReparacionRepositorio, ReparacionEFRepositorio>();
         // casos de uso
         builder.Services.AddScoped<IAgregarClienteUC, AgregarClienteUC>();
         builder.Services.AddScoped<IObtenerTodosLosClientesUC, ObtenerTodosLosClientesUC>();
+        builder.Services.AddScoped<IObtenerClientePorCI,ObtenerClientePorCi>();
         builder.Services.AddScoped<IObtenerUsuario,ObtenerUsuario>();
         builder.Services.AddScoped<IAgregarTecnico,AgregarTecnico>();
         builder.Services.AddScoped<IObtenerTecnicoPorEmail,ObtenerTecnicoPorEmail>();
         builder.Services.AddScoped<IObtenerTodosLosTecnicos,ObtenerTodosLosTecnicos>();
+        builder.Services.AddScoped<IObtenerTecnicoPorId,ObtenerTecnicoPorId>();
         builder.Services.AddScoped<IValidarPassword, ValidarPassword>();
         builder.Services.AddScoped<IAgregarAdministrador,AgregarAdministrador>();
         builder.Services.AddScoped<IObtenerAdministradores,ObtenerAdministradores>();
+        builder.Services.AddScoped<IAgregarReparacion, AgregarReparacion>();
+        builder.Services.AddScoped<IObtenerTodasLasReparaciones,ObtenerTodasLasReparaciones>();
+        builder.Services.AddScoped<IObtenerReparacionesPorCliente,ObtenerReparacionesPorCliente>();
+        builder.Services.AddScoped<IObtenerReparacionesPorTecnico, ObtenerReparacionesPorTecnico>();
+        builder.Services.AddScoped<IPresupuestarReparacion, PresupuestarReparacion>();
         // Add services to the container.
 
         builder.Services.AddControllers();

@@ -51,7 +51,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         public async Task<Cliente?> GetClienteByCi(string ci)
         {
             if (ci == null) throw new ClienteException("Debe ingresar una ci");
-            //TODO: VER EL FINDE ASYNC , ANTES USABA UN ASeNUMARABLE().FIRSTORDEFAULT
+            
             return  await _context.Clientes.FirstOrDefaultAsync(c=>c.Ci==ci);
         }
 

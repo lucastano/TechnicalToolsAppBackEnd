@@ -42,6 +42,7 @@ namespace ProyectoService.ApiRest.Controllers
                 if (usuarioModel is Cliente)
                 {
                     Cliente cliente= (Cliente)usuarioModel;
+                    usuarioLogeado.Id= cliente.Id;
                     usuarioLogeado.Nombre= cliente.Nombre;
                     usuarioLogeado.Apellido= cliente.Apellido;
                     usuarioLogeado.Direccion = cliente.Direccion;
@@ -56,6 +57,7 @@ namespace ProyectoService.ApiRest.Controllers
                 else if (usuarioModel is Tecnico)
                 {
                     Tecnico tecnico =(Tecnico)usuarioModel;
+                    usuarioLogeado.Id = tecnico.Id;
                     usuarioLogeado.Nombre = tecnico.Nombre;
                     usuarioLogeado.Apellido = tecnico.Apellido;
                     usuarioLogeado.Email = tecnico.Email.Value;
@@ -65,6 +67,7 @@ namespace ProyectoService.ApiRest.Controllers
                 else
                 {
                     Administrador administrador = (Administrador)usuarioModel;
+                    usuarioLogeado.Id = administrador.Id;
                     usuarioLogeado.Nombre = administrador.Nombre;
                     usuarioLogeado.Apellido = administrador.Apellido;
                     usuarioLogeado.Email = administrador.Email.Value;

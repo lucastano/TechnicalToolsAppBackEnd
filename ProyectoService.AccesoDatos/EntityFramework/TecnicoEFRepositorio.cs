@@ -50,6 +50,13 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         }
 
+        public async Task<Tecnico> ObtenerTecnicoPorId(int id)
+        {
+            var tecnicos= await _context.Tecnicos.ToListAsync();
+
+            return tecnicos.FirstOrDefault(t => t.Id == id);
+        }
+
         public async Task Update(Tecnico entity)
         {
             throw new NotImplementedException();
