@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoService.ApiRest.DTOs;
+using ProyectoService.Aplicacion.CasosUso;
 using ProyectoService.Aplicacion.ICasosUso;
 using ProyectoService.LogicaNegocio.Modelo;
 
@@ -18,9 +19,15 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly IAgregarClienteUC agregarClienteUc;
         private readonly IObtenerClientePorCI obtenerClientePorCiUc;
         private readonly IObtenerTecnicoPorId obtenerTecnicoPorIdUc;
+        private readonly IObtenerReparacionesPresupuestadas obtenerReparacionesPresupuestadasUc;
+        private readonly IObtenerReparacionesPresupuestadasPorCliente obtenerReparacionesPresupuestadasPorClienteUc;
+        private readonly IObtenerReparacionesPresupuestadasPorTecnico obtenerReparacionesPresupuestadasPorTecnicoUc;
+        private readonly IObtenerReparacionesEnTaller obtenerReparacionesEnTallerUc;
+        private readonly IObtenerReparacionesEnTallerPorCliente obtenerReparacionesEnTallerPorClienteUc;
+        private readonly IObtenerReparacionesEnTallerPorTecnico obtenerReparacionesEnTallerPorTecnicoUc;
 
 
-        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc, IObtenerReparacionesPorCliente obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc)
+        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc, IObtenerReparacionesPorCliente obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc, IObtenerReparacionesPresupuestadas obtenerReparacionesPresupuestadasUc, IObtenerReparacionesPresupuestadasPorCliente obtenerReparacionesPresupuestadasPorClienteUc, IObtenerReparacionesPresupuestadasPorTecnico obtenerReparacionesPresupuestadasPorTecnicoUc, IObtenerReparacionesEnTaller obtenerReparacionesEnTallerUc, IObtenerReparacionesEnTallerPorCliente obtenerReparacionesEnTallerPorClienteUc, IObtenerReparacionesEnTallerPorTecnico obtenerReparacionesEnTallerPorTecnicoUc)
         {
             this.agregarReparacionUc = agregarReparacionUc;
             this.obtenerTodasLasReparacionesUc = obtenerTodasLasReparacionesUc;
@@ -29,6 +36,12 @@ namespace ProyectoService.ApiRest.Controllers
             this.presupuestarReparacionUc = presupuestarReparacionUc;
             this.obtenerClientePorCiUc = obtenerClientePorCiUc;
             this.obtenerTecnicoPorIdUc = obtenerTecnicoPorIdUc;
+            this.obtenerReparacionesPresupuestadasUc = obtenerReparacionesPresupuestadasUc;
+            this.obtenerReparacionesPresupuestadasPorClienteUc = obtenerReparacionesPresupuestadasPorClienteUc;
+            this.obtenerReparacionesPresupuestadasPorTecnicoUc = obtenerReparacionesPresupuestadasPorTecnicoUc;
+            this.obtenerReparacionesEnTallerUc = obtenerReparacionesEnTallerUc;
+            this.obtenerReparacionesEnTallerPorClienteUc = obtenerReparacionesEnTallerPorClienteUc;
+            this.obtenerReparacionesEnTallerPorTecnicoUc = obtenerReparacionesEnTallerPorTecnicoUc;
         }
 
         [HttpPost]
@@ -73,8 +86,26 @@ namespace ProyectoService.ApiRest.Controllers
 
             
         }
-        [HttpGet]
-        public async Task<ActionResult<ResponseReparacionesEnTallerDTO>> ObtenerReparacionesEnTaller()
+
+        [HttpPost("Presupuestar")]
+        public async Task<ActionResult> PresupuestarReparacion(int id, double manoObra,string descripcion)
+        {
+            try
+            {
+                if (id == 0) throw new Exception("No existe reparacion con ese id");
+                if (descripcion == null) throw new Exception("Debe ingresar una descripcio");
+                await presupuestarReparacionUc.Ejecutar(id,manoObra,descripcion);
+                return StatusCode(200);    
+
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+        [HttpGet("TodasLasReparaciones")]
+        public async Task<ActionResult<ResponseReparacionesEnTallerDTO>> ObtenerTodasLasReparaciones()
         {
             try
             {
@@ -99,6 +130,97 @@ namespace ProyectoService.ApiRest.Controllers
                 {
                     StatusCode = 200,
                     reparaciones = rep.ToList()
+
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                ResponseReparacionesEnTallerDTO response = new ResponseReparacionesEnTallerDTO()
+                {
+                    StatusCode = 500,
+                    reparaciones = null
+
+                };
+                return BadRequest(response);
+            }
+
+
+        }
+
+        [HttpGet("EnTaller")]
+        public async Task<ActionResult<ResponseReparacionesEnTallerDTO>> ObtenerReparacionesEnTaller()
+        {
+            try
+            {
+                var reparaciones = await obtenerReparacionesEnTallerUc.Ejecutar();
+                IEnumerable<ReparacionEnTallerDTO> rep = reparaciones.Select(r => new ReparacionEnTallerDTO()
+                {
+                    Id = r.Id,
+                    ClienteNombre = r.Cliente.Nombre,
+                    ClienteApellido = r.Cliente.Apellido,
+                    ClienteTelefono = r.Cliente.Telefono,
+                    ClienteDireccion = r.Cliente.Direccion,
+                    ClienteEmail = r.Cliente.Email.Value,
+                    ClienteCedula = r.Cliente.Ci,
+                    Producto = r.Producto,
+                    NumeroSerie = r.NumeroSerie,
+                    Descripcion = r.Descripcion,
+                    Fecha = r.Fecha
+
+
+                });
+                ResponseReparacionesEnTallerDTO response = new ResponseReparacionesEnTallerDTO()
+                {
+                    StatusCode = 200,
+                    reparaciones = rep.ToList()
+
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                ResponseReparacionesEnTallerDTO response = new ResponseReparacionesEnTallerDTO()
+                {
+                    StatusCode = 500,
+                    reparaciones = null
+
+                };
+                return BadRequest(response);
+            }
+
+
+        }
+
+        [HttpGet("Presupuestadas")]
+        public async Task<ActionResult<ResponseReparacionesPresupuestadasDTO>> ObtenerReparacionesPresupuestadas()
+        {
+            try
+            {
+                var reparaciones = await obtenerReparacionesPresupuestadasUc.Ejecutar();
+                IEnumerable<ReparacionPresupuestadaDTO> rep = reparaciones.Select(r => new ReparacionPresupuestadaDTO()
+                {
+                    Id = r.Id,
+                    ClienteNombre = r.Cliente.Nombre,
+                    ClienteApellido = r.Cliente.Apellido,
+                    ClienteTelefono = r.Cliente.Telefono,
+                    ClienteDireccion = r.Cliente.Direccion,
+                    ClienteEmail = r.Cliente.Email.Value,
+                    ClienteCedula = r.Cliente.Ci,
+                    Producto = r.Producto,
+                    NumeroSerie = r.NumeroSerie,
+                    Descripcion = r.Descripcion,
+                    Fecha = r.Fecha,
+                    DescripcionPresupuesto=r.DescripcionPresupuesto,
+                    ManoDeObra=r.ManoDeObra,
+                    CostoFinal=r.CostoFinal
+
+
+                });
+                ResponseReparacionesPresupuestadasDTO response = new ResponseReparacionesPresupuestadasDTO()
+                {
+                    StatusCode = 200,
+                    ReparacionesPresupuestadas = rep.ToList()
 
                 };
                 return Ok(response);
