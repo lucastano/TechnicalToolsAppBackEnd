@@ -27,6 +27,7 @@ public class Program
         builder.Services.AddScoped<ITecnicoRepositorio, TecnicoEFRepositorio>();
         builder.Services.AddScoped<IAdministradorRepositorio, AdministradorEFRepositorio>();
         builder.Services.AddScoped<IReparacionRepositorio, ReparacionEFRepositorio>();
+        builder.Services.AddScoped<IEnviarEmail,EnviarEmail>();
         // casos de uso
         builder.Services.AddScoped<IAgregarClienteUC, AgregarClienteUC>();
         builder.Services.AddScoped<IObtenerTodosLosClientesUC, ObtenerTodosLosClientesUC>();
@@ -50,6 +51,8 @@ public class Program
         builder.Services.AddScoped<IObtenerReparacionesEnTaller,ObtenerReparacionesEnTaller>();
         builder.Services.AddScoped<IObtenerReparacionesEnTallerPorCliente, ObtenerReparacionesEnTallerPorCliente>();
         builder.Services.AddScoped<IObtenerReparacionesEnTallerPorTecnico, ObtenerReparacionesEnTallerPorTecnico>();
+        builder.Services.AddScoped<IAvisoNuevaReparacion,AvisoNuevaReparacion>();
+        builder.Services.AddScoped<IAvisoNuevoPresupuesto,AvisoNuevoPresupuesto>();
         // Add services to the container.
 
         builder.Services.AddControllers();

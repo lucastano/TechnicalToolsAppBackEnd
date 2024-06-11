@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProyectoService.Aplicacion.ICasosUso
+namespace ProyectoService.LogicaNegocio.IRepositorios
 {
-    public interface IAgregarReparacion
+    public interface IEmpresaRepositorio:ICrudRepositorio<Empresa>
     {
-         Task<Reparacion> Ejecutar(Reparacion entity);
+        Task<Empresa> GetEmpresa();
     }
 }

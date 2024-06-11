@@ -13,21 +13,44 @@ namespace ProyectoService.AccesoDatos.EntityFramework
     public class ReparacionEFRepositorio : IReparacionRepositorio
     {
         ProyectoServiceContext _context;
+        
         public ReparacionEFRepositorio(ProyectoServiceContext context)
         {
             _context = context;
+           
+            
         }
+        //TODO: EN ESTE REPOSITORIO NO SE USA, YA QUE AL HACER EL ADD NECESITO RETORNAR EL ENTITY, Y ESTE METODO AL SER GENERICO NO 
+        // LO DEVUELVE, VER SI LO MEJOR ES HACER QUE EL GENERICO DEVUELVA, ESO LLEVA UN CAMBIO MAS GRANDE
         public async Task Add(Reparacion entity)
         {
             if (entity == null) throw new ReparacionException("Debe ingresar una reparacion");
             if (entity.Cliente == null) throw new ReparacionException("Debe ingresar un cliente");
             if (entity.Descripcion == null) throw new ReparacionException("Debe ingresar una descripcion");
             if (entity.Producto == null) throw new ReparacionException("Debe ingresar un producto");
+            
             //if (entity.Fecha.) throw new ReparacionException("Debe ingresar una fecha "); ver como comparar con fecha vacia
             if (entity.NumeroSerie == null) throw new ReparacionException("Debe ingresar numero de serie");
             await _context.Reparaciones.AddAsync(entity);
             await _context.SaveChangesAsync();
+            
         }
+
+        public async Task<Reparacion>AddAlternativo(Reparacion entity)
+        {
+            if (entity == null) throw new ReparacionException("Debe ingresar una reparacion");
+            if (entity.Cliente == null) throw new ReparacionException("Debe ingresar un cliente");
+            if (entity.Descripcion == null) throw new ReparacionException("Debe ingresar una descripcion");
+            if (entity.Producto == null) throw new ReparacionException("Debe ingresar un producto");
+
+            //if (entity.Fecha.) throw new ReparacionException("Debe ingresar una fecha "); ver como comparar con fecha vacia
+            if (entity.NumeroSerie == null) throw new ReparacionException("Debe ingresar numero de serie");
+            await _context.Reparaciones.AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity;
+        }
+
+        
 
         public Task Delete(Reparacion entity)
         {
@@ -39,14 +62,17 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             return await _context.Reparaciones.Include(r=>r.Tecnico).Include(r=>r.Cliente).ToListAsync();
         }
 
-        public async Task Presupuestar(int id, double ManoObra, string Descripcion)
+        public async Task<Reparacion> Presupuestar(int id, double ManoObra, string Descripcion)
         {
             Reparacion reparacion = await ObtenerReparacionPorId(id);
+            //VERIFICAR QUE LA REPARACION AUN NO FUE PRESUPUESTADA
+            if (reparacion.Estado != "EnTaller") throw new ReparacionException("Esta reparacion ya fue presupuestada");
             if (reparacion == null) throw new ReparacionException("Reparacion no existe");
             if (Descripcion == null) throw new ReparacionException("Debe ingresar una descripcion");
             if (ManoObra == 0) throw new ReparacionException("Debe ingresar un valor de mano de obra"); 
             reparacion.Presupuestar(ManoObra, Descripcion);
             await _context.SaveChangesAsync();
+            return reparacion;
 
         }
 
@@ -67,7 +93,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         //esta devuelve la reparacion por su id, involuntariamente de su estado
         public async Task<Reparacion> ObtenerReparacionPorId(int id)
         {
-            var reparaciones = await _context.Reparaciones.ToListAsync();
+            var reparaciones = await getAll();
             return reparaciones.FirstOrDefault(r => r.Id == id);
         }
 

@@ -14,5 +14,8 @@
         public string Producto { get; set; }
         public string NumeroSerie { get; set; }
         public string Descripcion { get; set; }
+        public string Estado { get; set; }
+        public string DescripcionPresupuesto {  get; set; }
+        public double Costo { get; set; }
     }
 }

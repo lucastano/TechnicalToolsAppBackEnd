@@ -1,5 +1,6 @@
 ﻿using ProyectoService.Aplicacion.ICasosUso;
 using ProyectoService.LogicaNegocio.IRepositorios;
+using ProyectoService.LogicaNegocio.Modelo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,9 @@ namespace ProyectoService.Aplicacion.CasosUso
             this.repo = repo;
         }
 
-        public async Task Ejecutar(int id, double ManoObra, string descripcion)
+        public async Task<Reparacion> Ejecutar(int id, double ManoObra, string descripcion)
         {
-            await repo.Presupuestar(id, ManoObra, descripcion);
+            return await repo.Presupuestar(id, ManoObra, descripcion);
         }
     }
 }

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.ICasosUso
 {
-    public interface IAgregarReparacion
+    public interface IAvisoNuevoPresupuesto
     {
-         Task<Reparacion> Ejecutar(Reparacion entity);
+        Task Ejecutar(Reparacion entity);
     }
 }

@@ -25,9 +25,12 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly IObtenerReparacionesEnTaller obtenerReparacionesEnTallerUc;
         private readonly IObtenerReparacionesEnTallerPorCliente obtenerReparacionesEnTallerPorClienteUc;
         private readonly IObtenerReparacionesEnTallerPorTecnico obtenerReparacionesEnTallerPorTecnicoUc;
+        private readonly IAvisoNuevaReparacion avisoNuevaReparacionUc;
+        private readonly IAvisoNuevoPresupuesto avisoNuevoPresupuestoUc;
 
 
-        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc, IObtenerReparacionesPorCliente obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc, IObtenerReparacionesPresupuestadas obtenerReparacionesPresupuestadasUc, IObtenerReparacionesPresupuestadasPorCliente obtenerReparacionesPresupuestadasPorClienteUc, IObtenerReparacionesPresupuestadasPorTecnico obtenerReparacionesPresupuestadasPorTecnicoUc, IObtenerReparacionesEnTaller obtenerReparacionesEnTallerUc, IObtenerReparacionesEnTallerPorCliente obtenerReparacionesEnTallerPorClienteUc, IObtenerReparacionesEnTallerPorTecnico obtenerReparacionesEnTallerPorTecnicoUc)
+
+        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc, IObtenerReparacionesPorCliente obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc, IObtenerReparacionesPresupuestadas obtenerReparacionesPresupuestadasUc, IObtenerReparacionesPresupuestadasPorCliente obtenerReparacionesPresupuestadasPorClienteUc, IObtenerReparacionesPresupuestadasPorTecnico obtenerReparacionesPresupuestadasPorTecnicoUc, IObtenerReparacionesEnTaller obtenerReparacionesEnTallerUc, IObtenerReparacionesEnTallerPorCliente obtenerReparacionesEnTallerPorClienteUc, IObtenerReparacionesEnTallerPorTecnico obtenerReparacionesEnTallerPorTecnicoUc, IAvisoNuevaReparacion avisoNuevaReparacionUc, IAvisoNuevoPresupuesto avisoNuevoPresupuestoUc)
         {
             this.agregarReparacionUc = agregarReparacionUc;
             this.obtenerTodasLasReparacionesUc = obtenerTodasLasReparacionesUc;
@@ -42,6 +45,8 @@ namespace ProyectoService.ApiRest.Controllers
             this.obtenerReparacionesEnTallerUc = obtenerReparacionesEnTallerUc;
             this.obtenerReparacionesEnTallerPorClienteUc = obtenerReparacionesEnTallerPorClienteUc;
             this.obtenerReparacionesEnTallerPorTecnicoUc = obtenerReparacionesEnTallerPorTecnicoUc;
+            this.avisoNuevaReparacionUc = avisoNuevaReparacionUc;
+            this.avisoNuevoPresupuestoUc = avisoNuevoPresupuestoUc;
         }
 
         [HttpPost]
@@ -70,7 +75,8 @@ namespace ProyectoService.ApiRest.Controllers
 
                 };
 
-                await agregarReparacionUc.Ejecutar(reparacion);
+               Reparacion rep= await agregarReparacionUc.Ejecutar(reparacion);
+               await avisoNuevaReparacionUc.Ejecutar(rep);
 
                 return Ok();
 
@@ -94,7 +100,8 @@ namespace ProyectoService.ApiRest.Controllers
             {
                 if (id == 0) throw new Exception("No existe reparacion con ese id");
                 if (descripcion == null) throw new Exception("Debe ingresar una descripcio");
-                await presupuestarReparacionUc.Ejecutar(id,manoObra,descripcion);
+                Reparacion rep=await presupuestarReparacionUc.Ejecutar(id,manoObra,descripcion);
+                await avisoNuevoPresupuestoUc.Ejecutar(rep);//caso de uso 
                 return StatusCode(200);    
 
             }
@@ -122,7 +129,11 @@ namespace ProyectoService.ApiRest.Controllers
                     Producto = r.Producto,
                     NumeroSerie = r.NumeroSerie,
                     Descripcion = r.Descripcion,
-                    Fecha = r.Fecha
+                    Fecha = r.Fecha,
+                    Estado=r.Estado,
+                    DescripcionPresupuesto=r.DescripcionPresupuesto,
+                    Costo=r.CostoFinal
+                    
                     
 
                 });

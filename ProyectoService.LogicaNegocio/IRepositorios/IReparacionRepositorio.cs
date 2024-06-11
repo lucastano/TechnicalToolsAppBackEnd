@@ -9,7 +9,7 @@ namespace ProyectoService.LogicaNegocio.IRepositorios
 {
     public interface IReparacionRepositorio:ICrudRepositorio<Reparacion>
     {
-        Task Presupuestar(int id,double ManoObra,string Descripcion);
+        Task<Reparacion> Presupuestar(int id,double ManoObra,string Descripcion);
         Task Entregar(int id,bool reparada);
         //estas reparaciones son todas las reparaciones sin ver su estado
         Task<Reparacion>ObtenerReparacionPorId(int id);
@@ -35,6 +35,8 @@ namespace ProyectoService.LogicaNegocio.IRepositorios
         Task<List<Reparacion>> ObtenerReparacionesEntregadas();//todas las entregadas
         Task<List<Reparacion>> ObtenerReparacionesEntregadasPorCliente(string ci);//entregadas por cliente
         Task<List<Reparacion>> ObtenerReparacionesEntregadasPorTecnico(string EmailTecnico);//entregadas por tecnico
+        //TODO:la hice para probar 
+        Task<Reparacion> AddAlternativo(Reparacion entity);
 
 
 
