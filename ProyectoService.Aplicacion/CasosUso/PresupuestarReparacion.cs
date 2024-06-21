@@ -17,9 +17,9 @@ namespace ProyectoService.Aplicacion.CasosUso
             this.repo = repo;
         }
 
-        public async Task<Reparacion> Ejecutar(int id, double ManoObra, string descripcion)
+        public async Task<Reparacion> Ejecutar(int id, double ManoObra, string descripcion,DateTime fechaPromesaEntrega)
         {
-            return await repo.Presupuestar(id, ManoObra, descripcion);
+            return await repo.Presupuestar(id, ManoObra, descripcion,fechaPromesaEntrega);
         }
     }
 }

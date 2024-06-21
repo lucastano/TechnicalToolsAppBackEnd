@@ -9,22 +9,18 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.CasosUso
 {
-    public class AgregarReparacion : IAgregarReparacion
+    public class EntregarReparacion : IEntregarReparacion
     {
         private readonly IReparacionRepositorio repo;
-        public AgregarReparacion(IReparacionRepositorio repo)
+        public EntregarReparacion(IReparacionRepositorio repo)
         {
             this.repo = repo;
         }
 
-        public async Task<Reparacion> Ejecutar(Reparacion entity)
+        public async Task<Reparacion> Ejecutar(int id)
         {
-            //await repo.Add(entity);
-            Reparacion rep = await repo.AddAlternativo(entity);
-            return rep;
-
+            if (id == 0) throw new Exception("Numero de orden incorrecto");
+            return await repo.Entregar(id);
         }
-
-        
     }
 }

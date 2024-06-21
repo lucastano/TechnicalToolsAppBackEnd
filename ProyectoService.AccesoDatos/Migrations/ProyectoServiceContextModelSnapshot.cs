@@ -24,6 +24,39 @@ namespace ProyectoService.AccesoDatos.Migrations
 
             modelBuilder.HasSequence("UsuarioSequence");
 
+            modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Empresa", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Direccion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Foto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Empresas");
+                });
+
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Reparacion", b =>
                 {
                     b.Property<int>("Id")
@@ -56,6 +89,15 @@ namespace ProyectoService.AccesoDatos.Migrations
                     b.Property<DateTime>("FechaEntrega")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("FechaPresupuesto")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaPromesaEntrega")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaPromesaPresupuesto")
+                        .HasColumnType("datetime2");
+
                     b.Property<double>("ManoDeObra")
                         .HasColumnType("float");
 
@@ -64,6 +106,10 @@ namespace ProyectoService.AccesoDatos.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Producto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RazonNoAceptada")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

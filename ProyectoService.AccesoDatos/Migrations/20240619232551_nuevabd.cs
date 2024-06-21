@@ -52,6 +52,23 @@ namespace ProyectoService.AccesoDatos.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Empresas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Telefono = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Direccion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Foto = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Empresas", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tecnicos",
                 columns: table => new
                 {
@@ -80,10 +97,16 @@ namespace ProyectoService.AccesoDatos.Migrations
                     Producto = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NumeroSerie = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaPromesaPresupuesto = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Estado = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DescripcionPresupuesto = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RazonNoAceptada = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaPresupuesto = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaPromesaEntrega = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ManoDeObra = table.Column<double>(type: "float", nullable: false),
-                    CostoFinal = table.Column<double>(type: "float", nullable: false)
+                    CostoFinal = table.Column<double>(type: "float", nullable: false),
+                    FechaEntrega = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Reparada = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -118,6 +141,9 @@ namespace ProyectoService.AccesoDatos.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Administradores");
+
+            migrationBuilder.DropTable(
+                name: "Empresas");
 
             migrationBuilder.DropTable(
                 name: "Reparaciones");

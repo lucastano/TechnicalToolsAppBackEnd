@@ -38,16 +38,24 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public async Task<Reparacion>AddAlternativo(Reparacion entity)
         {
-            if (entity == null) throw new ReparacionException("Debe ingresar una reparacion");
-            if (entity.Cliente == null) throw new ReparacionException("Debe ingresar un cliente");
-            if (entity.Descripcion == null) throw new ReparacionException("Debe ingresar una descripcion");
-            if (entity.Producto == null) throw new ReparacionException("Debe ingresar un producto");
-
-            //if (entity.Fecha.) throw new ReparacionException("Debe ingresar una fecha "); ver como comparar con fecha vacia
-            if (entity.NumeroSerie == null) throw new ReparacionException("Debe ingresar numero de serie");
-            await _context.Reparaciones.AddAsync(entity);
-            await _context.SaveChangesAsync();
-            return entity;
+            try
+            {
+                if (entity == null) throw new ReparacionException("Debe ingresar una reparacion");
+                if (entity.Tecnico == null) throw new ReparacionException("Debe ingresar un tecnico");
+                if (entity.Cliente == null) throw new ReparacionException("Debe ingresar un cliente");
+                if (entity.Descripcion == null) throw new ReparacionException("Debe ingresar una descripcion");
+                if (entity.Producto == "") throw new ReparacionException("Debe ingresar un producto");
+                if (entity.FechaPromesaPresupuesto == DateTime.MinValue) throw new ReparacionException("Debe ingresar una fecha aproximada para el presupuesto");
+                if (entity.NumeroSerie == null) throw new ReparacionException("Debe ingresar numero de serie");
+                await _context.Reparaciones.AddAsync(entity);
+                await _context.SaveChangesAsync();
+                return entity;
+            }
+            catch(ReparacionException ex)
+            {
+                return null;
+            }
+            
         }
 
         
@@ -57,25 +65,77 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             throw new NotImplementedException();
         }
 
+        //todas las reparaciones
         public async Task<List<Reparacion>> getAll()
         {
             return await _context.Reparaciones.Include(r=>r.Tecnico).Include(r=>r.Cliente).ToListAsync();
         }
 
-        public async Task<Reparacion> Presupuestar(int id, double ManoObra, string Descripcion)
+        public async Task<Reparacion> Presupuestar(int id, double ManoObra, string Descripcion,DateTime fechaPromesaEntrega)
         {
             Reparacion reparacion = await ObtenerReparacionPorId(id);
-            //VERIFICAR QUE LA REPARACION AUN NO FUE PRESUPUESTADA
+            
             if (reparacion.Estado != "EnTaller") throw new ReparacionException("Esta reparacion ya fue presupuestada");
             if (reparacion == null) throw new ReparacionException("Reparacion no existe");
             if (Descripcion == null) throw new ReparacionException("Debe ingresar una descripcion");
             if (ManoObra == 0) throw new ReparacionException("Debe ingresar un valor de mano de obra"); 
-            reparacion.Presupuestar(ManoObra, Descripcion);
+            reparacion.Presupuestar(ManoObra, Descripcion,fechaPromesaEntrega);
             await _context.SaveChangesAsync();
             return reparacion;
 
         }
+        public async Task<Reparacion> Entregar(int id)
+        {
+            if (id == 0) throw new ReparacionException("reparacion no existe");
+            Reparacion reparacion = await ObtenerReparacionPorId(id);
+            if (reparacion.Estado != "Terminada") throw new ReparacionException("Esta reparacion aun no esta terminada");
+            reparacion.Entregar();
+            await _context.SaveChangesAsync();
+            return reparacion;
+        }
 
+        //TODO:NO NECESITA DEVOLVER NADA, YA QUE NO TENGO QUE IMPRIMIR PDF
+        public async Task AceptarPresupuesto(int id)
+        {
+            if (id == 0) throw new ReparacionException("reparacion no existe");
+            Reparacion reparacion = await ObtenerReparacionPorId(id);
+            if (reparacion.Estado != "Presupuestada") throw new ReparacionException("Esta reparacion aun no esta presupuestada");
+            if (reparacion == null) throw new ReparacionException("Reparacion no existe");
+            reparacion.AceptarPresupuesto();
+            await _context.SaveChangesAsync();
+            
+        }
+
+        //TODO:NO NECESITA DEVOLVER NADA, YA QUE NO TENGO QUE IMPRIMIR PDF
+
+        public async Task NoAceptarPresupuesto(int id, double costo,string razon)
+        {
+            if (id == 0) throw new ReparacionException("reparacion no existe");
+            Reparacion reparacion = await ObtenerReparacionPorId(id);
+            if (reparacion.Estado !="Presupuestada") throw new ReparacionException("Esta reparacion aun no esta presupuestada");
+            reparacion.NoAceptarPresupuesto(costo,razon);
+            await _context.SaveChangesAsync();
+            
+        }
+
+        public async Task<Reparacion> Terminar(int id, bool reparada)
+        {
+            //SOLO SE ACEPTAN REPARACIONES ACEPTADAS O NOACEPTADAS
+            if (id == 0) throw new ReparacionException("reparacion no existe");
+            Reparacion reparacion = await ObtenerReparacionPorId(id);
+            if(reparacion.Estado=="EnTaller" || reparacion.Estado == "Presupuestada") throw new ReparacionException("Esta reparacion aun no se puede terminar");
+            if (reparacion.Estado == "Terminada") throw new ReparacionException("Esta reparacion ya fue terminada");
+            if (reparacion.Estado == "Entregada") throw new ReparacionException("Esta reparacion ya fue entregada");
+            reparacion.Terminar(reparada);
+            await _context.SaveChangesAsync();
+            return reparacion;
+            //TODO: ACA DEBERIA AVISAR AL CLIENTE
+        }
+
+
+
+
+        //todas las reparaciones por cliente
         public async Task<List<Reparacion>> ObtenerReparacionesPorCliente(string Ci)
         {
             //TODO:CHEQUEAR OBTENERREPARACIONESPORCLIENTE
@@ -83,6 +143,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             return reparaciones.Where(r => r.Cliente.Ci == Ci).ToList();
         }
 
+        //todas las reparaciones por tecnico
         public async Task<List<Reparacion>> ObtenerReparacionesPorTecnico(string EmailTecnico)
         {
             //TODO:CHEQUEAR ObtenerReparacionesPorTecnico
@@ -102,6 +163,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             throw new NotImplementedException();
         }
 
+        //todas las reparaciones presupuestadas
         public async Task<List<Reparacion>> ObtenerReparacionesPresupuestadas()
         {
             var reparaciones = await getAll();
@@ -123,6 +185,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             return reparaciones.Where(r => r.Estado == "Presupuestada" && r.Tecnico.Email.Equals(EmailTecnico)).ToList();
         }
 
+        //solo reparaciones en taller 
         public async Task<List<Reparacion>> ObtenerReparacionesEnTaller()
         {
             
@@ -144,14 +207,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             return reparaciones.Where(r => r.Estado == "EnTaller" && r.Tecnico.Email.Equals(EmailTecnico)).ToList();
         }
 
-        public async Task Entregar(int id, bool reparada)
-        {
-            if (id == 0) throw new ReparacionException("reparacion no existe");
-            Reparacion reparacion = await ObtenerReparacionPorId(id);
-            reparacion.Entregar();
-            await _context.SaveChangesAsync();
-
-        }
+        
 
         public async Task<List<Reparacion>> ObtenerReparacionesEntregadas()
         {
@@ -187,5 +243,9 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         {
             throw new NotImplementedException();
         }
+
+       
+
+     
     }
 }

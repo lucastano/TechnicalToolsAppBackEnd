@@ -53,6 +53,10 @@ public class Program
         builder.Services.AddScoped<IObtenerReparacionesEnTallerPorTecnico, ObtenerReparacionesEnTallerPorTecnico>();
         builder.Services.AddScoped<IAvisoNuevaReparacion,AvisoNuevaReparacion>();
         builder.Services.AddScoped<IAvisoNuevoPresupuesto,AvisoNuevoPresupuesto>();
+        builder.Services.AddScoped<IAceptarPresupuesto, AceptarPresupuesto>();
+        builder.Services.AddScoped<ITerminarReparacion, TerminarReparacion>();
+        builder.Services.AddScoped<IEntregarReparacion,EntregarReparacion>();
+        builder.Services.AddScoped<INoAceptarPresupuesto, NoAceptarPresupuesto>();
         // Add services to the container.
 
         builder.Services.AddControllers();

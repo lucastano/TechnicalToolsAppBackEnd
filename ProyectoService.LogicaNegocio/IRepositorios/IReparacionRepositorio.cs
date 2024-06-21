@@ -9,8 +9,12 @@ namespace ProyectoService.LogicaNegocio.IRepositorios
 {
     public interface IReparacionRepositorio:ICrudRepositorio<Reparacion>
     {
-        Task<Reparacion> Presupuestar(int id,double ManoObra,string Descripcion);
-        Task Entregar(int id,bool reparada);
+        Task<Reparacion> Presupuestar(int id,double ManoObra,string Descripcion,DateTime fechaPromesaEntrega);
+        Task<Reparacion> Entregar(int id);
+        Task AceptarPresupuesto(int id);
+        Task NoAceptarPresupuesto(int id,double costo,string razon);
+        Task<Reparacion> Terminar(int id, bool reparada);
+
         //estas reparaciones son todas las reparaciones sin ver su estado
         Task<Reparacion>ObtenerReparacionPorId(int id);
         Task<List<Reparacion>> ObtenerReparacionesPorCliente(string Ci);

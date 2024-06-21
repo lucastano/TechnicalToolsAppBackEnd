@@ -9,22 +9,19 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.CasosUso
 {
-    public class AgregarReparacion : IAgregarReparacion
+    public class TerminarReparacion : ITerminarReparacion
     {
         private readonly IReparacionRepositorio repo;
-        public AgregarReparacion(IReparacionRepositorio repo)
+        public TerminarReparacion(IReparacionRepositorio repo)
         {
             this.repo = repo;
         }
 
-        public async Task<Reparacion> Ejecutar(Reparacion entity)
+        public async Task<Reparacion> Ejecutar(int id, bool reparada)
         {
-            //await repo.Add(entity);
-            Reparacion rep = await repo.AddAlternativo(entity);
-            return rep;
-
+            //bool reparada indica si se reparo o no 
+            if (id == 0) throw new Exception("debe ingresar numero de orden");
+            return await repo.Terminar(id, reparada);
         }
-
-        
     }
 }
