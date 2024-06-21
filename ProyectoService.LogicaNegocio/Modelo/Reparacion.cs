@@ -33,7 +33,8 @@ namespace ProyectoService.LogicaNegocio.Modelo
         public double CostoFinal { get; set; }
         public DateTime FechaEntrega { get; set; }
         public bool Reparada {  get; set; }
-        
+        //al Terminar la reparacion, deberia agregar una descripcion de reparacion, de no repararse por no aceptar presupuesto, tambien deberia agregarla, el tenico puede indicar 
+        //porque no se reparo 
 
         //TODO: DEBERIA SETEAR LOS DATOS QUE NO VOY A UTILIZAR CUANDO CREO EL OBJETO(COSTO,MANOOBRA,DESCRIPCIONPRESUPUESTO,REPUESTOS)????
         public Reparacion()
