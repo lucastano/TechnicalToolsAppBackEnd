@@ -38,23 +38,18 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public async Task<Reparacion>AddAlternativo(Reparacion entity)
         {
-            try
-            {
+           
                 if (entity == null) throw new ReparacionException("Debe ingresar una reparacion");
                 if (entity.Tecnico == null) throw new ReparacionException("Debe ingresar un tecnico");
                 if (entity.Cliente == null) throw new ReparacionException("Debe ingresar un cliente");
                 if (entity.Descripcion == null) throw new ReparacionException("Debe ingresar una descripcion");
-                if (entity.Producto == "") throw new ReparacionException("Debe ingresar un producto");
+                if (entity.Producto == null) throw new ReparacionException("Debe ingresar un producto");
                 if (entity.FechaPromesaPresupuesto == DateTime.MinValue) throw new ReparacionException("Debe ingresar una fecha aproximada para el presupuesto");
                 if (entity.NumeroSerie == null) throw new ReparacionException("Debe ingresar numero de serie");
                 await _context.Reparaciones.AddAsync(entity);
                 await _context.SaveChangesAsync();
                 return entity;
-            }
-            catch(ReparacionException ex)
-            {
-                return null;
-            }
+            
             
         }
 
@@ -74,9 +69,8 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         public async Task<Reparacion> Presupuestar(int id, double ManoObra, string Descripcion,DateTime fechaPromesaEntrega)
         {
             Reparacion reparacion = await ObtenerReparacionPorId(id);
-            
-            if (reparacion.Estado != "EnTaller") throw new ReparacionException("Esta reparacion ya fue presupuestada");
             if (reparacion == null) throw new ReparacionException("Reparacion no existe");
+            if (reparacion.Estado != "EnTaller") throw new ReparacionException("Esta reparacion ya fue presupuestada");
             if (Descripcion == null) throw new ReparacionException("Debe ingresar una descripcion");
             if (ManoObra == 0) throw new ReparacionException("Debe ingresar un valor de mano de obra"); 
             reparacion.Presupuestar(ManoObra, Descripcion,fechaPromesaEntrega);
@@ -97,10 +91,11 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         //TODO:NO NECESITA DEVOLVER NADA, YA QUE NO TENGO QUE IMPRIMIR PDF
         public async Task AceptarPresupuesto(int id)
         {
-            if (id == 0) throw new ReparacionException("reparacion no existe");
+            
             Reparacion reparacion = await ObtenerReparacionPorId(id);
-            if (reparacion.Estado != "Presupuestada") throw new ReparacionException("Esta reparacion aun no esta presupuestada");
             if (reparacion == null) throw new ReparacionException("Reparacion no existe");
+            if (reparacion.Estado != "Presupuestada") throw new ReparacionException("Esta reparacion aun no esta presupuestada");
+            
             reparacion.AceptarPresupuesto();
             await _context.SaveChangesAsync();
             
@@ -110,8 +105,9 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public async Task NoAceptarPresupuesto(int id, double costo,string razon)
         {
-            if (id == 0) throw new ReparacionException("reparacion no existe");
+            
             Reparacion reparacion = await ObtenerReparacionPorId(id);
+            if (reparacion == null) throw new ReparacionException("Reparacion no existe");
             if (reparacion.Estado !="Presupuestada") throw new ReparacionException("Esta reparacion aun no esta presupuestada");
             reparacion.NoAceptarPresupuesto(costo,razon);
             await _context.SaveChangesAsync();
@@ -160,6 +156,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public Task Update(Reparacion entity)
         {
+            //SE PUEDE EDITAR COSTO, DESCRIPCION DE REPARACION 
             throw new NotImplementedException();
         }
 
