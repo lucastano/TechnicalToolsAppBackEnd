@@ -88,6 +88,7 @@ namespace ProyectoService.ApiRest.Controllers
                Reparacion rep= await agregarReparacionUc.Ejecutar(reparacion);
                await avisoNuevaReparacionUc.Ejecutar(rep);
                 Byte[] pdf = rep.GenerarPdfOrdenServicioEntrada();
+               // rep.GenerarPdfOrdenServicioEntrada();
                 return Ok();
 
 

@@ -7,6 +7,9 @@ using System.Net.Mail;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
+using System.IO;
 
 namespace ProyectoService.AccesoDatos.EntityFramework
 {
@@ -33,20 +36,9 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public async Task EnviarEmailNuevaReparacion(Reparacion entity)
         {
-            //ver los datos de la empresa de donde obtenerlos, al igual que el email de envio
-            //esta version es la primera sin archivo pdf
-            //await _mailService.SendEmailAsync(
-            //    fromName: "CompanyName",
-            //    fromEmail: "pruebaemial.net@outlook.es",
-            //    toName: entity.Cliente.Nombre,
-            //    toEmail: entity.Cliente.Email.Value,
-            //    subject: "ORDEN DE SERVICIO REPARACION Nro: " + entity.Id,
-            //    body: "Se dejo para service el aparato" + entity.Producto + " Numero de serie: " + entity.NumeroSerie + " Su numero de orden es: " + entity.Id,
-            //    isHtml: true
 
 
-            //    );
-            // Genera el PDF
+
             byte[] pdfContent = entity.GenerarPdfOrdenServicioEntrada();
 
             // Verifica si el PDF se generó correctamente

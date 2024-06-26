@@ -1,10 +1,13 @@
 ﻿
-using PdfSharpCore.Drawing;
-using PdfSharpCore.Pdf;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
+using QuestPDF.Previewer;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -45,7 +48,7 @@ namespace ProyectoService.LogicaNegocio.Modelo
             this.ManoDeObra = 0;
             this.CostoFinal = 0;
             this.RazonNoAceptada = string.Empty;
-            
+            QuestPDF.Settings.License = LicenseType.Community;
         }
         
 
@@ -91,49 +94,162 @@ namespace ProyectoService.LogicaNegocio.Modelo
             this.Estado = "Entregada";     
         }
 
-        public byte[] GenerarPdfOrdenServicioEntrada()
+        // return byte[];
+        public byte [] GenerarPdfOrdenServicioEntrada()
         {
-            // Crea un nuevo documento PDF
-            PdfDocument document = new PdfDocument();
-            document.Info.Title = "PDF Orden de servicio";
-
-
-
-
-            // Crea una nueva página
-            PdfPage page = document.AddPage();
-
-            // Obtiene el objeto XGraphics para dibujar en la página
-            XGraphics gfx = XGraphics.FromPdfPage(page);
-
-            // Define la fuente
-            XFont font = new XFont("Verdana", 20);
-
-            // Dibuja texto en la página
-            gfx.DrawString("Información de la Reparacion:", font, XBrushes.Black,
-                new XRect(0, 0, page.Width, page.Height),
-                XStringFormats.TopCenter);
-
-            font = new XFont("Verdana", 12, XFontStyle.Regular);
-            gfx.DrawString($"Numero de orden: {Id}", font, XBrushes.Black,
-                new XRect(40, 60, page.Width, page.Height),
-                XStringFormats.TopLeft);
-            gfx.DrawString($"Nombre de cliente: {Cliente.Nombre}", font, XBrushes.Black,
-                new XRect(40, 90, page.Width, page.Height),
-                XStringFormats.TopLeft);
-            gfx.DrawString($"Descripcion de problema: {Descripcion}", font, XBrushes.Black,
-                new XRect(40, 120, page.Width, page.Height),
-                XStringFormats.TopLeft);
-            gfx.DrawString($"Producto: {Producto}", font, XBrushes.Black,
-                new XRect(40, 150, page.Width, page.Height),
-                XStringFormats.TopLeft);
-
-            // Guarda el documento en un MemoryStream
-            using (MemoryStream stream = new MemoryStream())
+            var data = Document.Create(document =>
             {
-                document.Save(stream, false);
-                return stream.ToArray();
-            }
+                document.Page(page =>
+                {
+                    page.Margin(30);
+
+                    page.Header().ShowOnce().Row(row =>
+                    {
+                        //TODO: PARA PONERLE UNA IMAGEN AL PDF, HACERLO CUANDO HAGA LO DE EMPRESA
+                        //var rutaImagen = Path.Combine(_hostWebRootPath, "images/VisualStudio.png");
+                        //byte[] imageData = System.IO.File.ReadAllBytes(rutaImagen);
+
+                        //row.ConstantItem(140).Height(60).Placeholder();
+                        //row.ConstantItem(150).Image(imageData);
+
+                        row.RelativeItem().Column(col =>
+                        {
+                            col.Item().AlignCenter().Text("Codigo Estudiante SAC").Bold().FontSize(14);
+                            col.Item().AlignCenter().Text("Jr. Las mercedes N378 - Lima").FontSize(9);
+                            col.Item().AlignCenter().Text("987 987 123 / 02 213232").FontSize(9);
+                            col.Item().AlignCenter().Text("codigo@example.com").FontSize(9);
+                        });
+
+                        row.RelativeItem().Column(col =>
+                        {
+                            col.Item().Border(1).BorderColor("#257272")
+                            .AlignCenter().Text("Numero de Orden");
+
+                            col.Item().Background("#257272").Border(1)
+                            .BorderColor("#257272").AlignCenter()
+                            .Text(Id).FontColor("#fff");
+
+                            col.Item().Border(1).BorderColor("#257272")
+                            .AlignCenter().Text(Fecha);
+                        });
+                    });
+
+                    page.Content().PaddingVertical(10).Column(col1 =>
+                    {
+                        col1.Item().Column(col2 =>
+                        {
+                            col2.Item().Text("Datos del cliente").Underline().Bold();
+
+                            col2.Item().Text(txt =>
+                            {
+                                txt.Span("Nombre: ").SemiBold().FontSize(10);
+                                txt.Span(Cliente.Nombre+" "+Cliente.Apellido).FontSize(10);
+                            });
+
+                            col2.Item().Text(txt =>
+                            {
+                                txt.Span("Celular/Telefono: ").SemiBold().FontSize(10);
+                                txt.Span(Cliente.Telefono).FontSize(10);
+                            });
+
+                            col2.Item().Text(txt =>
+                            {
+                                txt.Span("Email: ").SemiBold().FontSize(10);
+                                txt.Span(Cliente.Email.Value).FontSize(10);
+                            });
+                            col2.Item().Text(txt =>
+                            {
+                                txt.Span("Direccion: ").SemiBold().FontSize(10);
+                                txt.Span(Cliente.Direccion).FontSize(10);
+                            });
+                        });
+
+                        col1.Item().LineHorizontal(0.5f);
+
+                        col1.Item().Table(tabla =>
+                        {
+                            tabla.ColumnsDefinition(columns =>
+                            {
+                                columns.RelativeColumn(3);
+                                columns.RelativeColumn();
+                                columns.RelativeColumn();
+                                columns.RelativeColumn();
+                            });
+
+                            tabla.Header(header =>
+                            {
+                                header.Cell().Background("#257272")
+                                .Padding(2).Text("Producto").FontColor("#fff");
+
+                                header.Cell().Background("#257272")
+                                .Padding(2).Text("Precio Unit").FontColor("#fff");
+
+                                header.Cell().Background("#257272")
+                                .Padding(2).Text("Cantidad").FontColor("#fff");
+
+                                header.Cell().Background("#257272")
+                                .Padding(2).Text("Total").FontColor("#fff");
+                            });
+
+                            foreach (var item in Enumerable.Range(1, 45))
+                            {
+                                var cantidad = Placeholders.Random.Next(1, 10);
+                                var precio = Placeholders.Random.Next(5, 15);
+                                var total = cantidad * precio;
+
+                                tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
+                                .Padding(2).Text(Placeholders.Label()).FontSize(10);
+
+                                tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
+                                .Padding(2).Text(cantidad.ToString()).FontSize(10);
+
+                                tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
+                                .Padding(2).Text($"S/. {precio}").FontSize(10);
+
+                                tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
+                                .Padding(2).AlignRight().Text($"S/. {total}").FontSize(10);
+                            }
+                        });
+
+                        col1.Item().AlignRight().Text("Total: 1500").FontSize(12);
+
+                        if (1 == 1)
+                            col1.Item().Background(Colors.Grey.Lighten3).Padding(10)
+                            .Column(column =>
+                            {
+                                column.Item().Text("Comentarios").FontSize(14);
+                                column.Item().Text(Placeholders.LoremIpsum());
+                                column.Spacing(5);
+                            });
+
+                        col1.Spacing(10);
+                    });
+
+                    page.Footer()
+                    .AlignRight()
+                    .Text(txt =>
+                    {
+                        txt.Span("Pagina ").FontSize(10);
+                        txt.CurrentPageNumber().FontSize(10);
+                        txt.Span(" de ").FontSize(10);
+                        txt.TotalPages().FontSize(10);
+                    });
+                });
+            }).GeneratePdf();
+
+            return data;
+
+
+            //return data;
+        }
+            //Document.Create(document =>
+            //{
+            //    document.Page(page =>
+            //    {
+
+            //    });
+
+            //}).ShowInPreviewer();
 
         }
 
@@ -145,5 +261,5 @@ namespace ProyectoService.LogicaNegocio.Modelo
 
 
 
-    }
+    
 }
