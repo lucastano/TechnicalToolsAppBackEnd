@@ -38,9 +38,10 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         }
 
-        public Task<Empresa> GetEmpresa()
+        public async Task<Empresa> GetEmpresa()
         {
-            throw new NotImplementedException();
+            Empresa emp = await _context.Empresas.FirstOrDefaultAsync();
+            return emp;
         }
 
         public Task Update(Empresa entity)

@@ -28,6 +28,7 @@ public class Program
         builder.Services.AddScoped<IAdministradorRepositorio, AdministradorEFRepositorio>();
         builder.Services.AddScoped<IReparacionRepositorio, ReparacionEFRepositorio>();
         builder.Services.AddScoped<IEnviarEmail,EnviarEmail>();
+        builder.Services.AddScoped<IEmpresaRepositorio,EmpresaEFRepositorio>();
         // casos de uso
         builder.Services.AddScoped<IAgregarClienteUC, AgregarClienteUC>();
         builder.Services.AddScoped<IObtenerTodosLosClientesUC, ObtenerTodosLosClientesUC>();
@@ -53,10 +54,14 @@ public class Program
         builder.Services.AddScoped<IObtenerReparacionesEnTallerPorTecnico, ObtenerReparacionesEnTallerPorTecnico>();
         builder.Services.AddScoped<IAvisoNuevaReparacion,AvisoNuevaReparacion>();
         builder.Services.AddScoped<IAvisoNuevoPresupuesto,AvisoNuevoPresupuesto>();
+        builder.Services.AddScoped<IAvisoEntregaReparacion, AvisoEntregaReparacion>();
+        builder.Services.AddScoped<IAvisoReparacionTerminada,AvisoReparacionTerminada>();
         builder.Services.AddScoped<IAceptarPresupuesto, AceptarPresupuesto>();
         builder.Services.AddScoped<ITerminarReparacion, TerminarReparacion>();
         builder.Services.AddScoped<IEntregarReparacion,EntregarReparacion>();
         builder.Services.AddScoped<INoAceptarPresupuesto, NoAceptarPresupuesto>();
+        builder.Services.AddScoped<IAgregarEmpresa, AgregarEmpresa>();
+        builder.Services.AddScoped<IObtenerEmpresa, ObtenerEmpresa>();
         // Add services to the container.
 
         builder.Services.AddControllers();

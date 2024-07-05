@@ -12,8 +12,8 @@ using ProyectoService.AccesoDatos;
 namespace ProyectoService.AccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoServiceContext))]
-    [Migration("20240619232551_nuevabd")]
-    partial class nuevabd
+    [Migration("20240629234307_nombres")]
+    partial class nombres
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,9 +43,9 @@ namespace ProyectoService.AccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Foto")
+                    b.Property<byte[]>("Foto")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -57,7 +57,7 @@ namespace ProyectoService.AccesoDatos.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Empresas");
+                    b.ToTable("Empresa");
                 });
 
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Reparacion", b =>
@@ -128,7 +128,7 @@ namespace ProyectoService.AccesoDatos.Migrations
 
                     b.HasIndex("TecnicoId");
 
-                    b.ToTable("Reparaciones");
+                    b.ToTable("Reparacion");
                 });
 
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Usuario", b =>
@@ -175,7 +175,7 @@ namespace ProyectoService.AccesoDatos.Migrations
                 {
                     b.HasBaseType("ProyectoService.LogicaNegocio.Modelo.Usuario");
 
-                    b.ToTable("Administradores", (string)null);
+                    b.ToTable("Administrador", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Cliente", b =>
@@ -194,14 +194,14 @@ namespace ProyectoService.AccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("Clientes", (string)null);
+                    b.ToTable("Cliente", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Tecnico", b =>
                 {
                     b.HasBaseType("ProyectoService.LogicaNegocio.Modelo.Usuario");
 
-                    b.ToTable("Tecnicos", (string)null);
+                    b.ToTable("Tecnico", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Reparacion", b =>

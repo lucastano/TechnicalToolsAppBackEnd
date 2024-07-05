@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoService.AccesoDatos;
 
@@ -11,9 +12,11 @@ using ProyectoService.AccesoDatos;
 namespace ProyectoService.AccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoServiceContext))]
-    partial class ProyectoServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20240629234112_nuevabd")]
+    partial class nuevabd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,11 +43,8 @@ namespace ProyectoService.AccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EmailPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<byte[]>("Foto")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Nombre")
@@ -175,7 +175,7 @@ namespace ProyectoService.AccesoDatos.Migrations
                 {
                     b.HasBaseType("ProyectoService.LogicaNegocio.Modelo.Usuario");
 
-                    b.ToTable("Administrador", (string)null);
+                    b.ToTable("Administradores", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Cliente", b =>
@@ -194,14 +194,14 @@ namespace ProyectoService.AccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("Cliente", (string)null);
+                    b.ToTable("Clientes", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Tecnico", b =>
                 {
                     b.HasBaseType("ProyectoService.LogicaNegocio.Modelo.Usuario");
 
-                    b.ToTable("Tecnico", (string)null);
+                    b.ToTable("Tecnicos", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Reparacion", b =>

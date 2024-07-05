@@ -18,7 +18,7 @@ namespace ProyectoService.AccesoDatos
         public DbSet<Administrador>Administradores { get; set; }
         public DbSet<Reparacion>Reparaciones { get; set; }
         public DbSet<Empresa>Empresas { get; set; }
-
+        
 
 
         public ProyectoServiceContext(DbContextOptions<ProyectoServiceContext> options) : base(options)
@@ -34,9 +34,9 @@ namespace ProyectoService.AccesoDatos
 
 
             modelBuilder.Entity<Usuario>().UseTpcMappingStrategy();
-            modelBuilder.Entity<Cliente>().ToTable("Clientes");
-            modelBuilder.Entity<Tecnico>().ToTable("Tecnicos");
-            modelBuilder.Entity<Administrador>().ToTable("Administradores");
+            modelBuilder.Entity<Cliente>().ToTable("Cliente");
+            modelBuilder.Entity<Tecnico>().ToTable("Tecnico");
+            modelBuilder.Entity<Administrador>().ToTable("Administrador");
         }
 
     }
