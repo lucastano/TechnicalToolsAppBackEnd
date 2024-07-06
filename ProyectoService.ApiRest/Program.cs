@@ -45,13 +45,7 @@ public class Program
         builder.Services.AddScoped<IObtenerTodasLasReparaciones,ObtenerTodasLasReparaciones>();
         builder.Services.AddScoped<IObtenerReparacionesPorCliente,ObtenerReparacionesPorCliente>();
         builder.Services.AddScoped<IObtenerReparacionesPorTecnico, ObtenerReparacionesPorTecnico>();
-        builder.Services.AddScoped<IPresupuestarReparacion, PresupuestarReparacion>();
-        builder.Services.AddScoped<IObtenerReparacionesPresupuestadas,ObtenerReparacionesPresupuestadas>();
-        builder.Services.AddScoped<IObtenerReparacionesPresupuestadasPorCliente,ObtenerReparacionesPresupuestadasPorCliente>();
-        builder.Services.AddScoped<IObtenerReparacionesPresupuestadasPorTecnico, ObtenerReparacionesPresupuestadasPorTecnico>();
-        builder.Services.AddScoped<IObtenerReparacionesEnTaller,ObtenerReparacionesEnTaller>();
-        builder.Services.AddScoped<IObtenerReparacionesEnTallerPorCliente, ObtenerReparacionesEnTallerPorCliente>();
-        builder.Services.AddScoped<IObtenerReparacionesEnTallerPorTecnico, ObtenerReparacionesEnTallerPorTecnico>();
+        builder.Services.AddScoped<IPresupuestarReparacion, PresupuestarReparacion>(); 
         builder.Services.AddScoped<IAvisoNuevaReparacion,AvisoNuevaReparacion>();
         builder.Services.AddScoped<IAvisoNuevoPresupuesto,AvisoNuevoPresupuesto>();
         builder.Services.AddScoped<IAvisoEntregaReparacion, AvisoEntregaReparacion>();
