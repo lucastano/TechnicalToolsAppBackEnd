@@ -17,21 +17,19 @@ namespace ProyectoService.AccesoDatos.EntityFramework
     public class EnviarEmail : IEnviarEmail
     {
         private  MailService _mailService;
-        private readonly IEmpresaRepositorio empresaRepo;
         
-        public  EnviarEmail( IEmpresaRepositorio empresaRepo)
+        
+        public  EnviarEmail( )
         {
-            this.empresaRepo = empresaRepo;
            
-
             //ver como obtener estos datos de algun archivo de texto
 
             //_mailService = new MailService("smtp.office365.com", 587, "pruebaemial.net@outlook.es", "Lu3472759");
         }
         
-        public async Task EnviarEmailAvisoEntrega(Reparacion entity)
+        public async Task EnviarEmailAvisoEntrega(Reparacion entity,Empresa emp)
         {
-            Empresa emp = await empresaRepo.GetEmpresa();
+            
             string reparada = "Reparada";
             if (!entity.Reparada)
             {
@@ -84,12 +82,12 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             
         }
 
-        public async Task EnviarEmailAvisoTerminada(Reparacion entity)
+        public async Task EnviarEmailAvisoTerminada(Reparacion entity,Empresa emp)
         {
            
 
             // Verifica si el PDF se generó correctamente
-            Empresa emp = await empresaRepo.GetEmpresa();
+            
                 // Ver los datos de la empresa de donde obtenerlos, al igual que el email de envio
                 string fromName = emp.Nombre;
                 string fromEmail = emp.Email;
@@ -122,9 +120,9 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         }
 
-        public async Task EnviarEmailNuevaReparacion(Reparacion entity)
+        public async Task<byte[]> EnviarEmailNuevaReparacion(Reparacion entity,Empresa emp)
         {
-            Empresa emp = await empresaRepo.GetEmpresa();
+           
             _mailService = new MailService("smtp.office365.com", 587, emp.Email, emp.EmailPassword);
             byte[] pdfContent = entity.GenerarPdfOrdenServicioEntrada(emp);
             
@@ -164,14 +162,14 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                     }
                 }
             }
-           
+            return pdfContent;
 
         }
 
-        public async Task EnviarEmailNuevoPresupuesto(Reparacion entity)
+        public async Task EnviarEmailNuevoPresupuesto(Reparacion entity,Empresa emp)
         {
-            byte[] pdfContent = entity.GenerarPdfOrdenServicioPresupuestada();
-            Empresa emp = await empresaRepo.GetEmpresa();
+            byte[] pdfContent = entity.GenerarPdfOrdenServicioPresupuestada(emp);
+           
             // Verifica si el PDF se generó correctamente
             if (pdfContent != null && pdfContent.Length > 0)
             {

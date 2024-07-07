@@ -28,10 +28,12 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly ITerminarReparacion terminarReparacionUc;
         private readonly IEntregarReparacion entregarReparacionUc;
         private readonly IObtenerEmpresa obtenerEmpresaUc;
+        private readonly IConfiguration configuration;
+        private Empresa emp;
 
 
 
-        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc, IObtenerReparacionesPorTecnico obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc, IAvisoNuevaReparacion avisoNuevaReparacionUc, IAvisoNuevoPresupuesto avisoNuevoPresupuestoUc, IAceptarPresupuesto aceptarPresupuestoUc, INoAceptarPresupuesto noAceptarPresupuestoUc, ITerminarReparacion terminarReparacionUc, IEntregarReparacion entregarReparacionUc, IAvisoEntregaReparacion avisoEntregarReparacionUc, IAvisoReparacionTerminada avisoReparacionTerminadaUc, IObtenerEmpresa obtenerEmpresaUc)
+        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc, IObtenerReparacionesPorTecnico obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc, IAvisoNuevaReparacion avisoNuevaReparacionUc, IAvisoNuevoPresupuesto avisoNuevoPresupuestoUc, IAceptarPresupuesto aceptarPresupuestoUc, INoAceptarPresupuesto noAceptarPresupuestoUc, ITerminarReparacion terminarReparacionUc, IEntregarReparacion entregarReparacionUc, IAvisoEntregaReparacion avisoEntregarReparacionUc, IAvisoReparacionTerminada avisoReparacionTerminadaUc, IObtenerEmpresa obtenerEmpresaUc, IConfiguration configuration)
         {
             this.agregarReparacionUc = agregarReparacionUc;
             this.obtenerTodasLasReparacionesUc = obtenerTodasLasReparacionesUc;
@@ -49,6 +51,22 @@ namespace ProyectoService.ApiRest.Controllers
             this.avisoEntregarReparacionUc = avisoEntregarReparacionUc;
             this.avisoReparacionTerminadaUc = avisoReparacionTerminadaUc;
             this.obtenerEmpresaUc = obtenerEmpresaUc;
+            this.configuration = configuration;
+            //CONFIGURACION ENTIDAD EMPRESA
+            var configNombreEmpresa = configuration.GetSection("EmpresaSettings:NombreEmpresa").Value!;
+            var configDireccionEmpresa = configuration.GetSection("EmpresaSettings:DireccionEmpresa").Value!;
+            var configTelefonoEmpresa = configuration.GetSection("EmpresaSettings:TelefonoEmpresa").Value!;
+            var configEmail = configuration.GetSection("EmpresaSettings:Email").Value!;
+            var configPassword = configuration.GetSection("EmpresaSettings:EmailPassword").Value!;
+            Empresa empresaConfig = new Empresa()
+            {
+                Nombre = configNombreEmpresa,
+                Direccion = configDireccionEmpresa,
+                Telefono = configTelefonoEmpresa,
+                Email = configEmail,
+                EmailPassword = configPassword
+            };
+            this.emp=empresaConfig;
         }
 
         [HttpPost]
@@ -80,10 +98,8 @@ namespace ProyectoService.ApiRest.Controllers
                 };
 
                Reparacion rep= await agregarReparacionUc.Ejecutar(reparacion);
-               await avisoNuevaReparacionUc.Ejecutar(rep);
-                
-                //Byte[] pdf = rep.GenerarPdfOrdenServicioEntrada();
-                // rep.GenerarPdfOrdenServicioEntrada();
+               byte []pdf=  await avisoNuevaReparacionUc.Ejecutar(rep,emp);
+               //ACA TENGO QUE RESOLVER QUE RETORNAR
                 return Ok();
 
 
@@ -107,7 +123,7 @@ namespace ProyectoService.ApiRest.Controllers
                 if (dto.Id == 0) throw new Exception("No existe reparacion con ese id");
                 if (dto.Descripcion == null) throw new Exception("Debe ingresar una descripcio");
                 Reparacion rep=await presupuestarReparacionUc.Ejecutar(dto.Id,dto.ManoObra,dto.Descripcion,dto.FechaPromesaEntrega);
-                await avisoNuevoPresupuestoUc.Ejecutar(rep);//caso de uso 
+                await avisoNuevoPresupuestoUc.Ejecutar(rep,emp);//caso de uso 
                 return StatusCode(200);    
 
             }
@@ -157,7 +173,7 @@ namespace ProyectoService.ApiRest.Controllers
                 if (id == 0) throw new Exception("Numero de orden incorrecto");
                 Reparacion reparacion = await terminarReparacionUc.Ejecutar(id,reparada);
                 if (reparacion == null) throw new Exception("No se pudo terminar esta reparacion");
-                await avisoReparacionTerminadaUc.Ejecutar(reparacion);
+                await avisoReparacionTerminadaUc.Ejecutar(reparacion,emp);
                 return Ok();
             }
             catch (Exception ex)
@@ -177,7 +193,7 @@ namespace ProyectoService.ApiRest.Controllers
                 if (id == 0) throw new Exception("Numero de orden incorrecto");
                 Reparacion reparacion = await entregarReparacionUc.Ejecutar(id);
                 if (reparacion == null) throw new Exception("No se pudo entregar esta reparacion");
-                await avisoEntregarReparacionUc.Ejecutar(reparacion);
+                await avisoEntregarReparacionUc.Ejecutar(reparacion, emp);
                 return Ok();
             }
             catch (Exception ex)
@@ -203,6 +219,7 @@ namespace ProyectoService.ApiRest.Controllers
                     ClienteDireccion = r.Cliente.Direccion,
                     ClienteEmail = r.Cliente.Email.Value,
                     ClienteCedula=r.Cliente.Ci,
+                    TecnicoId = r.Tecnico.Id,
                     Producto = r.Producto,
                     NumeroSerie = r.NumeroSerie,
                     Descripcion = r.Descripcion,

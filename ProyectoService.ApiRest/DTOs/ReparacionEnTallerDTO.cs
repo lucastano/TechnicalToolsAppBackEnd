@@ -11,6 +11,8 @@
         public string ClienteEmail { get; set; }
         public string ClienteTelefono { get; set; }
         public string ClienteDireccion { get; set; }
+
+        public int TecnicoId {  get; set; }
         public string Producto { get; set; }
         public string NumeroSerie { get; set; }
         public string Descripcion { get; set; }

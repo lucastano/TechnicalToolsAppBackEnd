@@ -98,7 +98,9 @@ namespace ProyectoService.LogicaNegocio.Modelo
 
 		public byte[] GenerarPdfOrdenServicioEntrada(Empresa emp)
 		{
-			var data = Document.Create(document =>
+            var imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Imagenes", "Empresa.png");
+			byte[] imageData=File.ReadAllBytes(imagePath);
+            var data = Document.Create(document =>
 {
 	document.Page(page =>
 	{
@@ -106,13 +108,13 @@ namespace ProyectoService.LogicaNegocio.Modelo
 
 		page.Header().ShowOnce().Row(row =>
 		{
-			
-			byte[] imageData = emp.Foto;
-            row.ConstantItem(150).Image(imageData);
-            //row.ConstantItem(100).Height(150).Image(imageData, ImageScaling.FitArea);
-            
 
-            row.RelativeItem().Column(col =>
+			
+			row.ConstantItem(150).Image(imageData);
+			//row.ConstantItem(100).Height(150).Image(imageData, ImageScaling.FitArea);
+
+
+			row.RelativeItem().Column(col =>
 			{ // estos van a ser datos de la empresa. 
 				col.Item().AlignCenter().Text(emp.Nombre.ToUpper()).Bold().FontSize(14);
 				col.Item().AlignCenter().Text(emp.Direccion).FontSize(9);
@@ -243,13 +245,11 @@ namespace ProyectoService.LogicaNegocio.Modelo
 
 
 		}
-
-
-		
-
-		public byte[] GenerarPdfOrdenServicioPresupuestada()
+		public byte[] GenerarPdfOrdenServicioPresupuestada(Empresa emp)
 		{
-			var data =Document.Create(document =>
+            var imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Imagenes", "Empresa.png");
+            byte[] imageData = File.ReadAllBytes(imagePath);
+            var data =Document.Create(document =>
 {
  document.Page(page =>
  {
@@ -257,19 +257,17 @@ namespace ProyectoService.LogicaNegocio.Modelo
 
 	 page.Header().ShowOnce().Row(row =>
 	 {
-		 //TODO: PARA PONERLE UNA IMAGEN AL PDF, HACERLO CUANDO HAGA LO DE EMPRESA
-		 //var rutaImagen = Path.Combine(_hostWebRootPath, "images/VisualStudio.png");
-		 //byte[] imageData = System.IO.File.ReadAllBytes(rutaImagen);
+		 
 
 		 //row.ConstantItem(140).Height(60).Placeholder();
-		 //row.ConstantItem(150).Image(imageData);
+		 row.ConstantItem(150).Image(imageData);
 
 		 row.RelativeItem().Column(col =>
 		 { // estos van a ser datos de la empresa. 
-			 col.Item().AlignCenter().Text("Codigo Estudiante SAC").Bold().FontSize(14);
-			 col.Item().AlignCenter().Text("Jr. Las mercedes N378 - Lima").FontSize(9);
-			 col.Item().AlignCenter().Text("987 987 123 / 02 213232").FontSize(9);
-			 col.Item().AlignCenter().Text("codigo@example.com").FontSize(9);
+			 col.Item().AlignCenter().Text(emp.Nombre).Bold().FontSize(14);
+			 col.Item().AlignCenter().Text(emp.Direccion).FontSize(9);
+			 col.Item().AlignCenter().Text(emp.Telefono).FontSize(9);
+			 col.Item().AlignCenter().Text(emp.Email).FontSize(9);
 		 });
 
 		 row.RelativeItem().Column(col =>
@@ -437,7 +435,9 @@ namespace ProyectoService.LogicaNegocio.Modelo
 		}
         public byte[] GenerarPdfOrdenServicioEntregada( Empresa emp)
         {
-			var data =Document.Create(document =>
+            var imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Imagenes", "Empresa.png");
+            byte[] imageData = File.ReadAllBytes(imagePath);
+            var data =Document.Create(document =>
 			{
 				document.Page(page =>
 				{
@@ -445,11 +445,6 @@ namespace ProyectoService.LogicaNegocio.Modelo
 
 					page.Header().ShowOnce().Row(row =>
 					{
-						//TODO: PARA PONERLE UNA IMAGEN AL PDF, HACERLO CUANDO HAGA LO DE EMPRESA
-						//var rutaImagen = Path.Combine(_hostWebRootPath, "images/VisualStudio.png");
-						byte[] imageData = emp.Foto;
-
-						row.ConstantItem(140).Height(60).Placeholder();
 						row.ConstantItem(150).Image(imageData);
 
 						row.RelativeItem().Column(col =>
