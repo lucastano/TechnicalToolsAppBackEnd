@@ -62,9 +62,8 @@ namespace ProyectoService.LogicaNegocio.Modelo
 			this.DescripcionPresupuesto = descripcion;
 			this.FechaPresupuesto = DateTime.Now;
 			this.FechaPromesaEntrega = fechaPromesaEntrega;
-			//TODO: para calcular el costo final, este metodo debe recibir la lista de repuestos a utilizar, se recorre esa lista y por cada repuesto se toma el costo
-			//ese costo se suma en una variable que al finalizar vamos a utilizar para sumarle  a la mano de obra y ahi obtenemos el costo final
-			//TODO: ACA TENEMOS QUE MANEJAR EL ENVIO DEL EMAIL
+			
+			
 
 		}
 
@@ -95,6 +94,23 @@ namespace ProyectoService.LogicaNegocio.Modelo
 			this.FechaEntrega = DateTime.Now;
 			this.Estado = "Entregada";
 		}
+		public byte[] GenerarOrdenDeServicio(Empresa emp)
+		{
+			if (this.Estado == "EnTaller")
+			{
+				return GenerarPdfOrdenServicioEntrada(emp);
+			}
+			else if (this.Estado == "Entregada")
+			{
+                return GenerarPdfOrdenServicioEntregada(emp);
+
+            }
+            else
+			{
+                return GenerarPdfOrdenServicioPresupuestada(emp);
+
+            }
+        }
 
 		public byte[] GenerarPdfOrdenServicioEntrada(Empresa emp)
 		{
@@ -219,9 +235,9 @@ namespace ProyectoService.LogicaNegocio.Modelo
 				col1.Item().Background(Colors.Grey.Lighten3).Padding(10)
 				.Column(column =>
 				{
-					column.Item().Text("Comentarios").FontSize(14);
+					column.Item().Text("Politicas").FontSize(14);
 					//aca va algun atributo de empresa con sus politicas
-					column.Item().Text(Placeholders.LoremIpsum());
+					column.Item().Text(emp.PoliticasEmpresa);
 					column.Spacing(5);
 				});
 
@@ -398,7 +414,7 @@ namespace ProyectoService.LogicaNegocio.Modelo
 			 .Padding(2).Text(FechaPromesaEntrega).FontSize(10);
 
 			 tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
-			 .Padding(2).Text(CostoFinal).FontSize(10);
+			 .Padding(2).Text(ManoDeObra).FontSize(10);
 
 
 		 });
@@ -407,9 +423,9 @@ namespace ProyectoService.LogicaNegocio.Modelo
 			 col1.Item().Background(Colors.Grey.Lighten3).Padding(10)
 			 .Column(column =>
 			 {
-				 column.Item().Text("Comentarios").FontSize(14);
+				 column.Item().Text("Politicas").FontSize(14);
 				 //aca va algun atributo de empresa con sus politicas
-				 column.Item().Text(Placeholders.LoremIpsum());
+				 column.Item().Text(emp.PoliticasEmpresa);
 				 column.Spacing(5);
 			 });
 
@@ -583,7 +599,7 @@ namespace ProyectoService.LogicaNegocio.Modelo
 							.Padding(2).Text(FechaPromesaEntrega).FontSize(10);
 
 							tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
-							.Padding(2).Text(CostoFinal).FontSize(10);
+							.Padding(2).Text(ManoDeObra).FontSize(10);
 
 
 						});
@@ -641,9 +657,9 @@ namespace ProyectoService.LogicaNegocio.Modelo
 							col1.Item().Background(Colors.Grey.Lighten3).Padding(10)
 							.Column(column =>
 							{
-								column.Item().Text("Comentarios").FontSize(14);
+								column.Item().Text("Politicas").FontSize(14);
 								//aca va algun atributo de empresa con sus politicas
-								column.Item().Text(Placeholders.LoremIpsum());
+								column.Item().Text(emp.PoliticasEmpresa);
 								column.Spacing(5);
 							});
 

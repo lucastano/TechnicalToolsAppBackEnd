@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.CasosUso
 {
-    public class ObtenerEmpresa : IObtenerEmpresa
+    public class GenerarOrdenDeServicio : IGenerarOrdenDeServicio
     {
-        private readonly IEmpresaRepositorio repo;
-        public ObtenerEmpresa(IEmpresaRepositorio repo)
+        private readonly IReparacionRepositorio repo;
+        public GenerarOrdenDeServicio(IReparacionRepositorio repo)
         {
             this.repo = repo;
         }
 
-        public async Task<Empresa> Ejecutar()
+        public byte[] Ejecutar(Reparacion rep, Empresa emp)
         {
-            return await repo.GetEmpresa();
+           return repo.GenerarOrdenDeServicio(rep, emp);
         }
     }
 }

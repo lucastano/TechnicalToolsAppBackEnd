@@ -12,7 +12,7 @@ namespace ProyectoService.LogicaNegocio.IRepositorios
         Task<byte[]> EnviarEmailNuevaReparacion(Reparacion entity, Empresa emp);
         Task EnviarEmailNuevoPresupuesto(Reparacion entity,Empresa emp);
         Task EnviarEmailAvisoTerminada(Reparacion entity, Empresa emp);
-        Task EnviarEmailAvisoEntrega(Reparacion entity, Empresa emp);
+        Task<byte[]> EnviarEmailAvisoEntrega(Reparacion entity, Empresa emp);
 
     }
 }

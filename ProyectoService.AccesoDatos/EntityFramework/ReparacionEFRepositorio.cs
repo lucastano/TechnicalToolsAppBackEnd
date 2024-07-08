@@ -156,16 +156,53 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             return reparaciones.FirstOrDefault(r => r.Id == id);
         }
 
-        public Task Update(Reparacion entity)
+        public async Task Update(Reparacion entity)
         {
-            //SE PUEDE EDITAR COSTO, DESCRIPCION DE REPARACION 
+           
             throw new NotImplementedException();
         }
 
-        
+        public byte[] GenerarOrdenDeServicio(Reparacion rep,Empresa emp)
+        {
+            if (rep == null) throw new ReparacionException("Reparaicon no existe");
+            byte[] pdf= rep.GenerarOrdenDeServicio(emp);
+            return pdf;
+        }
+        //ESTA MODIFICACION NO SE PUEDE REALIZAR EN REPARACIONES QUE AUN NO FUERON PRESUPUESTADAS
+        public async Task ModificarCostoReparacion(int id, double costo)
+        {
+            Reparacion rep = await ObtenerReparacionPorId(id);
+            if (rep == null) throw new ReparacionException("No existe la reparacion");
+            if (rep.Estado == "Entregada") throw new ReparacionException("Esta reparacion ya fue entregada");
+            if (rep.Estado == "EnTaller") throw new ReparacionException("Esta reparacion aun no esta presupuestada");
+            rep.ManoDeObra = costo;
+            rep.CostoFinal = costo;
+            await _context.SaveChangesAsync();
+        }
+        public async Task ModificarDatosReparacion(int id ,DateTime fechaPromesaPresupuesto, string numeroSerie,string descripcion)
+        {
+            Reparacion reparacion = await ObtenerReparacionPorId(id);
+            if (reparacion == null)throw new ReparacionException("Esta reparacion no existe");
+            if (reparacion.Estado == "Entregada") throw new ReparacionException("Esta reparacion ya fue entregada");
+            if(fechaPromesaPresupuesto!=DateTime.MinValue && fechaPromesaPresupuesto != DateTime.MaxValue)
+            {
 
-       
+                reparacion.FechaPromesaPresupuesto= fechaPromesaPresupuesto;
 
-     
+            }
+            if(numeroSerie!=string.Empty)
+            {
+                reparacion.NumeroSerie= numeroSerie;
+            }
+            if (descripcion != string.Empty)
+            {
+
+                reparacion.Descripcion= descripcion;
+            }
+            
+            await _context.SaveChangesAsync();
+
+
+        }
     }
 }

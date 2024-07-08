@@ -28,7 +28,7 @@ public class Program
         builder.Services.AddScoped<IAdministradorRepositorio, AdministradorEFRepositorio>();
         builder.Services.AddScoped<IReparacionRepositorio, ReparacionEFRepositorio>();
         builder.Services.AddScoped<IEnviarEmail,EnviarEmail>();
-        builder.Services.AddScoped<IEmpresaRepositorio,EmpresaEFRepositorio>();
+       
         // casos de uso
         builder.Services.AddScoped<IAgregarClienteUC, AgregarClienteUC>();
         builder.Services.AddScoped<IObtenerTodosLosClientesUC, ObtenerTodosLosClientesUC>();
@@ -45,6 +45,8 @@ public class Program
         builder.Services.AddScoped<IObtenerTodasLasReparaciones,ObtenerTodasLasReparaciones>();
         builder.Services.AddScoped<IObtenerReparacionesPorCliente,ObtenerReparacionesPorCliente>();
         builder.Services.AddScoped<IObtenerReparacionesPorTecnico, ObtenerReparacionesPorTecnico>();
+        builder.Services.AddScoped<IGenerarOrdenDeServicio,GenerarOrdenDeServicio>();
+        builder.Services.AddScoped<IObtenerReparacionPorId,ObtenerReparacionPorId>();
         builder.Services.AddScoped<IPresupuestarReparacion, PresupuestarReparacion>(); 
         builder.Services.AddScoped<IAvisoNuevaReparacion,AvisoNuevaReparacion>();
         builder.Services.AddScoped<IAvisoNuevoPresupuesto,AvisoNuevoPresupuesto>();
@@ -54,8 +56,9 @@ public class Program
         builder.Services.AddScoped<ITerminarReparacion, TerminarReparacion>();
         builder.Services.AddScoped<IEntregarReparacion,EntregarReparacion>();
         builder.Services.AddScoped<INoAceptarPresupuesto, NoAceptarPresupuesto>();
-        builder.Services.AddScoped<IAgregarEmpresa, AgregarEmpresa>();
-        builder.Services.AddScoped<IObtenerEmpresa, ObtenerEmpresa>();
+        builder.Services.AddScoped<IModificarCostoReparacion, ModificarCostoReparacion>();
+        builder.Services.AddScoped<IModificarDatosReparacion, ModificarDatosReparacion>();
+        
         // Add services to the container.
 
         builder.Services.AddControllers();

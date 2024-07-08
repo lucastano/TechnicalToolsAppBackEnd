@@ -15,7 +15,7 @@ namespace ProyectoService.AccesoDatos.Migrations
                 name: "UsuarioSequence");
 
             migrationBuilder.CreateTable(
-                name: "Administradores",
+                name: "Administrador",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [UsuarioSequence]"),
@@ -28,11 +28,11 @@ namespace ProyectoService.AccesoDatos.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Administradores", x => x.Id);
+                    table.PrimaryKey("PK_Administrador", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Clientes",
+                name: "Cliente",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [UsuarioSequence]"),
@@ -48,28 +48,11 @@ namespace ProyectoService.AccesoDatos.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Clientes", x => x.Id);
+                    table.PrimaryKey("PK_Cliente", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Empresa",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Telefono = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Direccion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Foto = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Empresa", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tecnicos",
+                name: "Tecnico",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [UsuarioSequence]"),
@@ -82,7 +65,7 @@ namespace ProyectoService.AccesoDatos.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tecnicos", x => x.Id);
+                    table.PrimaryKey("PK_Tecnico", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -112,15 +95,15 @@ namespace ProyectoService.AccesoDatos.Migrations
                 {
                     table.PrimaryKey("PK_Reparacion", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reparacion_Clientes_ClienteId",
+                        name: "FK_Reparacion_Cliente_ClienteId",
                         column: x => x.ClienteId,
-                        principalTable: "Clientes",
+                        principalTable: "Cliente",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reparacion_Tecnicos_TecnicoId",
+                        name: "FK_Reparacion_Tecnico_TecnicoId",
                         column: x => x.TecnicoId,
-                        principalTable: "Tecnicos",
+                        principalTable: "Tecnico",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -140,19 +123,16 @@ namespace ProyectoService.AccesoDatos.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Administradores");
-
-            migrationBuilder.DropTable(
-                name: "Empresa");
+                name: "Administrador");
 
             migrationBuilder.DropTable(
                 name: "Reparacion");
 
             migrationBuilder.DropTable(
-                name: "Clientes");
+                name: "Cliente");
 
             migrationBuilder.DropTable(
-                name: "Tecnicos");
+                name: "Tecnico");
 
             migrationBuilder.DropSequence(
                 name: "UsuarioSequence");

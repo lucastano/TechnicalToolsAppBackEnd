@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.LogicaNegocio.Modelo
 {
-    [Table("Empresa")]
+    
     public class Empresa
     {
         public int Id { get; set; }
@@ -17,6 +17,7 @@ namespace ProyectoService.LogicaNegocio.Modelo
         public string Email { get; set; }
         //HAY QUE CIFRARLO, POR EL MOMENTO LO DEJAMOS ASI
         public string EmailPassword { get; set; }
+        public string PoliticasEmpresa {  get; set; }
         public byte []? Foto { get; set; }
 
 

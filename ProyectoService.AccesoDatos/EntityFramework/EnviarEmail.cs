@@ -27,7 +27,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             //_mailService = new MailService("smtp.office365.com", 587, "pruebaemial.net@outlook.es", "Lu3472759");
         }
         
-        public async Task EnviarEmailAvisoEntrega(Reparacion entity,Empresa emp)
+        public async Task<byte[]> EnviarEmailAvisoEntrega(Reparacion entity,Empresa emp)
         {
             
             string reparada = "Reparada";
@@ -79,7 +79,9 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                     }
                 }
             }
-            
+            return pdfContent;
+
+
         }
 
         public async Task EnviarEmailAvisoTerminada(Reparacion entity,Empresa emp)
