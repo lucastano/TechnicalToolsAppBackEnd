@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.CasosUso
 {
-    public class ModificarCostoReparacion : IModificarCostoReparacion
+    public class ModificarPresupuestoReparacion : IModificarPresupuestoReparacion
     {
         private readonly IReparacionRepositorio repo;
-        public ModificarCostoReparacion(IReparacionRepositorio repo)
+        public ModificarPresupuestoReparacion(IReparacionRepositorio repo)
         {
             this.repo = repo;
         }
 
-        public async Task Ejecutar(int id, double costo)
+        public async Task Ejecutar(int id, double costo, string descripcion)
         {
-            await repo.ModificarCostoReparacion(id, costo);
+            await repo.ModificarPresupuestoReparacion(id, costo,descripcion);
         }
     }
 }

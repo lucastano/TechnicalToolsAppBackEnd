@@ -169,14 +169,23 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             return pdf;
         }
         //ESTA MODIFICACION NO SE PUEDE REALIZAR EN REPARACIONES QUE AUN NO FUERON PRESUPUESTADAS
-        public async Task ModificarCostoReparacion(int id, double costo)
+        public async Task ModificarPresupuestoReparacion(int id, double costo, string descripcion)
         {
             Reparacion rep = await ObtenerReparacionPorId(id);
             if (rep == null) throw new ReparacionException("No existe la reparacion");
             if (rep.Estado == "Entregada") throw new ReparacionException("Esta reparacion ya fue entregada");
             if (rep.Estado == "EnTaller") throw new ReparacionException("Esta reparacion aun no esta presupuestada");
-            rep.ManoDeObra = costo;
-            rep.CostoFinal = costo;
+            if (descripcion != string.Empty)
+            {
+                rep.DescripcionPresupuesto = descripcion;
+            }
+            if (costo != 0)
+            {
+                rep.ManoDeObra = costo;
+                rep.CostoFinal = costo;
+
+            }
+            
             await _context.SaveChangesAsync();
         }
         public async Task ModificarDatosReparacion(int id ,DateTime fechaPromesaPresupuesto, string numeroSerie,string descripcion)

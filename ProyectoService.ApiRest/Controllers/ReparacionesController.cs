@@ -26,7 +26,7 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly INoAceptarPresupuesto noAceptarPresupuestoUc;
         private readonly ITerminarReparacion terminarReparacionUc;
         private readonly IEntregarReparacion entregarReparacionUc;
-        private readonly IModificarCostoReparacion modificarCostoReparacionUc;
+        private readonly IModificarPresupuestoReparacion modificarPresupuestoReparacionUc;
         private readonly IModificarDatosReparacion modificarDatosReparacionUc;
         private readonly IGenerarOrdenDeServicio generarOrdenDeServicioUc;
         private readonly IConfiguration configuration;
@@ -34,7 +34,7 @@ namespace ProyectoService.ApiRest.Controllers
 
 
 
-        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc, IObtenerReparacionesPorTecnico obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc, IAvisoNuevaReparacion avisoNuevaReparacionUc, IAvisoNuevoPresupuesto avisoNuevoPresupuestoUc, IAceptarPresupuesto aceptarPresupuestoUc, INoAceptarPresupuesto noAceptarPresupuestoUc, ITerminarReparacion terminarReparacionUc, IEntregarReparacion entregarReparacionUc, IAvisoEntregaReparacion avisoEntregarReparacionUc, IAvisoReparacionTerminada avisoReparacionTerminadaUc,  IConfiguration configuration, IObtenerReparacionPorId obtenerReparacionPorIdUc, IGenerarOrdenDeServicio generarOrdenDeServicioUc, IModificarCostoReparacion modificarCostoReparacionUc,IModificarDatosReparacion modificarDatosReparacionUc)
+        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc, IObtenerReparacionesPorTecnico obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc, IAvisoNuevaReparacion avisoNuevaReparacionUc, IAvisoNuevoPresupuesto avisoNuevoPresupuestoUc, IAceptarPresupuesto aceptarPresupuestoUc, INoAceptarPresupuesto noAceptarPresupuestoUc, ITerminarReparacion terminarReparacionUc, IEntregarReparacion entregarReparacionUc, IAvisoEntregaReparacion avisoEntregarReparacionUc, IAvisoReparacionTerminada avisoReparacionTerminadaUc,  IConfiguration configuration, IObtenerReparacionPorId obtenerReparacionPorIdUc, IGenerarOrdenDeServicio generarOrdenDeServicioUc, IModificarPresupuestoReparacion modificarPresupuestoReparacionUc,IModificarDatosReparacion modificarDatosReparacionUc)
         {
             this.agregarReparacionUc = agregarReparacionUc;
             this.obtenerTodasLasReparacionesUc = obtenerTodasLasReparacionesUc;
@@ -50,7 +50,7 @@ namespace ProyectoService.ApiRest.Controllers
             this.entregarReparacionUc = entregarReparacionUc;
             this.avisoEntregarReparacionUc = avisoEntregarReparacionUc;
             this.avisoReparacionTerminadaUc = avisoReparacionTerminadaUc;
-            this.modificarCostoReparacionUc = modificarCostoReparacionUc;
+            this.modificarPresupuestoReparacionUc = modificarPresupuestoReparacionUc;
             this.modificarDatosReparacionUc = modificarDatosReparacionUc;
             
             this.configuration = configuration;
@@ -293,13 +293,13 @@ namespace ProyectoService.ApiRest.Controllers
             }
         }
 
-        [HttpPut("ModificarCostoReparacion")]
-        public async Task<ActionResult> ModificarCostoReparacion(int id,double costo)
+        [HttpPut("ModificarPresupuestoReparacion")]
+        public async Task<ActionResult> ModificarPresupuestoReparacion(int id,double costo,string descripcion)
         {
             try
             {
                 if (id == 0) throw new Exception("Numero de orden de reparacion incorrecto");
-                await modificarCostoReparacionUc.Ejecutar(id, costo);
+                await modificarPresupuestoReparacionUc.Ejecutar(id, costo,descripcion);
                 return Ok();
 
             }

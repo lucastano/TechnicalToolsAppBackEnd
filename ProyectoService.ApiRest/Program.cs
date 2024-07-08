@@ -56,7 +56,7 @@ public class Program
         builder.Services.AddScoped<ITerminarReparacion, TerminarReparacion>();
         builder.Services.AddScoped<IEntregarReparacion,EntregarReparacion>();
         builder.Services.AddScoped<INoAceptarPresupuesto, NoAceptarPresupuesto>();
-        builder.Services.AddScoped<IModificarCostoReparacion, ModificarCostoReparacion>();
+        builder.Services.AddScoped<IModificarPresupuestoReparacion, ModificarPresupuestoReparacion>();
         builder.Services.AddScoped<IModificarDatosReparacion, ModificarDatosReparacion>();
         
         // Add services to the container.

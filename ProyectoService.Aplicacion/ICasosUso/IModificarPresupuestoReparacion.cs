@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.ICasosUso
 {
-    public interface IModificarCostoReparacion
+    public interface IModificarPresupuestoReparacion
     {
-        Task Ejecutar(int id, double costo);
+        Task Ejecutar(int id, double costo,string descripcion);
     }
 }
