@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.LogicaNegocio.IRepositorios
 {
-    public interface IClienteRepositorio:ICrudRepositorio<Cliente>
+    public interface IMensajeriaRepositorio
     {
-       
-       Task<Cliente> GetClienteByCi(string ci);
-        Task<Cliente> GetClienteById(int id); 
+        Task<List<Mensaje>> ObtenerMensajesDeReparacion(int idReparacion);
 
-
+        Task NuevoMensaje(Mensaje msg);
+        Task EliminarMensajesReparacion(int idReparacion);
     }
 }

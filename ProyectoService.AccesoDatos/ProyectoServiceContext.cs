@@ -17,6 +17,7 @@ namespace ProyectoService.AccesoDatos
         public DbSet<Tecnico>Tecnicos { get; set; }
         public DbSet<Administrador>Administradores { get; set; }
         public DbSet<Reparacion>Reparaciones { get; set; }
+        public DbSet<Mensaje> Mensajes {  get; set; }   
        
         
 
@@ -32,11 +33,33 @@ namespace ProyectoService.AccesoDatos
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
 
-
+            //CONFIGURACION DE HERENCIA
             modelBuilder.Entity<Usuario>().UseTpcMappingStrategy();
             modelBuilder.Entity<Cliente>().ToTable("Cliente");
             modelBuilder.Entity<Tecnico>().ToTable("Tecnico");
             modelBuilder.Entity<Administrador>().ToTable("Administrador");
+
+
+            //CONFIGURACION DE MENSAJERIA
+            modelBuilder.Entity<Reparacion>()
+                .HasMany(r => r.Mensajes)
+                .WithOne(m => m.Reparacion)
+                .HasForeignKey(m => m.ReparacionId);
+
+            modelBuilder.Entity<Mensaje>()
+                .HasOne(m=>m.Emisor)
+                .WithMany()
+                .HasForeignKey(m=>m.EmisorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Mensaje>()
+                .HasOne(m=>m.Destinatario)
+                .WithMany()
+                .HasForeignKey(m=>m.DestinatarioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            base.OnModelCreating(modelBuilder);
+
         }
 
     }

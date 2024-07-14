@@ -38,6 +38,7 @@ namespace ProyectoService.LogicaNegocio.Modelo
 		public double CostoFinal { get; set; }
 		public DateTime FechaEntrega { get; set; }
 		public bool Reparada { get; set; }
+		public ICollection<Mensaje>Mensajes { get; set; }
 		//al Terminar la reparacion, deberia agregar una descripcion de reparacion, de no repararse por no aceptar presupuesto, tambien deberia agregarla, el tenico puede indicar 
 		//porque no se reparo 
 

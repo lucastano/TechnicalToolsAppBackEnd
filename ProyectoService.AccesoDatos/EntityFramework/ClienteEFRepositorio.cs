@@ -55,6 +55,12 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             return  await _context.Clientes.FirstOrDefaultAsync(c=>c.Ci==ci);
         }
 
+        public async Task<Cliente> GetClienteById(int id)
+        {
+            if (id == 0) throw new ClienteException("El id es incorrecto");
+            return await _context.Clientes.FirstOrDefaultAsync(c => c.Id == id);
+        }
+
         public async Task Update(Cliente entity)
         {
             throw new NotImplementedException();

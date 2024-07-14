@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "ProyectoServiceApiRest20240606005629",
+      "defaultValue": "ProyectoServiceApiRest20240712211208",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }

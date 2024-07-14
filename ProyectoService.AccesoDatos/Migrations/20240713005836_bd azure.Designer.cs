@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoService.AccesoDatos;
 
@@ -11,9 +12,11 @@ using ProyectoService.AccesoDatos;
 namespace ProyectoService.AccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoServiceContext))]
-    partial class ProyectoServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20240713005836_bd azure")]
+    partial class bdazure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,41 +26,6 @@ namespace ProyectoService.AccesoDatos.Migrations
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.HasSequence("UsuarioSequence");
-
-            modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Mensaje", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DestinatarioId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EmisorId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaHoraEnvio")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ReparacionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Texto")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DestinatarioId");
-
-                    b.HasIndex("EmisorId");
-
-                    b.HasIndex("ReparacionId");
-
-                    b.ToTable("Mensajes");
-                });
 
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Reparacion", b =>
                 {
@@ -203,33 +171,6 @@ namespace ProyectoService.AccesoDatos.Migrations
                     b.ToTable("Tecnico", (string)null);
                 });
 
-            modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Mensaje", b =>
-                {
-                    b.HasOne("ProyectoService.LogicaNegocio.Modelo.Usuario", "Destinatario")
-                        .WithMany()
-                        .HasForeignKey("DestinatarioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ProyectoService.LogicaNegocio.Modelo.Usuario", "Emisor")
-                        .WithMany()
-                        .HasForeignKey("EmisorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ProyectoService.LogicaNegocio.Modelo.Reparacion", "Reparacion")
-                        .WithMany("Mensajes")
-                        .HasForeignKey("ReparacionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Destinatario");
-
-                    b.Navigation("Emisor");
-
-                    b.Navigation("Reparacion");
-                });
-
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Reparacion", b =>
                 {
                     b.HasOne("ProyectoService.LogicaNegocio.Modelo.Cliente", "Cliente")
@@ -247,11 +188,6 @@ namespace ProyectoService.AccesoDatos.Migrations
                     b.Navigation("Cliente");
 
                     b.Navigation("Tecnico");
-                });
-
-            modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Reparacion", b =>
-                {
-                    b.Navigation("Mensajes");
                 });
 #pragma warning restore 612, 618
         }

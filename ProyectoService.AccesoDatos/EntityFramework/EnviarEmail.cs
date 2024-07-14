@@ -16,7 +16,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 {
     public class EnviarEmail : IEnviarEmail
     {
-        private  MailService _mailService;
+        //private  MailService _mailService;
         
         
         public  EnviarEmail( )
@@ -71,10 +71,13 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                     mailMessage.Attachments.Add(new Attachment(stream, "orden_de_servicio_"+entity.Id+".pdf", "application/pdf"));
 
                     // Envía el correo electrónico
-                    using (SmtpClient smtpClient = new SmtpClient("smtp.outlook.com", 587))
+                    using (SmtpClient smtpClient = new SmtpClient("smtp.office365.com"))
                     {
-                        smtpClient.Credentials = new NetworkCredential(fromEmail, emp.EmailPassword);
+                        smtpClient.Port = 587;
                         smtpClient.EnableSsl = true;
+                        smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                        smtpClient.UseDefaultCredentials = false;
+                        smtpClient.Credentials = new NetworkCredential(emp.Email, emp.EmailPassword);
                         await smtpClient.SendMailAsync(mailMessage);
                     }
                 }
@@ -107,10 +110,13 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 mailMessage.Body = body;
                 mailMessage.IsBodyHtml = isHtml;
             // Envía el correo electrónico
-            using (SmtpClient smtpClient = new SmtpClient("smtp.outlook.com", 587))
+            using (SmtpClient smtpClient = new SmtpClient("smtp.office365.com"))
             {
-                smtpClient.Credentials = new NetworkCredential(fromEmail, emp.EmailPassword);
+                smtpClient.Port = 587;
                 smtpClient.EnableSsl = true;
+                smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtpClient.UseDefaultCredentials = false;
+                smtpClient.Credentials = new NetworkCredential(emp.Email, emp.EmailPassword);
                 await smtpClient.SendMailAsync(mailMessage);
             }
 
@@ -124,24 +130,23 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public async Task<byte[]> EnviarEmailNuevaReparacion(Reparacion entity,Empresa emp)
         {
-           
-            _mailService = new MailService("smtp.office365.com", 587, emp.Email, emp.EmailPassword);
+
             byte[] pdfContent = entity.GenerarPdfOrdenServicioEntrada(emp);
             
+
             // Verifica si el PDF se generó correctamente
             if (pdfContent != null && pdfContent.Length > 0)
             {
-                // Ver los datos de la empresa de donde obtenerlos, al igual que el email de envio
+                // Ver los datos de la empresa de donde obtenerlos, al igual que el email de envío
                 string fromName = emp.Nombre;
                 string fromEmail = emp.Email;
                 string toName = entity.Cliente.Nombre;
                 string toEmail = entity.Cliente.Email.Value;
                 string subject = "ORDEN DE SERVICIO REPARACION Nro: " + entity.Id;
-                string body = "Se dejó para service el aparato " + entity.Producto + ". Número de serie: " + entity.NumeroSerie +"\n" 
-                    +"Número de orden: " + entity.Id+"\n"
-                    +"Fecha aproximada del presupuesto: "+entity.FechaPromesaPresupuesto;
+                string body = "Se dejó para service el aparato " + entity.Producto + ". Número de serie: " + entity.NumeroSerie + "\n"
+                    + "Número de orden: " + entity.Id + "\n"
+                    + "Fecha aproximada del presupuesto: " + entity.FechaPromesaPresupuesto;
                 bool isHtml = true;
-
                 // Configura el mensaje de correo electrónico
                 MailMessage mailMessage = new MailMessage();
                 mailMessage.From = new MailAddress(fromEmail, fromName);
@@ -155,13 +160,18 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 {
                     mailMessage.Attachments.Add(new Attachment(stream, "orden_de_servicio_" + entity.Id + ".pdf", "application/pdf"));
 
-                    // Envía el correo electrónico
-                    using (SmtpClient smtpClient = new SmtpClient("smtp.outlook.com", 587))
+                   
+                    using (SmtpClient smtpClient = new SmtpClient("smtp.office365.com"))
                     {
-                        smtpClient.Credentials = new NetworkCredential(fromEmail, emp.EmailPassword);
+                        smtpClient.Port = 587;
                         smtpClient.EnableSsl = true;
+                        smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                        smtpClient.UseDefaultCredentials = false;
+                        smtpClient.Credentials = new NetworkCredential(emp.Email, emp.EmailPassword);
                         await smtpClient.SendMailAsync(mailMessage);
                     }
+
+                    
                 }
             }
             return pdfContent;
