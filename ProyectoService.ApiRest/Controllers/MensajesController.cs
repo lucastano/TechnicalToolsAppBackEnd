@@ -13,6 +13,7 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly INuevoMensaje nuevoMensajeUc;
         private readonly IObtenerMensajes obtenerMensajesUc;
         private readonly IObtenerReparacionPorId obtenerReparacionPorIdUc;
+        
              
         
 
@@ -21,6 +22,7 @@ namespace ProyectoService.ApiRest.Controllers
             this.nuevoMensajeUc = nuevoMensajeUc;
             this.obtenerMensajesUc = obtenerMensajesUc;
             this.obtenerReparacionPorIdUc=obtenerReparacionPorIdUc;
+            
         }
 
 
@@ -30,7 +32,8 @@ namespace ProyectoService.ApiRest.Controllers
         {
             try
             {
-                if (!ModelState.IsValid) throw new Exception("Algun campoi vacio");
+                if (!ModelState.IsValid) throw new Exception("Algun campo vacio");
+                
                 Mensaje mensaje = new Mensaje()
                 {
                     EmisorId = dto.EmisorId,

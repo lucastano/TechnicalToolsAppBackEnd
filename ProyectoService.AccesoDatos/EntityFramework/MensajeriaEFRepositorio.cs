@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProyectoService.LogicaNegocio.IRepositorios;
+using ProyectoService.LogicaNegocio.IServicios;
 using ProyectoService.LogicaNegocio.Modelo;
+using ProyectoService.LogicaNegocio.Servicios;
+using ProyectoService.LogicaNegocio.Validaciones;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +15,13 @@ namespace ProyectoService.AccesoDatos.EntityFramework
     public class MensajeriaEFRepositorio : IMensajeriaRepositorio
     {
         ProyectoServiceContext _context;
-        public MensajeriaEFRepositorio(ProyectoServiceContext context)
+        private readonly IUsuarioServicio usuarioServicio;
+        private readonly IReparacionServicio reparacionServicio;
+        public MensajeriaEFRepositorio(ProyectoServiceContext context,IUsuarioServicio usuarioServicio,IReparacionServicio reparacionServicio)
         {
             _context = context;
+            this.reparacionServicio = reparacionServicio;
+            this.usuarioServicio = usuarioServicio;
         }
 
         public async Task EliminarMensajesReparacion(int idReparacion)
@@ -31,13 +38,36 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public async Task NuevoMensaje(Mensaje msg)
         {
-                if (msg == null) throw new Exception("Debe ingresar un mensaje");
-                if (msg.Texto == null) throw new Exception("Falta el cuerpo del mensaje");
+            if (msg.DestinatarioId == msg.EmisorId) throw new Exception("Emisor y destinatario no pueden ser el mismo");
+            if (msg == null) throw new Exception("Debe ingresar un mensaje");
+            if (msg.Texto == null || msg.Texto==" ") throw new Exception("Falta el cuerpo del mensaje");
+            if (msg.ReparacionId == 0) throw new Exception("falta asociar una reparacion");
+            if (msg.DestinatarioId == 0) throw new Exception("Destinatario no asociado");
+            if (msg.EmisorId == 0) throw new Exception("Emisor no asociado");
 
-                if (msg.EmisorId == 0) throw new Exception("Falta emisor del mensaje");
-                if (msg.DestinatarioId == 0) throw new Exception("Falta el destinatario del mensaje");
-                await _context.Mensajes.AddAsync(msg);
-                await _context.SaveChangesAsync();
+            Usuario usuarioEmisor= await usuarioServicio.ExisteUsuario(msg.EmisorId);
+            Usuario usuarioDestinatario = await usuarioServicio.ExisteUsuario(msg.DestinatarioId);
+            Reparacion reparacion = await reparacionServicio.ExisteReparacion(msg.ReparacionId);
+            if (usuarioEmisor==null) throw new Exception("Emisor no existe");
+            if (usuarioDestinatario==null) throw new Exception(" Destinatario no existe");
+            if (reparacion==null) throw new Exception("Reparacion no existe");
+
+            bool estadoMensaje= ValidacionesMensajeria.ValidarUsuariosReparacion(reparacion,usuarioEmisor,usuarioDestinatario);
+            if (!estadoMensaje) throw new Exception("Algun integrante del mensaje no corresponde a la reparacion");
+
+            //lo uso para cambiar la hora en el servidor
+            //int hora = msg.FechaHoraEnvio.Hour;
+            //int minuto = msg.FechaHoraEnvio.Minute;
+            //int sec = msg.FechaHoraEnvio.Second;
+            //int year = msg.FechaHoraEnvio.Year;
+            //int month = msg.FechaHoraEnvio.Month;
+            //int day = msg.FechaHoraEnvio.Day;
+            //hora -= 3;
+            //DateTime fechaFormat = new DateTime(year, month, day, hora, minuto, sec);
+            //msg.FechaHoraEnvio = fechaFormat;
+
+            await _context.Mensajes.AddAsync(msg);
+            await _context.SaveChangesAsync();
 
         }
 

@@ -4,9 +4,12 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProyectoService.AccesoDatos;
 using ProyectoService.AccesoDatos.EntityFramework;
+using ProyectoService.AccesoDatos.Servicios;
 using ProyectoService.Aplicacion.CasosUso;
 using ProyectoService.Aplicacion.ICasosUso;
 using ProyectoService.LogicaNegocio.IRepositorios;
+using ProyectoService.LogicaNegocio.IServicios;
+using ProyectoService.LogicaNegocio.Servicios;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
 
@@ -29,7 +32,8 @@ public class Program
         builder.Services.AddScoped<IReparacionRepositorio, ReparacionEFRepositorio>();
         builder.Services.AddScoped<IEnviarEmail,EnviarEmail>();
         builder.Services.AddScoped<IMensajeriaRepositorio, MensajeriaEFRepositorio>();
-       
+        builder.Services.AddScoped<IUsuarioServicio, UsuarioServicio>();
+        builder.Services.AddScoped<IReparacionServicio,ReparacionServicio>();
         // casos de uso
         builder.Services.AddScoped<IAgregarClienteUC, AgregarClienteUC>();
         builder.Services.AddScoped<IObtenerTodosLosClientesUC, ObtenerTodosLosClientesUC>();
