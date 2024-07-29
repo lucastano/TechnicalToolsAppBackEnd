@@ -22,13 +22,13 @@ namespace ProyectoService.Test
         [SetUp]
         public void SetUp()
         {
-            var options = new DbContextOptionsBuilder<ProyectoServiceContext>()
-                .UseInMemoryDatabase(databaseName: "TestDatabase")
-                .Options;
+            //var options = new DbContextOptionsBuilder<ProyectoServiceContext>()
+            //    .UseInMemoryDatabase(databaseName: "TestDatabase")
+            //    .Options;
 
-            _context = new ProyectoServiceContext(options);
-            SeedData();
-            _mensajesRepositorio = new MensajeriaEFRepositorio(_context);
+            //_context = new ProyectoServiceContext(options);
+            //SeedData();
+            //_mensajesRepositorio = new MensajeriaEFRepositorio(_context);
             
         }
 

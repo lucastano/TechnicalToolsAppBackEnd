@@ -19,7 +19,7 @@ namespace ProyectoService.AccesoDatos
         public DbSet<Reparacion>Reparaciones { get; set; }
         public DbSet<Mensaje> Mensajes {  get; set; }   
        
-        
+        public DbSet<Producto>Productos { get; set; }
 
 
         public ProyectoServiceContext(DbContextOptions<ProyectoServiceContext> options) : base(options)

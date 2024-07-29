@@ -213,5 +213,20 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
 
         }
+
+
+        //HISTORIA CLINICA SOLO OBTIENE EL HISTORIAL DE REPARACIONES TERMINADAS y que fueron reparadas
+        public async Task<List<Reparacion>> HistoriaClinicaPorNumeroSerie(string numeroSerie)
+        {
+            List<Reparacion>HistoriaClinica= await _context.Reparaciones.Where(r=>r.NumeroSerie==numeroSerie && r.Estado=="Entregada" &&r.Reparada).ToListAsync();
+            return HistoriaClinica;
+        }
+
+        public async Task<double> ObtenerMontoTotalReparaciones(string numeroSerie)
+        {
+            List<Reparacion>reparaciones = await HistoriaClinicaPorNumeroSerie(numeroSerie);
+            double gastoTotal = reparaciones.Sum(r => r.CostoFinal);
+            return gastoTotal;
+        }
     }
 }

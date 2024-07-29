@@ -99,7 +99,7 @@ namespace ProyectoService.ApiRest.Controllers
                 });
                 ResponseGetClientesDTO response = new ResponseGetClientesDTO()
                 {
-                   StatusCode = 200,
+                   
                    Clientes=cli.ToList(),
 
                 };
@@ -109,7 +109,7 @@ namespace ProyectoService.ApiRest.Controllers
             {
                 ResponseGetClientesDTO response = new ResponseGetClientesDTO()
                 {
-                    StatusCode = 500,
+                    
                     Clientes = null
 
                 };
