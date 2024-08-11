@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 namespace ProyectoService.LogicaNegocio.Modelo
 {
     [Table("Producto")]
+    [Index(nameof(Marca),nameof(Modelo),nameof(Version),IsUnique =true,Name ="IX_Producto_Marca_Modelo_Version")]
     public class Producto
     {
         public int Id { get; set; }

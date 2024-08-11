@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProyectoService.LogicaNegocio.Modelo;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace ProyectoService.Aplicacion.ICasosUso
 {
     public interface IModificarPresupuestoReparacion
     {
-        Task Ejecutar(int id, double costo,string descripcion);
+        Task<Reparacion> Ejecutar(int id, double costo,string descripcion);
     }
 }

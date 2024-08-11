@@ -9,7 +9,7 @@ namespace ProyectoService.ApiRest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    
     public class ProductosController : ControllerBase
     {
         private readonly IAgregarProducto agregarProductoUc;

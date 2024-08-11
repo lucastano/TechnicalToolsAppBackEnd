@@ -25,7 +25,7 @@ namespace ProyectoService.LogicaNegocio.Modelo
 
 		public Tecnico Tecnico { get; set; }
 		public Cliente Cliente { get; set; }
-		public string Producto { get; set; }//esto va a pasar a ser un objeto
+		public Producto Producto { get; set; }
 		public string NumeroSerie { get; set; }
 		public string Descripcion { get; set; }
 		public DateTime FechaPromesaPresupuesto { get; set; }
@@ -216,7 +216,7 @@ namespace ProyectoService.LogicaNegocio.Modelo
 
 
 				tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
-				.Padding(2).Text(Producto).FontSize(10);
+				.Padding(2).Text(Producto.Marca+" "+Producto.Modelo + " " +Producto.Version).FontSize(10);
 
 				tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
 				.Padding(2).Text(NumeroSerie).FontSize(10);
@@ -364,9 +364,9 @@ namespace ProyectoService.LogicaNegocio.Modelo
 
 
 			 tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
-			 .Padding(2).Text(Producto).FontSize(10);
+             .Padding(2).Text(Producto.Marca + " " + Producto.Modelo + " " + Producto.Version).FontSize(10);
 
-			 tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
+             tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
 			 .Padding(2).Text(NumeroSerie).FontSize(10);
 
 			 tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
@@ -549,9 +549,9 @@ namespace ProyectoService.LogicaNegocio.Modelo
 
 
 							tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
-							.Padding(2).Text(Producto).FontSize(10);
+                            .Padding(2).Text(Producto.Marca + " " + Producto.Modelo + " " + Producto.Version).FontSize(10);
 
-							tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
+                            tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
 							.Padding(2).Text(NumeroSerie).FontSize(10);
 
 							tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")

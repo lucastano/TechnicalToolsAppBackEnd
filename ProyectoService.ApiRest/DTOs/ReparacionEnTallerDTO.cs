@@ -13,7 +13,7 @@
         public string ClienteDireccion { get; set; }
         
         public int TecnicoId {  get; set; }
-        public string Producto { get; set; }
+        public ProductoDTO Producto { get; set; }
         public string NumeroSerie { get; set; }
         public string Descripcion { get; set; }
         public DateTime FechaPromesaPresupuesto { get; set; }

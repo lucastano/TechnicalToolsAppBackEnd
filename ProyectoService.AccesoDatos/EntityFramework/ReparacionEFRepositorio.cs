@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿ using Microsoft.EntityFrameworkCore;
 using ProyectoService.LogicaNegocio.Excepciones;
 using ProyectoService.LogicaNegocio.IRepositorios;
 using ProyectoService.LogicaNegocio.Modelo;
@@ -28,8 +28,6 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             if (entity.Cliente == null) throw new ReparacionException("Debe ingresar un cliente");
             if (entity.Descripcion == null) throw new ReparacionException("Debe ingresar una descripcion");
             if (entity.Producto == null) throw new ReparacionException("Debe ingresar un producto");
-            
-            //if (entity.Fecha.) throw new ReparacionException("Debe ingresar una fecha "); ver como comparar con fecha vacia
             if (entity.NumeroSerie == null) throw new ReparacionException("Debe ingresar numero de serie");
             await _context.Reparaciones.AddAsync(entity);
             await _context.SaveChangesAsync();
@@ -63,7 +61,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         //todas las reparaciones
         public async Task<List<Reparacion>> getAll()
         {
-            return await _context.Reparaciones.Include(r=>r.Tecnico).Include(r=>r.Cliente).ToListAsync();
+            return await _context.Reparaciones.Include(r=>r.Tecnico).Include(r=>r.Cliente).Include(r=>r.Producto ).ToListAsync();
         }
 
         public async Task<Reparacion> Presupuestar(int id, double ManoObra, string Descripcion,DateTime fechaPromesaEntrega)
@@ -169,7 +167,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             return pdf;
         }
         //ESTA MODIFICACION NO SE PUEDE REALIZAR EN REPARACIONES QUE AUN NO FUERON PRESUPUESTADAS
-        public async Task ModificarPresupuestoReparacion(int id, double costo, string descripcion)
+        public async Task<Reparacion> ModificarPresupuestoReparacion(int id, double costo, string descripcion)
         {
             Reparacion rep = await ObtenerReparacionPorId(id);
             if (rep == null) throw new ReparacionException("No existe la reparacion");
@@ -187,8 +185,9 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             }
             
             await _context.SaveChangesAsync();
+            return rep;
         }
-        public async Task ModificarDatosReparacion(int id ,DateTime fechaPromesaPresupuesto, string numeroSerie,string descripcion)
+        public async Task<Reparacion> ModificarDatosReparacion(int id ,DateTime fechaPromesaPresupuesto, string numeroSerie,string descripcion)
         {
             Reparacion reparacion = await ObtenerReparacionPorId(id);
             if (reparacion == null)throw new ReparacionException("Esta reparacion no existe");
@@ -210,7 +209,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             }
             
             await _context.SaveChangesAsync();
-
+            return reparacion;
 
         }
 

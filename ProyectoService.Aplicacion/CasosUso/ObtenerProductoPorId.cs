@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.CasosUso
 {
-    public class ModificarPresupuestoReparacion : IModificarPresupuestoReparacion
+    public class ObtenerProductoPorId : IObtenerProductoPorId
     {
-        private readonly IReparacionRepositorio repo;
-        public ModificarPresupuestoReparacion(IReparacionRepositorio repo)
+        private readonly IProductoRepositorio repo;
+        public ObtenerProductoPorId(IProductoRepositorio repo)
         {
             this.repo = repo;
         }
 
-        public async Task<Reparacion> Ejecutar(int id, double costo, string descripcion)
+        public async Task<Producto> Ejecutar(int id)
         {
-            return await repo.ModificarPresupuestoReparacion(id, costo,descripcion);
+            return await repo.ObtenerProductoPorId(id);
         }
     }
 }

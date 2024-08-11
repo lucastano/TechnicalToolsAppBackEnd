@@ -52,6 +52,21 @@ namespace ProyectoService.AccesoDatos.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Producto",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Marca = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Modelo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Version = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Producto", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tecnico",
                 columns: table => new
                 {
@@ -77,7 +92,7 @@ namespace ProyectoService.AccesoDatos.Migrations
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TecnicoId = table.Column<int>(type: "int", nullable: false),
                     ClienteId = table.Column<int>(type: "int", nullable: false),
-                    Producto = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductoId = table.Column<int>(type: "int", nullable: false),
                     NumeroSerie = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FechaPromesaPresupuesto = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -101,6 +116,12 @@ namespace ProyectoService.AccesoDatos.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_Reparacion_Producto_ProductoId",
+                        column: x => x.ProductoId,
+                        principalTable: "Producto",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Reparacion_Tecnico_TecnicoId",
                         column: x => x.TecnicoId,
                         principalTable: "Tecnico",
@@ -108,10 +129,53 @@ namespace ProyectoService.AccesoDatos.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Mensaje",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReparacionId = table.Column<int>(type: "int", nullable: false),
+                    EmisorId = table.Column<int>(type: "int", nullable: false),
+                    DestinatarioId = table.Column<int>(type: "int", nullable: false),
+                    FechaHoraEnvio = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Texto = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Mensaje", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Mensaje_Reparacion_ReparacionId",
+                        column: x => x.ReparacionId,
+                        principalTable: "Reparacion",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Mensaje_DestinatarioId",
+                table: "Mensaje",
+                column: "DestinatarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Mensaje_EmisorId",
+                table: "Mensaje",
+                column: "EmisorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Mensaje_ReparacionId",
+                table: "Mensaje",
+                column: "ReparacionId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Reparacion_ClienteId",
                 table: "Reparacion",
                 column: "ClienteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reparacion_ProductoId",
+                table: "Reparacion",
+                column: "ProductoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reparacion_TecnicoId",
@@ -126,10 +190,16 @@ namespace ProyectoService.AccesoDatos.Migrations
                 name: "Administrador");
 
             migrationBuilder.DropTable(
+                name: "Mensaje");
+
+            migrationBuilder.DropTable(
                 name: "Reparacion");
 
             migrationBuilder.DropTable(
                 name: "Cliente");
+
+            migrationBuilder.DropTable(
+                name: "Producto");
 
             migrationBuilder.DropTable(
                 name: "Tecnico");

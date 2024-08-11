@@ -33,11 +33,12 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly IEliminarMensajesReparacion eliminarMensajesReparacionUc;
         private readonly IObtenerHistoriaClinica obtenerHistoriaClinicaUc;
         private readonly IObtenerMontoTotalHistoriaClinica obtenerMontoTotalHistoriaClinicaUc;
+        private readonly IObtenerProductoPorId obtenerProductoPorIdUc;
         private Empresa emp;
 
 
 
-        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc, IObtenerReparacionesPorTecnico obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc, IAvisoNuevaReparacion avisoNuevaReparacionUc, IAvisoNuevoPresupuesto avisoNuevoPresupuestoUc, IAceptarPresupuesto aceptarPresupuestoUc, INoAceptarPresupuesto noAceptarPresupuestoUc, ITerminarReparacion terminarReparacionUc, IEntregarReparacion entregarReparacionUc, IAvisoEntregaReparacion avisoEntregarReparacionUc, IAvisoReparacionTerminada avisoReparacionTerminadaUc,  IConfiguration configuration, IObtenerReparacionPorId obtenerReparacionPorIdUc, IGenerarOrdenDeServicio generarOrdenDeServicioUc, IModificarPresupuestoReparacion modificarPresupuestoReparacionUc,IModificarDatosReparacion modificarDatosReparacionUc, IEliminarMensajesReparacion eliminarMensajesReparacionUc, IObtenerHistoriaClinica obtenerHistoriaClinicaUc, IObtenerMontoTotalHistoriaClinica obtenerMontoTotalHistoriaClinicaUc)
+        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc, IObtenerReparacionesPorTecnico obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc, IAvisoNuevaReparacion avisoNuevaReparacionUc, IAvisoNuevoPresupuesto avisoNuevoPresupuestoUc, IAceptarPresupuesto aceptarPresupuestoUc, INoAceptarPresupuesto noAceptarPresupuestoUc, ITerminarReparacion terminarReparacionUc, IEntregarReparacion entregarReparacionUc, IAvisoEntregaReparacion avisoEntregarReparacionUc, IAvisoReparacionTerminada avisoReparacionTerminadaUc,  IConfiguration configuration, IObtenerReparacionPorId obtenerReparacionPorIdUc, IGenerarOrdenDeServicio generarOrdenDeServicioUc, IModificarPresupuestoReparacion modificarPresupuestoReparacionUc,IModificarDatosReparacion modificarDatosReparacionUc, IEliminarMensajesReparacion eliminarMensajesReparacionUc, IObtenerHistoriaClinica obtenerHistoriaClinicaUc, IObtenerMontoTotalHistoriaClinica obtenerMontoTotalHistoriaClinicaUc,IObtenerProductoPorId obtenerProductoPorIdUc)
         {
             this.agregarReparacionUc = agregarReparacionUc;
             this.obtenerTodasLasReparacionesUc = obtenerTodasLasReparacionesUc;
@@ -58,7 +59,7 @@ namespace ProyectoService.ApiRest.Controllers
             this.eliminarMensajesReparacionUc = eliminarMensajesReparacionUc;
             this.obtenerMontoTotalHistoriaClinicaUc = obtenerMontoTotalHistoriaClinicaUc;
             this.obtenerHistoriaClinicaUc = obtenerHistoriaClinicaUc;
-            
+            this.obtenerProductoPorIdUc = obtenerProductoPorIdUc;
             this.configuration = configuration;
             //CONFIGURACION ENTIDAD EMPRESA
             var configNombreEmpresa = configuration.GetSection("EmpresaSettings:NombreEmpresa").Value!;
@@ -101,7 +102,7 @@ namespace ProyectoService.ApiRest.Controllers
                 {
                     Tecnico = tecnico,
                     Cliente = cliente,
-                    Producto = dto.Producto,
+                    Producto = await obtenerProductoPorIdUc.Ejecutar(dto.IdProducto),
                     NumeroSerie = dto.NumeroSerie,
                     Descripcion = dto.Descripcion,
                     FechaPromesaPresupuesto=dto.FechaPromesaPresupuesto
@@ -246,7 +247,13 @@ namespace ProyectoService.ApiRest.Controllers
                     ClienteEmail = r.Cliente.Email.Value,
                     ClienteCedula=r.Cliente.Ci,
                     TecnicoId = r.Tecnico.Id,
-                    Producto = r.Producto,
+                    Producto = new ProductoDTO()
+                    {
+                        Id=r.Producto.Id,
+                        Marca=r.Producto.Marca,
+                        Modelo=r.Producto.Modelo,
+                        Version=r.Producto.Version
+                    },
                     NumeroSerie = r.NumeroSerie,
                     Descripcion = r.Descripcion,
                     Fecha = r.Fecha,
@@ -304,13 +311,39 @@ namespace ProyectoService.ApiRest.Controllers
         }
 
         [HttpPut("ModificarPresupuestoReparacion")]
-        public async Task<ActionResult> ModificarPresupuestoReparacion(int id,double costo,string descripcion)
+        public async Task<ActionResult> ModificarPresupuestoReparacion(ModificarPresupuestoReparacionDTO dto)
         {
             try
             {
-                if (id == 0) throw new Exception("Numero de orden de reparacion incorrecto");
-                await modificarPresupuestoReparacionUc.Ejecutar(id, costo,descripcion);
-                return Ok();
+                if (dto.Id == 0) throw new Exception("Numero de orden de reparacion incorrecto");
+                Reparacion rep =await modificarPresupuestoReparacionUc.Ejecutar(dto.Id, dto.Costo,dto.Descripcion);
+                ReparacionEnTallerDTO reparacionDTO = new ReparacionEnTallerDTO()
+                {
+                    Id = rep.Id,
+                    ClienteNombre = rep.Cliente.Nombre,
+                    ClienteApellido = rep.Cliente.Apellido,
+                    ClienteTelefono = rep.Cliente.Telefono,
+                    ClienteDireccion = rep.Cliente.Direccion,
+                    ClienteEmail = rep.Cliente.Email.Value,
+                    ClienteCedula = rep.Cliente.Ci,
+                    TecnicoId = rep.Tecnico.Id,
+                    Producto = new ProductoDTO()
+                    {
+                        Id = rep.Producto.Id,
+                        Marca = rep.Producto.Marca,
+                        Modelo = rep.Producto.Modelo,
+                        Version = rep.Producto.Version
+                    },
+                    NumeroSerie = rep.NumeroSerie,
+                    Descripcion = rep.Descripcion,
+                    Fecha = rep.Fecha,
+                    Estado = rep.Estado,
+                    DescripcionPresupuesto = rep.DescripcionPresupuesto,
+                    Costo = rep.CostoFinal,
+                    FechaPromesaPresupuesto = rep.FechaPromesaPresupuesto
+
+                };
+                return Ok(reparacionDTO);
 
             }
             catch(Exception ex)
@@ -320,13 +353,39 @@ namespace ProyectoService.ApiRest.Controllers
 
         }
         [HttpPut("ModificarDatosReparacion")]
-        public async Task<ActionResult> ModificarDatosReparacion(int id,DateTime fechaPromesaPresupuesto, string numeroSerie,string descripcion)
+        public async Task<ActionResult> ModificarDatosReparacion(ModificarDatosReparacionDTO dto)
         {
             try
             {
-                if (id == 0) throw new Exception("Numero de orden incorrecto");
-                await modificarDatosReparacionUc.Ejecutar(id,fechaPromesaPresupuesto,numeroSerie,descripcion);
-                return Ok();
+                if (dto.Id == 0) throw new Exception("Numero de orden incorrecto");
+                Reparacion rep=await modificarDatosReparacionUc.Ejecutar(dto.Id,dto.FechaPromesaPresupuesto,dto.NumeroSerie,dto.Descripcion);
+                ReparacionEnTallerDTO reparacionDTO = new ReparacionEnTallerDTO()
+                {
+                    Id = rep.Id,
+                    ClienteNombre = rep.Cliente.Nombre,
+                    ClienteApellido = rep.Cliente.Apellido,
+                    ClienteTelefono = rep.Cliente.Telefono,
+                    ClienteDireccion = rep.Cliente.Direccion,
+                    ClienteEmail = rep.Cliente.Email.Value,
+                    ClienteCedula = rep.Cliente.Ci,
+                    TecnicoId = rep.Tecnico.Id,
+                    Producto = new ProductoDTO()
+                    {
+                        Id = rep.Producto.Id,
+                        Marca = rep.Producto.Marca,
+                        Modelo = rep.Producto.Modelo,
+                        Version = rep.Producto.Version
+                    },
+                    NumeroSerie = rep.NumeroSerie,
+                    Descripcion = rep.Descripcion,
+                    Fecha = rep.Fecha,
+                    Estado = rep.Estado,
+                    DescripcionPresupuesto = rep.DescripcionPresupuesto,
+                    Costo = rep.CostoFinal,
+                    FechaPromesaPresupuesto = rep.FechaPromesaPresupuesto
+
+                };
+                return Ok(reparacionDTO);
 
             }
             catch( Exception ex)

@@ -4,10 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
+
 
 namespace ProyectoService.LogicaNegocio.Modelo
 {
     [Table("Cliente")]
+    [Index(nameof(Ci),IsUnique =true,Name ="IX_Cliente_Ci")]
     public class Cliente:Usuario
     {
         public string Direccion { get; set; }

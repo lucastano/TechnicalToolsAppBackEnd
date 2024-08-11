@@ -70,6 +70,7 @@ public class Program
         builder.Services.AddScoped<IEliminarMensajesReparacion, EliminarMensajesReparacion>();
         builder.Services.AddScoped<IAgregarProducto, AgregarProducto>();
         builder.Services.AddScoped<IObtenerProductos, ObtenerProductos>();
+        builder.Services.AddScoped<IObtenerProductoPorId, ObtenerProductoPorId>();
         builder.Services.AddScoped<IObtenerHistoriaClinica, ObtenerHistoriaClinica>();
         builder.Services.AddScoped<IObtenerMontoTotalHistoriaClinica, ObtenerMontoTotalHistoriaClinica>();
         // Add services to the container.

@@ -6,7 +6,7 @@ namespace ProyectoService.ApiRest.DTOs
     {
         public int Id { get; set; }
         public DateTime Fecha { get; set; } 
-        public string Producto { get; set; }//esto va a pasar a ser un objeto
+        public ProductoDTO Producto { get; set; }//esto va a pasar a ser un objeto
         public string NumeroSerie { get; set; }
         public string Descripcion { get; set; }
        

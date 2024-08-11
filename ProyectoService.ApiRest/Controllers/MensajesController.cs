@@ -66,6 +66,15 @@ namespace ProyectoService.ApiRest.Controllers
                     return StatusCode(200, "Esta reparacion no tiene ningun mensaje");
                 }
                 Reparacion reparacion = await obtenerReparacionPorIdUc.Ejecutar(id);
+                ProductoDTO producto = new ProductoDTO()
+                {
+                    Id = reparacion.Producto.Id,
+                    Marca = reparacion.Producto.Marca,
+                    Modelo=reparacion.Producto.Modelo,
+                    Version=reparacion.Producto.Version
+                    
+
+                };
                 ReparacionDTO repDto = new ReparacionDTO()
                 {
                     Id=reparacion.Id,
@@ -73,7 +82,7 @@ namespace ProyectoService.ApiRest.Controllers
                     Estado=reparacion.Estado,
                     NumeroSerie=reparacion.NumeroSerie,
                     Fecha=reparacion.Fecha,
-                    Producto=reparacion.Producto,
+                    Producto= producto
 
 
                 };

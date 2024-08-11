@@ -12,7 +12,7 @@ using ProyectoService.AccesoDatos;
 namespace ProyectoService.AccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoServiceContext))]
-    [Migration("20240707195217_nuevabd")]
+    [Migration("20240803223123_nuevabd")]
     partial class nuevabd
     {
         /// <inheritdoc />
@@ -26,6 +26,66 @@ namespace ProyectoService.AccesoDatos.Migrations
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.HasSequence("UsuarioSequence");
+
+            modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Mensaje", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DestinatarioId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmisorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaHoraEnvio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ReparacionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Texto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DestinatarioId");
+
+                    b.HasIndex("EmisorId");
+
+                    b.HasIndex("ReparacionId");
+
+                    b.ToTable("Mensaje");
+                });
+
+            modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Producto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Marca")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Modelo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Version")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Producto");
+                });
 
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Reparacion", b =>
                 {
@@ -75,9 +135,8 @@ namespace ProyectoService.AccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Producto")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("int");
 
                     b.Property<string>("RazonNoAceptada")
                         .IsRequired()
@@ -92,6 +151,8 @@ namespace ProyectoService.AccesoDatos.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClienteId");
+
+                    b.HasIndex("ProductoId");
 
                     b.HasIndex("TecnicoId");
 
@@ -171,11 +232,44 @@ namespace ProyectoService.AccesoDatos.Migrations
                     b.ToTable("Tecnico", (string)null);
                 });
 
+            modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Mensaje", b =>
+                {
+                    b.HasOne("ProyectoService.LogicaNegocio.Modelo.Usuario", "Destinatario")
+                        .WithMany()
+                        .HasForeignKey("DestinatarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProyectoService.LogicaNegocio.Modelo.Usuario", "Emisor")
+                        .WithMany()
+                        .HasForeignKey("EmisorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProyectoService.LogicaNegocio.Modelo.Reparacion", "Reparacion")
+                        .WithMany("Mensajes")
+                        .HasForeignKey("ReparacionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Destinatario");
+
+                    b.Navigation("Emisor");
+
+                    b.Navigation("Reparacion");
+                });
+
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Reparacion", b =>
                 {
                     b.HasOne("ProyectoService.LogicaNegocio.Modelo.Cliente", "Cliente")
                         .WithMany()
                         .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProyectoService.LogicaNegocio.Modelo.Producto", "Producto")
+                        .WithMany()
+                        .HasForeignKey("ProductoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -187,7 +281,14 @@ namespace ProyectoService.AccesoDatos.Migrations
 
                     b.Navigation("Cliente");
 
+                    b.Navigation("Producto");
+
                     b.Navigation("Tecnico");
+                });
+
+            modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Reparacion", b =>
+                {
+                    b.Navigation("Mensajes");
                 });
 #pragma warning restore 612, 618
         }

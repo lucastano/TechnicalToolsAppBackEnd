@@ -19,6 +19,7 @@ namespace ProyectoService.AccesoDatos
         public DbSet<Reparacion>Reparaciones { get; set; }
         public DbSet<Mensaje> Mensajes {  get; set; }   
        
+        public DbSet<BaseFalla>BaseFallas { get; set; }
         public DbSet<Producto>Productos { get; set; }
 
 

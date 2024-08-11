@@ -21,8 +21,8 @@ namespace ProyectoService.LogicaNegocio.IRepositorios
         Task<List<Reparacion>> ObtenerReparacionesPorTecnico(string EmailTecnico);
         byte[] GenerarOrdenDeServicio(Reparacion rep,Empresa emp);
         Task<Reparacion> AddAlternativo(Reparacion entity);
-        Task ModificarPresupuestoReparacion(int id, double costo, string descripcion);
-        Task ModificarDatosReparacion(int id, DateTime fechaPromesaPresupuesto,string numeroSerie,string descripcion);
+        Task<Reparacion> ModificarPresupuestoReparacion(int id, double costo, string descripcion);
+        Task<Reparacion> ModificarDatosReparacion(int id, DateTime fechaPromesaPresupuesto,string numeroSerie,string descripcion);
         Task<List<Reparacion>> HistoriaClinicaPorNumeroSerie(string numeroSerie);
         Task<double> ObtenerMontoTotalReparaciones(string numeroSerie);
 

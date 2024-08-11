@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.ICasosUso
 {
-    public interface IModificarDatosReparacion
+    public interface IObtenerProductoPorId
     {
-        Task<Reparacion> Ejecutar(int id,DateTime fechaPromesaPresupuesto,string numeroSerie,string descripcion);
+        Task<Producto> Ejecutar(int id);
     }
 }

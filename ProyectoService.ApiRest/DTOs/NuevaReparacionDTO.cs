@@ -13,7 +13,7 @@ namespace ProyectoService.ApiRest.DTOs
         public int IdTecnico { get; set; }//en el front, este dato lo deberiamos tener en la session
         
 
-        public string Producto { get; set; }//esto va a pasar a ser un objeto
+        public int IdProducto { get; set; }//esto va a pasar a ser un objeto
         [Required]
         public string NumeroSerie { get; set; }
         [Required]

@@ -9,17 +9,18 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.CasosUso
 {
-    public class ModificarPresupuestoReparacion : IModificarPresupuestoReparacion
+    public class ObtenerBaseFallaSegunDescripcion : IObtenerBaseFallaSegunDescripcion
     {
-        private readonly IReparacionRepositorio repo;
-        public ModificarPresupuestoReparacion(IReparacionRepositorio repo)
+
+        private readonly IBaseFallaRepositorio repo;
+        public ObtenerBaseFallaSegunDescripcion(IBaseFallaRepositorio repo)
         {
             this.repo = repo;
         }
 
-        public async Task<Reparacion> Ejecutar(int id, double costo, string descripcion)
+        public async Task<List<BaseFalla>> Ejecutar(string descripcion)
         {
-            return await repo.ModificarPresupuestoReparacion(id, costo,descripcion);
+            return await repo.ObtenerSegunDescripcion(descripcion);
         }
     }
 }

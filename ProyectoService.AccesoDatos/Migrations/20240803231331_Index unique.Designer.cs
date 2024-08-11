@@ -12,15 +12,15 @@ using ProyectoService.AccesoDatos;
 namespace ProyectoService.AccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoServiceContext))]
-    [Migration("20240716224345_agrege tabla")]
-    partial class agregetabla
+    [Migration("20240803231331_Index unique")]
+    partial class Indexunique
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.5")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -72,17 +72,20 @@ namespace ProyectoService.AccesoDatos.Migrations
 
                     b.Property<string>("Marca")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Modelo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Version")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex(new[] { "Marca", "Modelo", "Version" }, "IX_Producto_Marca_Modelo_Version")
+                        .IsUnique();
 
                     b.ToTable("Producto");
                 });
@@ -135,9 +138,8 @@ namespace ProyectoService.AccesoDatos.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Producto")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("int");
 
                     b.Property<string>("RazonNoAceptada")
                         .IsRequired()
@@ -152,6 +154,8 @@ namespace ProyectoService.AccesoDatos.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClienteId");
+
+                    b.HasIndex("ProductoId");
 
                     b.HasIndex("TecnicoId");
 
@@ -211,7 +215,7 @@ namespace ProyectoService.AccesoDatos.Migrations
 
                     b.Property<string>("Ci")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Direccion")
                         .IsRequired()
@@ -220,6 +224,10 @@ namespace ProyectoService.AccesoDatos.Migrations
                     b.Property<string>("Telefono")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.HasIndex(new[] { "Ci" }, "IX_Cliente_Ci")
+                        .IsUnique()
+                        .HasFilter("[Ci] IS NOT NULL");
 
                     b.ToTable("Cliente", (string)null);
                 });
@@ -266,6 +274,12 @@ namespace ProyectoService.AccesoDatos.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ProyectoService.LogicaNegocio.Modelo.Producto", "Producto")
+                        .WithMany()
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ProyectoService.LogicaNegocio.Modelo.Tecnico", "Tecnico")
                         .WithMany()
                         .HasForeignKey("TecnicoId")
@@ -273,6 +287,8 @@ namespace ProyectoService.AccesoDatos.Migrations
                         .IsRequired();
 
                     b.Navigation("Cliente");
+
+                    b.Navigation("Producto");
 
                     b.Navigation("Tecnico");
                 });
