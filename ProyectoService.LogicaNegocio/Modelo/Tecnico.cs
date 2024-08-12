@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProyectoService.LogicaNegocio.Modelo
 {
-    [Table("Tecnico")]
+    [Table("tecnicos")]
     public class Tecnico:Usuario
     {
 

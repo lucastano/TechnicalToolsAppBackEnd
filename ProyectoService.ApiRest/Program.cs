@@ -35,6 +35,7 @@ public class Program
         builder.Services.AddScoped<IUsuarioServicio, UsuarioServicio>();
         builder.Services.AddScoped<IReparacionServicio,ReparacionServicio>();
         builder.Services.AddScoped<IProductoRepositorio,ProductoRepositorio>();
+        builder.Services.AddScoped<IBaseFallaRepositorio, BaseFallaEFRepositorio>();
         // casos de uso
         builder.Services.AddScoped<IAgregarClienteUC, AgregarClienteUC>();
         builder.Services.AddScoped<IObtenerTodosLosClientesUC, ObtenerTodosLosClientesUC>();
@@ -73,6 +74,9 @@ public class Program
         builder.Services.AddScoped<IObtenerProductoPorId, ObtenerProductoPorId>();
         builder.Services.AddScoped<IObtenerHistoriaClinica, ObtenerHistoriaClinica>();
         builder.Services.AddScoped<IObtenerMontoTotalHistoriaClinica, ObtenerMontoTotalHistoriaClinica>();
+        builder.Services.AddScoped<IObtenerBaseFallaSegunDescripcion,ObtenerBaseFallaSegunDescripcion>();
+        builder.Services.AddScoped<IAgregarABaseFallas, AgregarABaseFallas>();
+        builder.Services.AddScoped<IObtenerBaseFallas,ObtenerBaseFallas>();
         // Add services to the container.
 
         builder.Services.AddControllers();

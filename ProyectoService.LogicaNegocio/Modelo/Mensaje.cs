@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.LogicaNegocio.Modelo
 {
-    [Table("Mensaje")]
+    [Table("mensajes")]
     public class Mensaje
     {
 

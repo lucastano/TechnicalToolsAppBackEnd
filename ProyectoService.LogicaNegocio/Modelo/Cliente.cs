@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ProyectoService.LogicaNegocio.Modelo
 {
-    [Table("Cliente")]
+    [Table("clientes")]
     [Index(nameof(Ci),IsUnique =true,Name ="IX_Cliente_Ci")]
     public class Cliente:Usuario
     {

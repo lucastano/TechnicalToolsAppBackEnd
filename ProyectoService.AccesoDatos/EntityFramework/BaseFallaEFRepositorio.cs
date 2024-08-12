@@ -35,13 +35,13 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public Task<List<BaseFalla>> getAll()
         {
-            return _context.BaseFallas.ToListAsync();
+            return _context.BaseFallas.Include(f=>f.Producto).ToListAsync();
 
         }
 
         public async Task<List<BaseFalla>> ObtenerSegunDescripcion(string Descripcion)
         {
-            return await _context.BaseFallas.Where(r => r.Falla.Contains(Descripcion)).ToListAsync();
+            return await _context.BaseFallas.Include(f=>f.Producto).Where(r => r.Falla.Contains(Descripcion)).ToListAsync();
            
         }
 

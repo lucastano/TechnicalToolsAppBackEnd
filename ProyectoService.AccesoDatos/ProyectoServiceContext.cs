@@ -36,9 +36,9 @@ namespace ProyectoService.AccesoDatos
 
             //CONFIGURACION DE HERENCIA
             modelBuilder.Entity<Usuario>().UseTpcMappingStrategy();
-            modelBuilder.Entity<Cliente>().ToTable("Cliente");
-            modelBuilder.Entity<Tecnico>().ToTable("Tecnico");
-            modelBuilder.Entity<Administrador>().ToTable("Administrador");
+            modelBuilder.Entity<Cliente>().ToTable("clientes");
+            modelBuilder.Entity<Tecnico>().ToTable("tecnicos");
+            modelBuilder.Entity<Administrador>().ToTable("administradores");
 
 
             //CONFIGURACION DE MENSAJERIA

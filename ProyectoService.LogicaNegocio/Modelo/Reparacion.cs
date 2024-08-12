@@ -16,7 +16,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProyectoService.LogicaNegocio.Modelo
 {
-	[Table("Reparacion")]
+	[Table("reparaciones")]
 	public class Reparacion
 	{
 

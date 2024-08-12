@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.LogicaNegocio.Modelo
 {
-    [Table("Producto")]
+    [Table("productos")]
     [Index(nameof(Marca),nameof(Modelo),nameof(Version),IsUnique =true,Name ="IX_Producto_Marca_Modelo_Version")]
     public class Producto
     {

@@ -44,7 +44,7 @@ namespace ProyectoService.AccesoDatos.Migrations
                     Rol = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Direccion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Telefono = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Ci = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Ci = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,18 +52,18 @@ namespace ProyectoService.AccesoDatos.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Producto",
+                name: "productos",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Marca = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Modelo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Version = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Marca = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Modelo = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Version = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Producto", x => x.Id);
+                    table.PrimaryKey("PK_productos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -84,7 +84,28 @@ namespace ProyectoService.AccesoDatos.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reparacion",
+                name: "baseFallas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductoId = table.Column<int>(type: "int", nullable: false),
+                    Falla = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Solucion = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_baseFallas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_baseFallas_productos_ProductoId",
+                        column: x => x.ProductoId,
+                        principalTable: "productos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "reparaciones",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -108,29 +129,29 @@ namespace ProyectoService.AccesoDatos.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reparacion", x => x.Id);
+                    table.PrimaryKey("PK_reparaciones", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reparacion_Cliente_ClienteId",
+                        name: "FK_reparaciones_Cliente_ClienteId",
                         column: x => x.ClienteId,
                         principalTable: "Cliente",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reparacion_Producto_ProductoId",
-                        column: x => x.ProductoId,
-                        principalTable: "Producto",
+                        name: "FK_reparaciones_Tecnico_TecnicoId",
+                        column: x => x.TecnicoId,
+                        principalTable: "Tecnico",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reparacion_Tecnico_TecnicoId",
-                        column: x => x.TecnicoId,
-                        principalTable: "Tecnico",
+                        name: "FK_reparaciones_productos_ProductoId",
+                        column: x => x.ProductoId,
+                        principalTable: "productos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Mensaje",
+                name: "mensajes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -143,43 +164,61 @@ namespace ProyectoService.AccesoDatos.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mensaje", x => x.Id);
+                    table.PrimaryKey("PK_mensajes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Mensaje_Reparacion_ReparacionId",
+                        name: "FK_mensajes_reparaciones_ReparacionId",
                         column: x => x.ReparacionId,
-                        principalTable: "Reparacion",
+                        principalTable: "reparaciones",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Mensaje_DestinatarioId",
-                table: "Mensaje",
-                column: "DestinatarioId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Mensaje_EmisorId",
-                table: "Mensaje",
-                column: "EmisorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Mensaje_ReparacionId",
-                table: "Mensaje",
-                column: "ReparacionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reparacion_ClienteId",
-                table: "Reparacion",
-                column: "ClienteId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reparacion_ProductoId",
-                table: "Reparacion",
+                name: "IX_baseFallas_ProductoId",
+                table: "baseFallas",
                 column: "ProductoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reparacion_TecnicoId",
-                table: "Reparacion",
+                name: "IX_Cliente_Ci",
+                table: "Cliente",
+                column: "Ci",
+                unique: true,
+                filter: "[Ci] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_mensajes_DestinatarioId",
+                table: "mensajes",
+                column: "DestinatarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_mensajes_EmisorId",
+                table: "mensajes",
+                column: "EmisorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_mensajes_ReparacionId",
+                table: "mensajes",
+                column: "ReparacionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Producto_Marca_Modelo_Version",
+                table: "productos",
+                columns: new[] { "Marca", "Modelo", "Version" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_reparaciones_ClienteId",
+                table: "reparaciones",
+                column: "ClienteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_reparaciones_ProductoId",
+                table: "reparaciones",
+                column: "ProductoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_reparaciones_TecnicoId",
+                table: "reparaciones",
                 column: "TecnicoId");
         }
 
@@ -190,19 +229,22 @@ namespace ProyectoService.AccesoDatos.Migrations
                 name: "Administrador");
 
             migrationBuilder.DropTable(
-                name: "Mensaje");
+                name: "baseFallas");
 
             migrationBuilder.DropTable(
-                name: "Reparacion");
+                name: "mensajes");
+
+            migrationBuilder.DropTable(
+                name: "reparaciones");
 
             migrationBuilder.DropTable(
                 name: "Cliente");
 
             migrationBuilder.DropTable(
-                name: "Producto");
+                name: "Tecnico");
 
             migrationBuilder.DropTable(
-                name: "Tecnico");
+                name: "productos");
 
             migrationBuilder.DropSequence(
                 name: "UsuarioSequence");
