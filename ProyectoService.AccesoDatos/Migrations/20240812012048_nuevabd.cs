@@ -15,7 +15,7 @@ namespace ProyectoService.AccesoDatos.Migrations
                 name: "UsuarioSequence");
 
             migrationBuilder.CreateTable(
-                name: "Administrador",
+                name: "administradores",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [UsuarioSequence]"),
@@ -28,11 +28,11 @@ namespace ProyectoService.AccesoDatos.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Administrador", x => x.Id);
+                    table.PrimaryKey("PK_administradores", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Cliente",
+                name: "clientes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [UsuarioSequence]"),
@@ -48,7 +48,7 @@ namespace ProyectoService.AccesoDatos.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cliente", x => x.Id);
+                    table.PrimaryKey("PK_clientes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,7 +67,7 @@ namespace ProyectoService.AccesoDatos.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tecnico",
+                name: "tecnicos",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [UsuarioSequence]"),
@@ -80,7 +80,7 @@ namespace ProyectoService.AccesoDatos.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tecnico", x => x.Id);
+                    table.PrimaryKey("PK_tecnicos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -131,21 +131,21 @@ namespace ProyectoService.AccesoDatos.Migrations
                 {
                     table.PrimaryKey("PK_reparaciones", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_reparaciones_Cliente_ClienteId",
+                        name: "FK_reparaciones_clientes_ClienteId",
                         column: x => x.ClienteId,
-                        principalTable: "Cliente",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_reparaciones_Tecnico_TecnicoId",
-                        column: x => x.TecnicoId,
-                        principalTable: "Tecnico",
+                        principalTable: "clientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_reparaciones_productos_ProductoId",
                         column: x => x.ProductoId,
                         principalTable: "productos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_reparaciones_tecnicos_TecnicoId",
+                        column: x => x.TecnicoId,
+                        principalTable: "tecnicos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -180,7 +180,7 @@ namespace ProyectoService.AccesoDatos.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cliente_Ci",
-                table: "Cliente",
+                table: "clientes",
                 column: "Ci",
                 unique: true,
                 filter: "[Ci] IS NOT NULL");
@@ -226,7 +226,7 @@ namespace ProyectoService.AccesoDatos.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Administrador");
+                name: "administradores");
 
             migrationBuilder.DropTable(
                 name: "baseFallas");
@@ -238,13 +238,13 @@ namespace ProyectoService.AccesoDatos.Migrations
                 name: "reparaciones");
 
             migrationBuilder.DropTable(
-                name: "Cliente");
-
-            migrationBuilder.DropTable(
-                name: "Tecnico");
+                name: "clientes");
 
             migrationBuilder.DropTable(
                 name: "productos");
+
+            migrationBuilder.DropTable(
+                name: "tecnicos");
 
             migrationBuilder.DropSequence(
                 name: "UsuarioSequence");

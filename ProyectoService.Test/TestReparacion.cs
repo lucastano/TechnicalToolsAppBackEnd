@@ -24,6 +24,7 @@ namespace ProyectoService.Test
         private ReparacionEFRepositorio _reparacionRepositorio;
         private TecnicoEFRepositorio _tecnicoEFRepositorio;
         private ClienteEFRepositorio _clienteEFRepositorio;
+        private ProductoRepositorio _productoRepositorio;
 
         [SetUp]
         public void SetUp()
@@ -37,13 +38,27 @@ namespace ProyectoService.Test
             _reparacionRepositorio = new ReparacionEFRepositorio(_context);
             _tecnicoEFRepositorio = new TecnicoEFRepositorio(_context);
             _clienteEFRepositorio = new ClienteEFRepositorio(_context);
+            _productoRepositorio = new ProductoRepositorio(_context);
         }
 
         private void SeedData()
         {
 
             var salt = ObtenerSalt();
+            var producto1 = new Producto()
+            {
+                Marca="Sony",
+                Modelo="PS5",
+                Version="slim"
 
+            };
+            var producto2 = new Producto()
+            {
+                Marca = "Microsoft",
+                Modelo = "Xbox",
+                Version = "x"
+
+            };
             var tecnico = new Tecnico
             {
                 Nombre = "Juan",
@@ -54,6 +69,7 @@ namespace ProyectoService.Test
                 Rol = "Tecnico"
 
             };
+            
             string ciCliente = "48161123";
             var cliente = new Cliente
             {
@@ -73,7 +89,7 @@ namespace ProyectoService.Test
             {
                 Tecnico = tecnico,
                 Cliente = cliente,
-                Producto = "ps5",
+                Producto = producto1,
                 NumeroSerie = "21312312",
                 Descripcion = "no prende"
 
@@ -82,7 +98,7 @@ namespace ProyectoService.Test
             {
                 Tecnico = tecnico,
                 Cliente = cliente,
-                Producto = "ps5",
+                Producto = producto2,
                 NumeroSerie = "21312312",
                 Descripcion = "no prende",
                 Estado="Presupuestada"
@@ -92,7 +108,7 @@ namespace ProyectoService.Test
             {
                 Tecnico = tecnico,
                 Cliente = cliente,
-                Producto = "ps5",
+                Producto = producto1,
                 NumeroSerie = "21312312",
                 Descripcion = "no prende",
                 Estado = "Aceptada"
@@ -102,7 +118,7 @@ namespace ProyectoService.Test
             {
                 Tecnico = tecnico,
                 Cliente = cliente,
-                Producto = "ps5",
+                Producto = producto2,
                 NumeroSerie = "21312312",
                 Descripcion = "no prende",
                 Estado = "Terminada"
@@ -116,6 +132,11 @@ namespace ProyectoService.Test
             _context.SaveChanges();
             _context.Reparaciones.Add(reparacion4);
             _context.SaveChanges();
+            _context.Productos.Add(producto1);
+            _context.SaveChanges();
+            _context.Productos.Add(producto2);
+            _context.SaveChanges();
+
 
 
         }
@@ -129,6 +150,10 @@ namespace ProyectoService.Test
             //BUSCO EL TECNICO POR EMAIL
             string email = "juan@example.com";
             Tecnico tecnico = await _tecnicoEFRepositorio.ObtenerTecnicoPorEmail(email);
+            int idProducto1 = 1;
+            int idProducto2 = 2;
+            Producto producto1 = await _productoRepositorio.ObtenerProductoPorId(1);
+            
 
             //BUSCO EL CLIENTE POR CI 
             string ciCliente = "48161123";
@@ -138,7 +163,7 @@ namespace ProyectoService.Test
             {
                 Tecnico = tecnico,
                 Cliente = cliente,
-                Producto = "ps5",
+                Producto = producto1,
                 NumeroSerie = "21312312",
                 Descripcion = "no prende",
                 FechaPromesaPresupuesto=new DateTime(2024,07,10)
@@ -162,12 +187,12 @@ namespace ProyectoService.Test
             //BUSCO EL CLIENTE POR CI 
             string ciCliente = "48161123";
             Cliente cliente = await _clienteEFRepositorio.GetClienteByCi(ciCliente);
-
+            Producto producto2 = await _productoRepositorio.ObtenerProductoPorId(2);
             Reparacion reparacion = new Reparacion()
             {
                 Tecnico = null,
                 Cliente = cliente,
-                Producto = "ps5",
+                Producto = producto2,
                 NumeroSerie = "21312312",
                 Descripcion = "no prende",
                 FechaPromesaPresupuesto = new DateTime(2024, 07, 10)
@@ -194,13 +219,13 @@ namespace ProyectoService.Test
             //BUSCO EL CLIENTE POR CI 
             string email = "juan@example.com";
             Tecnico tecnico = await _tecnicoEFRepositorio.ObtenerTecnicoPorEmail(email);
-
+            Producto producto2 = await _productoRepositorio.ObtenerProductoPorId(2);
 
             Reparacion reparacion = new Reparacion()
             {
                 Tecnico = tecnico,
                 Cliente = null,
-                Producto = "ps5",
+                Producto = producto2,
                 NumeroSerie = "21312312",
                 Descripcion = "no prende",
                 FechaPromesaPresupuesto = new DateTime(2024, 07, 10)
@@ -228,7 +253,7 @@ namespace ProyectoService.Test
             //BUSCO EL TECNICO POR EMAIL
             string email = "juan@example.com";
             Tecnico tecnico = await _tecnicoEFRepositorio.ObtenerTecnicoPorEmail(email);
-
+            Producto producto2 = await _productoRepositorio.ObtenerProductoPorId(2);
             //BUSCO EL CLIENTE POR CI 
             string ciCliente = "48161123";
             Cliente cliente = await _clienteEFRepositorio.GetClienteByCi(ciCliente);
@@ -237,7 +262,7 @@ namespace ProyectoService.Test
             {
                 Tecnico = tecnico,
                 Cliente = cliente,
-                Producto = "ps5",
+                Producto = producto2,
                 NumeroSerie = null,
                 Descripcion = "no prende",
                 FechaPromesaPresupuesto = new DateTime(2024, 07, 10)
@@ -264,7 +289,7 @@ namespace ProyectoService.Test
             //BUSCO EL TECNICO POR EMAIL
             string email = "juan@example.com";
             Tecnico tecnico = await _tecnicoEFRepositorio.ObtenerTecnicoPorEmail(email);
-
+            Producto producto2 = await _productoRepositorio.ObtenerProductoPorId(2);
             //BUSCO EL CLIENTE POR CI 
             string ciCliente = "48161123";
             Cliente cliente = await _clienteEFRepositorio.GetClienteByCi(ciCliente);
@@ -273,7 +298,7 @@ namespace ProyectoService.Test
             {
                 Tecnico = tecnico,
                 Cliente = cliente,
-                Producto = "ps5",
+                Producto = producto2,
                 NumeroSerie = "2312312",
                 Descripcion = null,
                 FechaPromesaPresupuesto = new DateTime(2024, 07, 10)
@@ -355,7 +380,7 @@ namespace ProyectoService.Test
             //BUSCO EL TECNICO POR EMAIL
             string email = "juan@example.com";
             Tecnico tecnico = await _tecnicoEFRepositorio.ObtenerTecnicoPorEmail(email);
-
+            Producto producto2 = await _productoRepositorio.ObtenerProductoPorId(2);
             //BUSCO EL CLIENTE POR CI 
             string ciCliente = "48161123";
             Cliente cliente = await _clienteEFRepositorio.GetClienteByCi(ciCliente);
@@ -364,7 +389,7 @@ namespace ProyectoService.Test
             {
                 Tecnico = tecnico,
                 Cliente = cliente,
-                Producto = "ps5",
+                Producto = producto2,
                 NumeroSerie = "2312312",
                 Descripcion = "no lee",
                
