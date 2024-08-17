@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using System.IO;
+using Microsoft.Extensions.Configuration;
 
 
 namespace ProyectoService.AccesoDatos.EntityFramework
@@ -17,16 +18,45 @@ namespace ProyectoService.AccesoDatos.EntityFramework
     public class EnviarEmail : IEnviarEmail
     {
         //private  MailService _mailService;
+        private readonly IConfiguration configuration;
+        SmtpClient smtpClient;
+        private Empresa empresa;
         
         
-        public  EnviarEmail( )
+        public  EnviarEmail( IConfiguration configuration)
         {
-           
-            //ver como obtener estos datos de algun archivo de texto
+            this.configuration = configuration;
+            var configNombreEmpresa = configuration.GetSection("EmpresaSettings:NombreEmpresa").Value!;
+            var configDireccionEmpresa = configuration.GetSection("EmpresaSettings:DireccionEmpresa").Value!;
+            var configTelefonoEmpresa = configuration.GetSection("EmpresaSettings:TelefonoEmpresa").Value!;
+            var configEmail = configuration.GetSection("EmpresaSettings:Email").Value!;
+            var configPassword = configuration.GetSection("EmpresaSettings:EmailPassword").Value!;
+            var configPoliticasEmpresa = configuration.GetSection("EmpresaSettings:PoliticasEmpresa").Value!;
+            var emailServer = configuration.GetSection("EmpresaSettings:EmailServer").Value!;
+            Empresa empresaConfig = new Empresa()
+            {
+                Nombre = configNombreEmpresa,
+                Direccion = configDireccionEmpresa,
+                Telefono = configTelefonoEmpresa,
+                Email = configEmail,
+                EmailPassword = configPassword,
+                PoliticasEmpresa = configPoliticasEmpresa
+            };
+            this.empresa = empresaConfig;
+            smtpClient = new SmtpClient(emailServer.ToString())
+            {
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(empresaConfig.Email, empresaConfig.EmailPassword)
 
-            //_mailService = new MailService("smtp.office365.com", 587, "pruebaemial.net@outlook.es", "Lu3472759");
+            };
+
+
+            
         }
-        
+
         public async Task<byte[]> EnviarEmailAvisoEntrega(Reparacion entity,Empresa emp)
         {
             
@@ -154,29 +184,38 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         public async Task<byte[]> EnviarEmailNuevaReparacion(Reparacion entity,Empresa emp)
         {
 
-            byte[] pdfContent = entity.GenerarPdfOrdenServicioEntrada(emp);
+            byte[] pdfContent = entity.GenerarPdfOrdenServicioEntrada(this.empresa);
             
 
             // Verifica si el PDF se generó correctamente
             if (pdfContent != null && pdfContent.Length > 0)
             {
                 // Ver los datos de la empresa de donde obtenerlos, al igual que el email de envío
-                string fromName = emp.Nombre;
-                string fromEmail = emp.Email;
+                string fromName = empresa.Nombre;
+                string fromEmail = empresa.Email;
                 string toName = entity.Cliente.Nombre;
                 string toEmail = entity.Cliente.Email.Value;
                 string subject = "ORDEN DE SERVICIO REPARACION Nro: " + entity.Id;
                 string body = "Se dejó para service el aparato " +entity.Producto.Marca+" " +entity.Producto.Modelo +" "+entity.Producto.Version+" "+ ". Número de serie: " + entity.NumeroSerie + "\n"
                     + "Número de orden: " + entity.Id + "\n"
                     + "Fecha aproximada del presupuesto: " + entity.FechaPromesaPresupuesto;
-                bool isHtml = true;
+                bool isHtml = false;
                 // Configura el mensaje de correo electrónico
-                MailMessage mailMessage = new MailMessage();
-                mailMessage.From = new MailAddress(fromEmail, fromName);
+                MailMessage mailMessage = new MailMessage()
+                {
+                    From = new MailAddress(fromEmail, fromName),
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = isHtml,
+                    
+                };
                 mailMessage.To.Add(new MailAddress(toEmail, toName));
-                mailMessage.Subject = subject;
-                mailMessage.Body = body;
-                mailMessage.IsBodyHtml = isHtml;
+
+                //mailMessage.From = new MailAddress(fromEmail, fromName);
+                //mailMessage.To.Add(new MailAddress(toEmail, toName));
+                //mailMessage.Subject = subject;
+                //mailMessage.Body = body;
+                //mailMessage.IsBodyHtml = isHtml;
                 mailMessage.ReplyToList.Add(new MailAddress("soporte@tudominio.com", "Soporte Técnico")); // Agrega un Reply-To
                 mailMessage.Headers.Add("X-Mailer", "Microsoft Outlook 16.0"); // Cabecera para ayudar a la clasificación
                 mailMessage.Headers.Add("X-Priority", "3");
@@ -184,20 +223,10 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 using (MemoryStream stream = new MemoryStream(pdfContent))
                 {
                     mailMessage.Attachments.Add(new Attachment(stream, "orden_de_servicio_" + entity.Id + ".pdf", "application/pdf"));
-
-                   
-                    using (SmtpClient smtpClient = new SmtpClient("smtp.office365.com"))
-                    {
-                        smtpClient.Port = 587;
-                        smtpClient.EnableSsl = true;
-                        smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-                        smtpClient.UseDefaultCredentials = false;
-                        smtpClient.Credentials = new NetworkCredential(emp.Email, emp.EmailPassword);
-                        await smtpClient.SendMailAsync(mailMessage);
-                    }
-
-                    
+   
                 }
+                await smtpClient.SendMailAsync(mailMessage);
+
             }
             return pdfContent;
 
