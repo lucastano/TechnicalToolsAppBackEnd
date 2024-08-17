@@ -58,11 +58,11 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             return tecnicos.FirstOrDefault(t => t.Id == id);
         }
 
-        public  Task RecuperarPassword(Tecnico entity)
+        public Task RecuperarPassword(Tecnico entity)
         {
             if (entity == null) throw new TecnicoException("Falta algun dato");
             _context.SaveChanges();
-            
+            throw new NotImplementedException();
         }
 
         public async Task Update(Tecnico entity)

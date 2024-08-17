@@ -55,18 +55,22 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                             +"Fecha y hora de entrega: "+entity.FechaEntrega+"\n"
                             +"Importe abonado: "+entity.CostoFinal+"\n"
                             +"Muchas gracias por confiar en nuestro servicio.";
-                bool isHtml = true;
+                bool isHtml = false;
 
                 // Configura el mensaje de correo electrónico
-                MailMessage mailMessage = new MailMessage();
-                mailMessage.From = new MailAddress(fromEmail, fromName);
-                mailMessage.To.Add(new MailAddress(toEmail, toName));
-                mailMessage.Subject = subject;
-                mailMessage.Body = body;
-                mailMessage.IsBodyHtml = isHtml;
+                MailMessage mailMessage = new MailMessage()
+                {
+                    From = new MailAddress(fromEmail, fromName),
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = isHtml
 
-                // Adjunta el PDF al correo electrónico
-                using (MemoryStream stream = new MemoryStream(pdfContent))
+                 };
+                mailMessage.To.Add(new MailAddress(toEmail, toName));
+
+
+            // Adjunta el PDF al correo electrónico
+            using (MemoryStream stream = new MemoryStream(pdfContent))
                 {
                     mailMessage.Attachments.Add(new Attachment(stream, "orden_de_servicio_"+entity.Id+".pdf", "application/pdf"));
 
@@ -78,7 +82,15 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                         smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
                         smtpClient.UseDefaultCredentials = false;
                         smtpClient.Credentials = new NetworkCredential(emp.Email, emp.EmailPassword);
-                        await smtpClient.SendMailAsync(mailMessage);
+                        try
+                        {
+                            await smtpClient.SendMailAsync(mailMessage);
+
+                        }
+                        catch (SmtpException ex)
+                        {
+
+                        }
                     }
                 }
             }
@@ -100,15 +112,18 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 string toEmail = entity.Cliente.Email.Value;
                 string subject = "REPARACION TERMINADA ORDEN DE SERVICIO Nro: " + entity.Id;
                 string body = "La reparacion de " + entity.Producto.Marca + " " + entity.Producto.Modelo + " " + entity.Producto.Version + ". Número de serie: " + entity.NumeroSerie + ". Su número de orden es: " + entity.Id+" fue terminada y esta lista para ser retirada, Muchas gracias.";
-                bool isHtml = true;
+                bool isHtml = false;
 
-                // Configura el mensaje de correo electrónico
-                MailMessage mailMessage = new MailMessage();
-                mailMessage.From = new MailAddress(fromEmail, fromName);
-                mailMessage.To.Add(new MailAddress(toEmail, toName));
-                mailMessage.Subject = subject;
-                mailMessage.Body = body;
-                mailMessage.IsBodyHtml = isHtml;
+            // Configura el mensaje de correo electrónico
+            MailMessage mailMessage = new MailMessage()
+            {
+                From = new MailAddress(fromEmail, fromName),
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = isHtml
+
+            };
+            mailMessage.To.Add(new MailAddress(toEmail, toName));
             // Envía el correo electrónico
             using (SmtpClient smtpClient = new SmtpClient("smtp.office365.com"))
             {
@@ -117,7 +132,15 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtpClient.UseDefaultCredentials = false;
                 smtpClient.Credentials = new NetworkCredential(emp.Email, emp.EmailPassword);
-                await smtpClient.SendMailAsync(mailMessage);
+                try
+                {
+                    await smtpClient.SendMailAsync(mailMessage);
+
+                }
+                catch (SmtpException ex)
+                {
+
+                }
             }
 
 
