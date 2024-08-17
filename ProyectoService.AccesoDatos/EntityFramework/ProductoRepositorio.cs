@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProyectoService.LogicaNegocio.IRepositorios;
 using ProyectoService.LogicaNegocio.Modelo;
+using ProyectoService.LogicaNegocio.Validaciones;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +22,11 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         {
             if (entity == null) throw new Exception("Debe ingresar producto");
             if (entity.Marca == null ||entity.Marca=="") throw new Exception("Debe ingresar marca");
+            entity.Marca=ValidacionesTexto.FormatearTexto(entity.Marca);
             if (entity.Modelo == null || entity.Modelo == "") throw new Exception("Debe ingresar modelo");
+            entity.Modelo = ValidacionesTexto.FormatearTexto(entity.Modelo);
             if (entity.Version == null || entity.Version == "") throw new Exception("Debe ingresar Version");
+            entity.Version=ValidacionesTexto.FormatearTexto(entity.Version);
             await _context.Productos.AddAsync(entity);
             await _context.SaveChangesAsync();
 

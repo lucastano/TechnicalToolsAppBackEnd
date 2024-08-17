@@ -70,6 +70,16 @@ namespace ProyectoService.ApiRest.Controllers
             }
 
         }
+        //[HttpPost("RecuperarPasswordTecnico")]
+        //public async Task<ActionResult>RecuperarPassword(string email)
+        //{
+        //    if (email == null) throw new Exception("Debe ingresar email de tecnico");
+        //    Tecnico tecnico = await obtenerTecnicoPorEmailUc.Ejecutar(email);
+        //    Seguridad.CrearPasswordHash(dto.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+
+        //    Seguridad.CrearPasswordHash();
+        //}
 
         [HttpGet]
 

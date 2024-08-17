@@ -2,6 +2,7 @@
 using ProyectoService.LogicaNegocio.Excepciones;
 using ProyectoService.LogicaNegocio.IRepositorios;
 using ProyectoService.LogicaNegocio.Modelo;
+using ProyectoService.LogicaNegocio.Validaciones;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +25,10 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             if (entity.Nombre == null) throw new TecnicoException("Debe ingresar nombre del tecnico");
             if (entity.Apellido == null) throw new TecnicoException("Debe ingresar apellido del tecnico");
             if (entity.Email.Value == null) throw new TecnicoException("Debe ingresar email del tecnico");
+            entity.Nombre=ValidacionesTexto.FormatearTexto(entity.Nombre);
+            entity.Apellido=ValidacionesTexto.FormatearTexto(entity.Apellido);
             Tecnico tecnicoBuscado= await ObtenerTecnicoPorEmail(entity.Email.Value);
-            if (tecnicoBuscado != null) throw new TecnicoException("Ya existe este tecnico");
-           
+            if (tecnicoBuscado != null) throw new TecnicoException("Ya existe este tecnico");   
            await _context.Tecnicos.AddAsync(entity);
            await _context.SaveChangesAsync();
         }
@@ -53,13 +55,24 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         public async Task<Tecnico> ObtenerTecnicoPorId(int id)
         {
             var tecnicos= await _context.Tecnicos.ToListAsync();
-
             return tecnicos.FirstOrDefault(t => t.Id == id);
+        }
+
+        public  Task RecuperarPassword(Tecnico entity)
+        {
+            if (entity == null) throw new TecnicoException("Falta algun dato");
+            _context.SaveChanges();
+            
         }
 
         public async Task Update(Tecnico entity)
         {
-            throw new NotImplementedException();
+           if(entity.Nombre==null)throw new TecnicoException("Debe ingresar nombre");
+           if (entity.Apellido == null) throw new TecnicoException("Debe ingresar apellido");
+           if (entity.Email.Value == null) throw new TecnicoException("Debe ingresar email");
+           entity.Nombre=ValidacionesTexto.FormatearTexto(entity.Nombre);
+           entity.Apellido = ValidacionesTexto.FormatearTexto(entity.Apellido);
+           _context.SaveChangesAsync();
         }
     }
 }

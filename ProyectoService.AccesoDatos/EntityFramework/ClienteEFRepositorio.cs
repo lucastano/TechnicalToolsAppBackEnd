@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ProyectoService.LogicaNegocio.Excepciones;
+using ProyectoService.LogicaNegocio.Validaciones;
 
 namespace ProyectoService.AccesoDatos.EntityFramework
 {
@@ -24,7 +25,9 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             
           
                 if (entity.Nombre == null) throw new ClienteException("Debe ingresar nombre de cliente");
+                entity.Nombre=ValidacionesTexto.FormatearTexto(entity.Nombre); 
                 if (entity.Apellido == null) throw new ClienteException("Debe ingresar apellido de cliente");
+                entity.Apellido=ValidacionesTexto.FormatearTexto(entity.Apellido);
                 if (entity.Telefono == null) throw new ClienteException("Debe ingresar telefono de cliente");
                 if (entity.Ci == null)  throw new ClienteException("cedula no valida"); 
                 if (!entity.validarCi())  throw new ClienteException("Número de documento inválido"); 

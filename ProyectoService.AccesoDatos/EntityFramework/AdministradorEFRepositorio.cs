@@ -2,6 +2,7 @@
 using ProyectoService.LogicaNegocio.Excepciones;
 using ProyectoService.LogicaNegocio.IRepositorios;
 using ProyectoService.LogicaNegocio.Modelo;
+using ProyectoService.LogicaNegocio.Validaciones;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,8 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             if (entity == null) throw new AdministradorException("Administrador esta vacio");
             if (entity.Nombre == null) throw new AdministradorException("Debe ingresar nombre del administrador");
             if (entity.Apellido == null) throw new AdministradorException("Debe ingresar apellido del administrador");
-            
+            entity.Nombre=ValidacionesTexto.FormatearTexto(entity.Nombre);
+            entity.Apellido = ValidacionesTexto.FormatearTexto(entity.Apellido);
             Administrador adminBuscado = await ObtenerAdministradorPorEmail(entity.Email.Value);
             if (adminBuscado != null) throw new AdministradorException("Administrador ya existe");
             await _context.Administradores.AddAsync(entity);
