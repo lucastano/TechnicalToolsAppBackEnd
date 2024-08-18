@@ -65,14 +65,14 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             {
                 reparada = "NO Reparada";
             }
-            byte[] pdfContent = entity.GenerarPdfOrdenServicioEntregada(emp);
+            byte[] pdfContent = entity.GenerarPdfOrdenServicioEntregada(this.empresa);
 
             // Verifica si el PDF se generó correctamente
             if (pdfContent != null && pdfContent.Length > 0)
             {
                 // Ver los datos de la empresa de donde obtenerlos, al igual que el email de envio
-                string fromName = emp.Nombre;
-                string fromEmail = emp.Email;
+                string fromName = this.empresa.Nombre;
+                string fromEmail = this.empresa.Email;
                 string toName = entity.Cliente.Nombre;
                 string toEmail = entity.Cliente.Email.Value;
                 string subject = "REPARACION Entregada Nro: " + entity.Id;
@@ -105,13 +105,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                     mailMessage.Attachments.Add(new Attachment(stream, "orden_de_servicio_"+entity.Id+".pdf", "application/pdf"));
 
                     // Envía el correo electrónico
-                    using (SmtpClient smtpClient = new SmtpClient("smtp.office365.com"))
-                    {
-                        smtpClient.Port = 587;
-                        smtpClient.EnableSsl = true;
-                        smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-                        smtpClient.UseDefaultCredentials = false;
-                        smtpClient.Credentials = new NetworkCredential(emp.Email, emp.EmailPassword);
+                    
                         try
                         {
                             await smtpClient.SendMailAsync(mailMessage);
@@ -121,7 +115,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                         {
 
                         }
-                    }
+                    
                 }
             }
             return pdfContent;
@@ -136,8 +130,8 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             // Verifica si el PDF se generó correctamente
             
                 // Ver los datos de la empresa de donde obtenerlos, al igual que el email de envio
-                string fromName = emp.Nombre;
-                string fromEmail = emp.Email;
+                string fromName = this.empresa.Nombre;
+                string fromEmail = this.empresa.Email;
                 string toName = entity.Cliente.Nombre;
                 string toEmail = entity.Cliente.Email.Value;
                 string subject = "REPARACION TERMINADA ORDEN DE SERVICIO Nro: " + entity.Id;
@@ -155,13 +149,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             };
             mailMessage.To.Add(new MailAddress(toEmail, toName));
             // Envía el correo electrónico
-            using (SmtpClient smtpClient = new SmtpClient("smtp.office365.com"))
-            {
-                smtpClient.Port = 587;
-                smtpClient.EnableSsl = true;
-                smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-                smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new NetworkCredential(emp.Email, emp.EmailPassword);
+
                 try
                 {
                     await smtpClient.SendMailAsync(mailMessage);
@@ -171,14 +159,6 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 {
 
                 }
-            }
-
-
-
-
-
-
-
         }
 
         public async Task<byte[]> EnviarEmailNuevaReparacion(Reparacion entity,Empresa emp)
@@ -223,9 +203,17 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 using (MemoryStream stream = new MemoryStream(pdfContent))
                 {
                     mailMessage.Attachments.Add(new Attachment(stream, "orden_de_servicio_" + entity.Id + ".pdf", "application/pdf"));
+                    try
+                    {
+                        await smtpClient.SendMailAsync(mailMessage);
+
+                    }
+                    catch (SmtpException ex)
+                    {
+
+                    }
    
                 }
-                await smtpClient.SendMailAsync(mailMessage);
 
             }
             return pdfContent;
@@ -234,14 +222,14 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public async Task EnviarEmailNuevoPresupuesto(Reparacion entity,Empresa emp)
         {
-            byte[] pdfContent = entity.GenerarPdfOrdenServicioPresupuestada(emp);
+            byte[] pdfContent = entity.GenerarPdfOrdenServicioPresupuestada(this.empresa);
            
             // Verifica si el PDF se generó correctamente
             if (pdfContent != null && pdfContent.Length > 0)
             {
                 // Ver los datos de la empresa de donde obtenerlos, al igual que el email de envio
-                string fromName = emp.Nombre;
-                string fromEmail = emp.Email;
+                string fromName = this.empresa.Nombre;
+                string fromEmail = this.empresa.Email;
                 string toName = entity.Cliente.Nombre;
                 string toEmail = entity.Cliente.Email.Value;
                 string subject = "PRESUPUESTO ORDEN DE SERVICIO REPARACION Nro: " + entity.Id;
@@ -251,15 +239,20 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                                +"Costo: "+entity.CostoFinal+"\n"
                                +"Fecha prometida de entrega aproximada: "+entity.FechaPromesaEntrega+"\n"
                                +"Para aceptar el presupuesto comuniquese con la empresa. Gracias";
-                bool isHtml = true;
+                bool isHtml = false;
 
                 // Configura el mensaje de correo electrónico
-                MailMessage mailMessage = new MailMessage();
-                mailMessage.From = new MailAddress(fromEmail, fromName);
+                MailMessage mailMessage = new MailMessage()
+                {
+                    From = new MailAddress(fromEmail, fromName),
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = isHtml
+
+                };
+                
                 mailMessage.To.Add(new MailAddress(toEmail, toName));
-                mailMessage.Subject = subject;
-                mailMessage.Body = body;
-                mailMessage.IsBodyHtml = isHtml;
+               
 
                 // Adjunta el PDF al correo electrónico
                 using (MemoryStream stream = new MemoryStream(pdfContent))
@@ -267,11 +260,15 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                     mailMessage.Attachments.Add(new Attachment(stream, "orden_de_servicio_" + entity.Id + ".pdf", "application/pdf"));
 
                     // Envía el correo electrónico
-                    using (SmtpClient smtpClient = new SmtpClient("smtp.outlook.com", 587))
+                    try
                     {
-                        smtpClient.Credentials = new NetworkCredential(fromEmail, emp.EmailPassword);
-                        smtpClient.EnableSsl = true;
                         await smtpClient.SendMailAsync(mailMessage);
+
+
+                    }
+                    catch (SmtpException ex)
+                    {
+
                     }
                 }
             }

@@ -10,6 +10,7 @@ using ProyectoService.Aplicacion.ICasosUso;
 using ProyectoService.LogicaNegocio.IRepositorios;
 using ProyectoService.LogicaNegocio.IServicios;
 using ProyectoService.LogicaNegocio.Servicios;
+using QuestPDF.Infrastructure;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
 
@@ -23,7 +24,7 @@ public class Program
         {
             option.UseSqlServer(builder.Configuration.GetConnectionString("ProyectoServiceContext"));
         });
-
+        
         //repositorios 
         builder.Services.AddScoped<IClienteRepositorio, ClienteEFRepositorio>();
         builder.Services.AddScoped<IAuthService, AuthService>();

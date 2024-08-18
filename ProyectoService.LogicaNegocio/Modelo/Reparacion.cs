@@ -2,16 +2,8 @@
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using QuestPDF.Previewer;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.JavaScript;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 
 namespace ProyectoService.LogicaNegocio.Modelo
@@ -63,9 +55,6 @@ namespace ProyectoService.LogicaNegocio.Modelo
 			this.DescripcionPresupuesto = descripcion;
 			this.FechaPresupuesto = DateTime.Now;
 			this.FechaPromesaEntrega = fechaPromesaEntrega;
-			
-			
-
 		}
 
 		public void AceptarPresupuesto()
@@ -267,10 +256,10 @@ namespace ProyectoService.LogicaNegocio.Modelo
             var imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Imagenes", "Empresa.png");
             byte[] imageData = File.ReadAllBytes(imagePath);
             var data =Document.Create(document =>
-{
- document.Page(page =>
- {
-	 page.Margin(30);
+						{
+					document.Page(page =>
+						{
+						 page.Margin(30);
 
 	 page.Header().ShowOnce().Row(row =>
 	 {

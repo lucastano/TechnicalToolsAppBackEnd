@@ -405,7 +405,7 @@ namespace ProyectoService.ApiRest.Controllers
                 List<Reparacion> reparaciones = await obtenerHistoriaClinicaUc.Ejecutar(numeroSerie);
                 if (reparaciones.Count == 0) throw new Exception("Sin reparaciones realizadas");
                 double montoTotal = await obtenerMontoTotalHistoriaClinicaUc.Ejecutar(numeroSerie);
-                Reparacion reparacion = reparaciones[1];
+                
                 ResponseHistoriaClinicaDTO historiaClinica = new ResponseHistoriaClinicaDTO()
                 {
                     CantidadReparacionesRealizadas = reparaciones.Count(),
