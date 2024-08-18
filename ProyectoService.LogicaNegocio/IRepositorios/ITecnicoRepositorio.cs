@@ -11,7 +11,7 @@ namespace ProyectoService.LogicaNegocio.IRepositorios
     {
         Task <Tecnico> ObtenerTecnicoPorEmail(string email);
         Task<Tecnico> ObtenerTecnicoPorId(int id);
-        Task RecuperarPassword(Tecnico entity);
+        Task<bool> RecuperarPassword(Tecnico entity);
        
     }
 }

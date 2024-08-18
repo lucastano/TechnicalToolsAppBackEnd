@@ -17,13 +17,18 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly IObtenerTodosLosTecnicos obtenerTodosLosTecnicosUc;
         private readonly IObtenerTecnicoPorEmail obtenerTecnicoPorEmailUc;
         private readonly IValidarPassword validarPasswordUc;
+        private readonly IRecuperarPasswordTecnico recuperarPasswordTecnicoUc;
+        private readonly IAvisoCambioPassword avisoCambioPasswordUc;
 
-        public TecnicosController(IAgregarTecnico agregarTecnicoUc, IObtenerTodosLosTecnicos obtenerTodosLosTecnicosUc, IObtenerTecnicoPorEmail obtenerTecnicoPorEmailUc, IValidarPassword validarPasswordUc)
+        public TecnicosController(IAgregarTecnico agregarTecnicoUc, IObtenerTodosLosTecnicos obtenerTodosLosTecnicosUc, IObtenerTecnicoPorEmail obtenerTecnicoPorEmailUc, IValidarPassword validarPasswordUc, IRecuperarPasswordTecnico recuperarPasswordTecnicoUc, IAvisoCambioPassword avisoCambioPasswordUc)
         {
             this.agregarTecnicoUc = agregarTecnicoUc;
             this.obtenerTodosLosTecnicosUc = obtenerTodosLosTecnicosUc;
             this.obtenerTecnicoPorEmailUc = obtenerTecnicoPorEmailUc;
             this.validarPasswordUc = validarPasswordUc;
+            this.recuperarPasswordTecnicoUc = recuperarPasswordTecnicoUc;
+            this.avisoCambioPasswordUc = avisoCambioPasswordUc;
+
         }
 
         [HttpPost]
@@ -70,16 +75,29 @@ namespace ProyectoService.ApiRest.Controllers
             }
 
         }
-        //[HttpPost("RecuperarPasswordTecnico")]
-        //public async Task<ActionResult>RecuperarPassword(string email)
-        //{
-        //    if (email == null) throw new Exception("Debe ingresar email de tecnico");
-        //    Tecnico tecnico = await obtenerTecnicoPorEmailUc.Ejecutar(email);
-        //    Seguridad.CrearPasswordHash(dto.Password, out byte[] passwordHash, out byte[] passwordSalt);
+        [HttpPost("RecuperarPasswordTecnico")]
+        public async Task<ActionResult> RecuperarPassword(string email)
+        {
+            if (email == null) throw new Exception("Debe ingresar email de tecnico");
+            Tecnico tecnico = await obtenerTecnicoPorEmailUc.Ejecutar(email);
+            string passwordRandom = Seguridad.GenerarPasswordRandom();
+            Seguridad.CrearPasswordHash(passwordRandom, out byte[] passwordHash, out byte[] passwordSalt);
+            tecnico.PasswordHash = passwordHash;
+            tecnico.PasswordSalt = passwordSalt;
+            bool response = await recuperarPasswordTecnicoUc.Ejecutar(tecnico);
+            if (response)
+            {
+                //deberia enviar email 
+                await avisoCambioPasswordUc.Ejecutar(tecnico, passwordRandom);
+                return Ok();
 
+            }
+            else
+            {
+                return BadRequest();
+            }
 
-        //    Seguridad.CrearPasswordHash();
-        //}
+        }
 
         [HttpGet]
 

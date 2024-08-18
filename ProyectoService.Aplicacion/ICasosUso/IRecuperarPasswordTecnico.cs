@@ -1,5 +1,4 @@
 ﻿using ProyectoService.LogicaNegocio.Modelo;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.ICasosUso
 {
-    public interface IAvisoNuevoPresupuesto
+    public interface IRecuperarPasswordTecnico
     {
-        Task Ejecutar(Reparacion entity,Empresa emp);
+        Task<bool> Ejecutar(Tecnico tecnico);
     }
 }

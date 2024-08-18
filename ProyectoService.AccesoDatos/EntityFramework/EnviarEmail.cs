@@ -57,6 +57,41 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             
         }
 
+        public async Task AvisoCambioPassword(Usuario usu,string password)
+        {
+            string fromName = this.empresa.Nombre;
+            string fromEmail = this.empresa.Email;
+            string toName = usu.Nombre;
+            string toEmail = usu.Email.Value;
+            string subject = "RECUPERACION DE PASSWORD: " + usu.Email.Value;
+            //string body = "Nuevo Password generado para inicio de session "
+            //            + "Para mantener la proteccion de su usuario, por favor cambie el password luego de iniciar"
+            //            + ": " + password.ToString();
+            string body = $@"
+            <html>
+            <body>
+                <p>Nuevo Password generado para inicio de session.</p>
+                <p>Para mantener la proteccion de su usuario, por favor cambie el password luego de iniciar.</p>
+                <p><strong>Contraseña:</strong> <strong>{password}</strong></p>
+            </body>
+            </html>";
+
+            bool isHtml = true;
+
+            // Configura el mensaje de correo electrónico
+            MailMessage mailMessage = new MailMessage()
+            {
+                From = new MailAddress(fromEmail, fromName),
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = isHtml
+
+            };
+            mailMessage.To.Add(new MailAddress(toEmail, toName));
+            await smtpClient.SendMailAsync(mailMessage);
+
+        }
+
         public async Task<byte[]> EnviarEmailAvisoEntrega(Reparacion entity,Empresa emp)
         {
             

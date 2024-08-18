@@ -58,11 +58,14 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             return tecnicos.FirstOrDefault(t => t.Id == id);
         }
 
-        public Task RecuperarPassword(Tecnico entity)
+
+        //solamente actualiza el password
+        public async Task<bool> RecuperarPassword(Tecnico entity)
         {
             if (entity == null) throw new TecnicoException("Falta algun dato");
-            _context.SaveChanges();
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
+            return true;
+            
         }
 
         public async Task Update(Tecnico entity)
@@ -72,7 +75,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
            if (entity.Email.Value == null) throw new TecnicoException("Debe ingresar email");
            entity.Nombre=ValidacionesTexto.FormatearTexto(entity.Nombre);
            entity.Apellido = ValidacionesTexto.FormatearTexto(entity.Apellido);
-           _context.SaveChangesAsync();
+           await _context.SaveChangesAsync();
         }
     }
 }

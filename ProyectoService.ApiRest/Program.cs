@@ -78,6 +78,8 @@ public class Program
         builder.Services.AddScoped<IObtenerBaseFallaSegunDescripcion,ObtenerBaseFallaSegunDescripcion>();
         builder.Services.AddScoped<IAgregarABaseFallas, AgregarABaseFallas>();
         builder.Services.AddScoped<IObtenerBaseFallas,ObtenerBaseFallas>();
+        builder.Services.AddScoped<IRecuperarPasswordTecnico,RecuperarPasswordTecnico>();
+        builder.Services.AddScoped<IAvisoCambioPassword,AvisoCambioPassword>();
         // Add services to the container.
 
         builder.Services.AddControllers();
@@ -132,6 +134,9 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        //app.UseSwagger();
+        //app.UseSwaggerUI();
 
         app.UseHttpsRedirection();
         app.UseCors("nuevaPolitica");
