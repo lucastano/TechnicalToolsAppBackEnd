@@ -260,7 +260,8 @@ namespace ProyectoService.ApiRest.Controllers
                     Estado=r.Estado,
                     DescripcionPresupuesto=r.DescripcionPresupuesto,
                     Costo=r.CostoFinal,
-                    FechaPromesaPresupuesto=r.FechaPromesaPresupuesto
+                    FechaPromesaPresupuesto=r.FechaPromesaPresupuesto,
+                    FechaPromesaEntrega=r.FechaPromesaEntrega
                     
                     
 

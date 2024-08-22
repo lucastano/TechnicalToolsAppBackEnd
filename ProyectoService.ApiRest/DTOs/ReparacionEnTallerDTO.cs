@@ -20,5 +20,7 @@
         public string Estado { get; set; }
         public string DescripcionPresupuesto {  get; set; }
         public double Costo { get; set; }
+
+        public DateTime FechaPromesaEntrega { get; set; }
     }
 }
