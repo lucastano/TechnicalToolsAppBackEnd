@@ -50,6 +50,27 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             return administradores.FirstOrDefault(a => a.Email.Value.Equals(email));
         }
 
+        public async Task<bool> RecuperarPassword(string email ,byte[]passwordHash,byte[]passwordSalt)
+        {
+            try
+            {
+                Administrador admin = await ObtenerAdministradorPorEmail(email);
+                if (admin == null) throw new AdministradorException("No existe administrador con ese email");
+                admin.PasswordHash = passwordHash;
+                admin.PasswordSalt = passwordSalt;
+                await _context.SaveChangesAsync(); 
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+
+            }
+
+
+        }
+
         public Task Update(Administrador entity)
         {
             throw new NotImplementedException();

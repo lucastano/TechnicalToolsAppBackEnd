@@ -62,9 +62,18 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         //solamente actualiza el password
         public async Task<bool> RecuperarPassword(Tecnico entity)
         {
-            if (entity == null) throw new TecnicoException("Falta algun dato");
-            await _context.SaveChangesAsync();
-            return true;
+            try
+            {
+                if (entity == null) throw new TecnicoException("Falta algun dato");
+                await _context.SaveChangesAsync();
+                return true;
+
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+            
             
         }
 

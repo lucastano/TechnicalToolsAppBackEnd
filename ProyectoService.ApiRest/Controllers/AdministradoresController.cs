@@ -5,6 +5,7 @@ using ProyectoService.Aplicacion.CasosUso;
 using ProyectoService.Aplicacion.ICasosUso;
 using ProyectoService.LogicaNegocio.Modelo;
 using ProyectoService.LogicaNegocio.Modelo.ValueObjects;
+using System.Runtime.Serialization;
 
 namespace ProyectoService.ApiRest.Controllers
 {
@@ -14,13 +15,20 @@ namespace ProyectoService.ApiRest.Controllers
     {
         private readonly IAgregarAdministrador agregarAdministradorUc;
         private readonly IObtenerAdministradores obtenerTodosLosAdministradoresUc;
-        private readonly IValidarPassword validarPasswordUc;    
+        private readonly IValidarPassword validarPasswordUc; 
+        private readonly IRecuperarPasswordAdministrador recuperarPasswordUc;
+        private readonly IObtenerAdministradorPorEmail obtenerAdministradorPorEmailUc;
+        private readonly IAvisoCambioPassword avisoCambioPasswordUc;
 
-        public AdministradoresController(IAgregarAdministrador agregarAdministradorUc, IObtenerAdministradores obtenerTodosLosAdministradoresUc, IValidarPassword validarPasswordUc)
+        public AdministradoresController(IAgregarAdministrador agregarAdministradorUc, IObtenerAdministradores obtenerTodosLosAdministradoresUc, IValidarPassword validarPasswordUc, IRecuperarPasswordAdministrador recuperarPasswordUc, IObtenerAdministradorPorEmail obtenerAdministradorPorEmailUc, IAvisoCambioPassword avisoCambioPasswordUc)
         {
             this.agregarAdministradorUc = agregarAdministradorUc;
             this.obtenerTodosLosAdministradoresUc = obtenerTodosLosAdministradoresUc;
             this.validarPasswordUc = validarPasswordUc;
+            this.recuperarPasswordUc = recuperarPasswordUc;
+            this.obtenerAdministradorPorEmailUc = obtenerAdministradorPorEmailUc;
+            this.avisoCambioPasswordUc = avisoCambioPasswordUc;
+
         }
 
         [HttpPost]
@@ -124,6 +132,30 @@ namespace ProyectoService.ApiRest.Controllers
                 return StatusCode(500, response);
             }
 
+        }
+        [HttpPut("RecuperarPassword")]
+
+        public async Task<ActionResult>RecuperarPassword(string email)
+        {
+            try
+            {
+                Administrador adminBuscado = await obtenerAdministradorPorEmailUc.Ejecutar(email);
+                if (adminBuscado == null) throw new Exception("No existe administrador con ese email");
+                string passRandom = Seguridad.GenerarPasswordRandom();
+                Seguridad.CrearPasswordHash(passRandom,out byte[]passwordHash,out byte[]passwordSalt);
+                bool resultado =await  recuperarPasswordUc.Ejecutar(email, passwordHash, passwordSalt);
+                if (!resultado) throw new Exception("No existe administrador con esa contraseña");
+                await avisoCambioPasswordUc.Ejecutar(adminBuscado,passRandom);
+                return Ok();
+           
+
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
         }
     }
 }

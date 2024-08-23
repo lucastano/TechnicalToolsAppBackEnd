@@ -75,27 +75,31 @@ namespace ProyectoService.ApiRest.Controllers
             }
 
         }
-        [HttpPost("RecuperarPasswordTecnico")]
+        [HttpPut("RecuperarPasswordTecnico")]
         public async Task<ActionResult> RecuperarPassword(string email)
         {
-            if (email == null) throw new Exception("Debe ingresar email de tecnico");
-            Tecnico tecnico = await obtenerTecnicoPorEmailUc.Ejecutar(email);
-            string passwordRandom = Seguridad.GenerarPasswordRandom();
-            Seguridad.CrearPasswordHash(passwordRandom, out byte[] passwordHash, out byte[] passwordSalt);
-            tecnico.PasswordHash = passwordHash;
-            tecnico.PasswordSalt = passwordSalt;
-            bool response = await recuperarPasswordTecnicoUc.Ejecutar(tecnico);
-            if (response)
+
+            try
             {
-                //deberia enviar email 
+                if (email == null) throw new Exception("Debe ingresar email de tecnico");
+                Tecnico tecnico = await obtenerTecnicoPorEmailUc.Ejecutar(email);
+                if (tecnico == null) throw new Exception("No existe un tecnico con ese Email");
+                string passwordRandom = Seguridad.GenerarPasswordRandom();
+                Seguridad.CrearPasswordHash(passwordRandom, out byte[] passwordHash, out byte[] passwordSalt);
+                tecnico.PasswordHash = passwordHash;
+                tecnico.PasswordSalt = passwordSalt;
+                bool response = await recuperarPasswordTecnicoUc.Ejecutar(tecnico);
+                if (!response) throw new Exception("No se pudo cambiar contraseña");
                 await avisoCambioPasswordUc.Ejecutar(tecnico, passwordRandom);
                 return Ok();
 
+
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
+
 
         }
 

@@ -80,6 +80,8 @@ public class Program
         builder.Services.AddScoped<IObtenerBaseFallas,ObtenerBaseFallas>();
         builder.Services.AddScoped<IRecuperarPasswordTecnico,RecuperarPasswordTecnico>();
         builder.Services.AddScoped<IAvisoCambioPassword,AvisoCambioPassword>();
+        builder.Services.AddScoped<IRecuperarPasswordAdministrador,RecuperarPasswordAdministrador>();
+        builder.Services.AddScoped<IObtenerAdministradorPorEmail,ObtenerAdministradorPorEmail>();
         // Add services to the container.
 
         builder.Services.AddControllers();
