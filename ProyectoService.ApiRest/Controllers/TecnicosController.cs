@@ -11,6 +11,8 @@ namespace ProyectoService.ApiRest.Controllers
     [Route("api/[controller]")]
     [ApiController]
     
+
+
     public class TecnicosController : ControllerBase
     {
         private readonly IAgregarTecnico agregarTecnicoUc;
@@ -30,7 +32,7 @@ namespace ProyectoService.ApiRest.Controllers
             this.avisoCambioPasswordUc = avisoCambioPasswordUc;
 
         }
-
+        [Authorize]
         [HttpPost]
 
         public async Task<ActionResult<ResponseAgregarTecnicoDTO>> AgregarTecnico(AgregarTecnicoDTO dto)
@@ -101,6 +103,7 @@ namespace ProyectoService.ApiRest.Controllers
 
         }
 
+        [Authorize]
         [HttpPut("CambiarPassword")]
         public async Task<ActionResult> CambiarPassword(string email, string nuevoPassword)
         {
@@ -124,8 +127,8 @@ namespace ProyectoService.ApiRest.Controllers
 
         }
 
+        [Authorize]
         [HttpGet]
-
         public async  Task<ActionResult<ResponseObtenerTecnicosDTO>> ObtenerTecnicos()
         {
             try

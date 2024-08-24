@@ -10,7 +10,9 @@ namespace ProyectoService.ApiRest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   
+    [Authorize]
+
+
     public class ClientesController : ControllerBase
     {
         private readonly IAgregarClienteUC agregarClienteUC;

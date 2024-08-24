@@ -67,6 +67,8 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             try
             {
                 if (email == "") throw new TecnicoException("Falta email");
+                if (passwordHash==null || passwordHash.Length==0) throw new TecnicoException("Contraseña no puede ser vacia");
+                if (passwordSalt == null|| passwordSalt.Length==0) throw new TecnicoException("Contraseña no puede ser vacia");
                 Tecnico tecnicoBuscado = await ObtenerTecnicoPorEmail(email);
                 if (tecnicoBuscado == null) throw new TecnicoException("No existe un tecnico con ese email");
                 tecnicoBuscado.PasswordHash = passwordHash;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoService.ApiRest.DTOs;
 using ProyectoService.Aplicacion.ICasosUso;
@@ -8,6 +9,8 @@ namespace ProyectoService.ApiRest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+
     public class MensajesController : ControllerBase
     {
         private readonly INuevoMensaje nuevoMensajeUc;

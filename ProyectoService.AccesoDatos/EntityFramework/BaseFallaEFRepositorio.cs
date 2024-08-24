@@ -20,11 +20,13 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public async Task Add(BaseFalla entity)
         {
-            if (entity.Producto == null) throw new Exception("Debe ingresar un producto");
-            if (entity.Falla == null) throw new Exception("Debe ingresar una falla");
-            if (entity.Solucion == null) throw new Exception("Debe ingresar una solucion");
-            await _context.BaseFallas.AddAsync(entity);
-            await _context.SaveChangesAsync();
+            
+                if (entity == null) throw new Exception("Debe ingresar una falla");
+                if (entity.Producto == null) throw new Exception("Debe ingresar un producto");
+                if (entity.Falla == "") throw new Exception("Debe ingresar una falla");
+                if (entity.Solucion == "") throw new Exception("Debe ingresar una solucion");
+                await _context.BaseFallas.AddAsync(entity);
+                await _context.SaveChangesAsync();
             
         }
 

@@ -34,22 +34,23 @@ namespace ProyectoService.Test
                 .Options;
 
             _context = new ProyectoServiceContext(options);
-            SeedData();
+            
             _reparacionRepositorio = new ReparacionEFRepositorio(_context);
             _tecnicoEFRepositorio = new TecnicoEFRepositorio(_context);
             _clienteEFRepositorio = new ClienteEFRepositorio(_context);
             _productoRepositorio = new ProductoRepositorio(_context);
+            SeedData();
         }
 
-        private void SeedData()
+        private async void SeedData()
         {
 
             var salt = ObtenerSalt();
             var producto1 = new Producto()
             {
-                Marca="Sony",
-                Modelo="PS5",
-                Version="slim"
+                Marca = "Sony",
+                Modelo = "PS5",
+                Version = "slim"
 
             };
             var producto2 = new Producto()
@@ -59,6 +60,7 @@ namespace ProyectoService.Test
                 Version = "x"
 
             };
+            
             var tecnico = new Tecnico
             {
                 Nombre = "Juan",
@@ -124,6 +126,10 @@ namespace ProyectoService.Test
                 Estado = "Terminada"
 
             };
+            _context.Productos.Add(producto1);
+            _context.SaveChanges();
+            _context.Productos.Add(producto2);
+            _context.SaveChanges();
             _context.Reparaciones.Add(reparacion);
             _context.SaveChanges();
             _context.Reparaciones.Add(reparacion2);
@@ -132,10 +138,38 @@ namespace ProyectoService.Test
             _context.SaveChanges();
             _context.Reparaciones.Add(reparacion4);
             _context.SaveChanges();
-            _context.Productos.Add(producto1);
+            
+
+            Reparacion reparacion5 = new Reparacion()
+            {
+                Tecnico = tecnico,
+                Cliente = cliente,
+                Producto = producto2,
+                NumeroSerie = "21312312",
+                Descripcion = "no prende",
+                Estado = "EnTaller"
+
+            };
+            _context.Reparaciones.Add(reparacion5);
             _context.SaveChanges();
-            _context.Productos.Add(producto2);
+            //presupuesto la reparacion 5
+            await _reparacionRepositorio.Presupuestar(5, 1000, "prueba", new DateTime(2024,08,24));
+
+            //REPARACION EN TALLER PARA PRUEBAS PRESUPUESTAR QUE FALLEN
+            Reparacion reparacion6 = new Reparacion()
+            {
+                Tecnico = tecnico,
+                Cliente = cliente,
+                Producto = producto2,
+                NumeroSerie = "21312312",
+                Descripcion = "no prende",
+                Estado = "EnTaller"
+
+            };
+            _context.Reparaciones.Add(reparacion6);
             _context.SaveChanges();
+
+
 
 
 
@@ -150,8 +184,7 @@ namespace ProyectoService.Test
             //BUSCO EL TECNICO POR EMAIL
             string email = "juan@example.com";
             Tecnico tecnico = await _tecnicoEFRepositorio.ObtenerTecnicoPorEmail(email);
-            int idProducto1 = 1;
-            int idProducto2 = 2;
+            
             Producto producto1 = await _productoRepositorio.ObtenerProductoPorId(1);
             
 
@@ -522,7 +555,7 @@ namespace ProyectoService.Test
         public async Task ShouldNullAceptarPresupuesto_WhenValidEstadoReparacion()
         {
             //SE LE PASE ID DE UNA REPARACION QUE ESTA PRESUPUESTADA
-            int id =2;
+            int id =5;
             Exception ex = null;
             try
             {
@@ -573,7 +606,9 @@ namespace ProyectoService.Test
         public async Task ShouldNullNOAceptarPresupuesto_WhenValidEstadoReparacion()
         {
             //SE LE PASE ID DE UNA REPARACION QUE ESTA PRESUPUESTADA
-            int id = 2;
+            int id = 5;
+            Reparacion rep = await _reparacionRepositorio.ObtenerReparacionPorId(id);
+
             double costo = 1000;
             string razon = "Muy caro";
             Exception ex = null;

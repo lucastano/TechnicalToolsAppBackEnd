@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoService.ApiRest.DTOs;
 using ProyectoService.Aplicacion.CasosUso;
@@ -11,6 +12,7 @@ namespace ProyectoService.ApiRest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class AdministradoresController : ControllerBase
     {
         private readonly IAgregarAdministrador agregarAdministradorUc;
@@ -30,20 +32,15 @@ namespace ProyectoService.ApiRest.Controllers
             this.avisoCambioPasswordUc = avisoCambioPasswordUc;
 
         }
-
+        [Authorize]
         [HttpPost]
-
         public async Task<ActionResult> AgregarAdministrador(AgregarAdministradorDTO dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Debe ingresar todos los campos ");
-            }
+            
             try
             {
-                
-                if (!validarPasswordUc.Ejecutar(dto.Password)) throw new Exception("Password no valido");
-
+                if (!ModelState.IsValid) throw new Exception("Debe llenar todos los campos");
+                if (!validarPasswordUc.Ejecutar(dto.Password)) throw new Exception("Contraseña no valida");
                 Seguridad.CrearPasswordHash(dto.Password, out byte[] PasswordHash, out byte[] PasswordSalt);
                 Administrador admin = new Administrador()
                 {
@@ -55,9 +52,7 @@ namespace ProyectoService.ApiRest.Controllers
 
 
                 };
-
                 await agregarAdministradorUc.Ejecutar(admin);
-
                 ResponseAgregarAdministradorDTO response = new ResponseAgregarAdministradorDTO()
                 {
                     StatusCode = 201,
@@ -86,9 +81,8 @@ namespace ProyectoService.ApiRest.Controllers
 
 
         }
-
+        [Authorize]
         [HttpGet]
-
         public async Task<ActionResult<ResponseObtenerAdministradoresDTO>> ObtenerAdministradores()
         {
             try
@@ -133,8 +127,8 @@ namespace ProyectoService.ApiRest.Controllers
             }
 
         }
-        [HttpPut("RecuperarPassword")]
 
+        [HttpPut("RecuperarPassword")]
         public async Task<ActionResult>RecuperarPassword(string email)
         {
             try
@@ -157,9 +151,11 @@ namespace ProyectoService.ApiRest.Controllers
 
             }
         }
+        [Authorize]
         [HttpPut("CambiarPassword")]
-
+#pragma warning disable CS1591 // Falta el comentario XML para el tipo o miembro visible públicamente
         public async Task<ActionResult> CambiarPassword(string email,string password)
+#pragma warning restore CS1591 // Falta el comentario XML para el tipo o miembro visible públicamente
         {
             //por ahora para cambiar el password solo se pasa el mail y el password, para mi deberia pedir el password actual, ya que este metodo solo se puede usar 
             //estando logeado

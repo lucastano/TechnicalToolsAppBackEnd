@@ -54,6 +54,9 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         {
             try
             {
+                if (email == "") throw new AdministradorException("Debe ingresar un email");
+                if (passwordHash == null || passwordHash.Length == 0) throw new AdministradorException("Password no valido");
+                if (passwordSalt == null || passwordSalt.Length == 0) throw new AdministradorException("Password no valido");
                 Administrador admin = await ObtenerAdministradorPorEmail(email);
                 if (admin == null) throw new AdministradorException("No existe administrador con ese email");
                 admin.PasswordHash = passwordHash;
