@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.CasosUso
 {
-    public class RecuperarPasswordTecnico : IRecuperarPasswordTecnico
+    public class CambiarPasswordTecnico : ICambiarPasswordTecnico
     {
         private readonly ITecnicoRepositorio _repositorio;
-        public RecuperarPasswordTecnico(ITecnicoRepositorio repositorio)
+        public CambiarPasswordTecnico(ITecnicoRepositorio repositorio)
         {
             _repositorio = repositorio;
         }
 
-        public async Task<bool> Ejecutar(Tecnico tecnico)
+        public async Task<bool> Ejecutar(string email, byte[] passwordHash, byte[]passwordSalt)
         {
-           return await _repositorio.RecuperarPassword(tecnico);
+           return await _repositorio.CambiarPassword(email, passwordHash, passwordSalt);
         }
     }
 }

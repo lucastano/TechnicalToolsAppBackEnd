@@ -112,7 +112,7 @@ namespace ProyectoService.ApiRest.Controllers
                 };
 
                Reparacion rep= await agregarReparacionUc.Ejecutar(reparacion);
-               byte []pdf=  await avisoNuevaReparacionUc.Ejecutar(rep,emp);
+               byte []pdf=  await avisoNuevaReparacionUc.Ejecutar(rep);
                 //ACA TENGO QUE RESOLVER QUE RETORNAR
                 ResponseNuevaReparacionDTO response = new ResponseNuevaReparacionDTO()
                 {
@@ -142,7 +142,7 @@ namespace ProyectoService.ApiRest.Controllers
                 if (dto.Id == 0) throw new Exception("No existe reparacion con ese id");
                 if (dto.Descripcion == null) throw new Exception("Debe ingresar una descripcio");
                 Reparacion rep=await presupuestarReparacionUc.Ejecutar(dto.Id,dto.ManoObra,dto.Descripcion,dto.FechaPromesaEntrega);
-                await avisoNuevoPresupuestoUc.Ejecutar(rep,emp);//caso de uso 
+                await avisoNuevoPresupuestoUc.Ejecutar(rep);//caso de uso 
                 return StatusCode(200);    
 
             }
@@ -192,7 +192,7 @@ namespace ProyectoService.ApiRest.Controllers
                 if (id == 0) throw new Exception("Numero de orden incorrecto");
                 Reparacion reparacion = await terminarReparacionUc.Ejecutar(id,reparada);
                 if (reparacion == null) throw new Exception("No se pudo terminar esta reparacion");
-                await avisoReparacionTerminadaUc.Ejecutar(reparacion,emp);
+                await avisoReparacionTerminadaUc.Ejecutar(reparacion);
                 return Ok();
             }
             catch (Exception ex)
@@ -212,7 +212,7 @@ namespace ProyectoService.ApiRest.Controllers
                 if (id == 0) throw new Exception("Numero de orden incorrecto");
                 Reparacion reparacion = await entregarReparacionUc.Ejecutar(id);
                 if (reparacion == null) throw new Exception("No se pudo entregar esta reparacion");
-                byte[] pdf=await avisoEntregarReparacionUc.Ejecutar(reparacion, emp);
+                byte[] pdf=await avisoEntregarReparacionUc.Ejecutar(reparacion);
                 ResponseEntregarReparacionDTO response = new ResponseEntregarReparacionDTO()
                 {
                     StatusCode = 200,

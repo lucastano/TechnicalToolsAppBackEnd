@@ -33,6 +33,8 @@ namespace ProyectoService.AccesoDatos.EntityFramework
            await _context.SaveChangesAsync();
         }
 
+       
+
         public async Task Delete(Tecnico entity)
         {
             throw new NotImplementedException();
@@ -60,11 +62,15 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
 
         //solamente actualiza el password
-        public async Task<bool> RecuperarPassword(Tecnico entity)
+        public async Task<bool> CambiarPassword(string email,byte[]passwordHash,byte[]passwordSalt)
         {
             try
             {
-                if (entity == null) throw new TecnicoException("Falta algun dato");
+                if (email == "") throw new TecnicoException("Falta email");
+                Tecnico tecnicoBuscado = await ObtenerTecnicoPorEmail(email);
+                if (tecnicoBuscado == null) throw new TecnicoException("No existe un tecnico con ese email");
+                tecnicoBuscado.PasswordHash = passwordHash;
+                tecnicoBuscado.PasswordSalt = passwordSalt;
                 await _context.SaveChangesAsync();
                 return true;
 

@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.CasosUso
 {
-    public class RecuperarPasswordAdministrador : IRecuperarPasswordAdministrador
+    public class CambiarPasswordAdministrador : ICambiarPasswordAdministrador
     {
         private readonly IAdministradorRepositorio repo;
-        public RecuperarPasswordAdministrador(IAdministradorRepositorio repo)
+        public CambiarPasswordAdministrador(IAdministradorRepositorio repo)
         {
             this.repo = repo;
         }
@@ -20,7 +20,7 @@ namespace ProyectoService.Aplicacion.CasosUso
 
         public async Task<bool> Ejecutar(string email, byte[] passwordHash, byte[] passwordSalt)
         {
-            return await repo.RecuperarPassword(email,passwordHash,passwordSalt);
+            return await repo.CambiarPassword(email,passwordHash,passwordSalt);
 
         }
     }

@@ -50,7 +50,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             return administradores.FirstOrDefault(a => a.Email.Value.Equals(email));
         }
 
-        public async Task<bool> RecuperarPassword(string email ,byte[]passwordHash,byte[]passwordSalt)
+        public async Task<bool> CambiarPassword(string email ,byte[]passwordHash,byte[]passwordSalt)
         {
             try
             {

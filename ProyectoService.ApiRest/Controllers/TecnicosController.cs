@@ -17,16 +17,16 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly IObtenerTodosLosTecnicos obtenerTodosLosTecnicosUc;
         private readonly IObtenerTecnicoPorEmail obtenerTecnicoPorEmailUc;
         private readonly IValidarPassword validarPasswordUc;
-        private readonly IRecuperarPasswordTecnico recuperarPasswordTecnicoUc;
+        private readonly ICambiarPasswordTecnico cambiarPasswordTecnicoUc;
         private readonly IAvisoCambioPassword avisoCambioPasswordUc;
 
-        public TecnicosController(IAgregarTecnico agregarTecnicoUc, IObtenerTodosLosTecnicos obtenerTodosLosTecnicosUc, IObtenerTecnicoPorEmail obtenerTecnicoPorEmailUc, IValidarPassword validarPasswordUc, IRecuperarPasswordTecnico recuperarPasswordTecnicoUc, IAvisoCambioPassword avisoCambioPasswordUc)
+        public TecnicosController(IAgregarTecnico agregarTecnicoUc, IObtenerTodosLosTecnicos obtenerTodosLosTecnicosUc, IObtenerTecnicoPorEmail obtenerTecnicoPorEmailUc, IValidarPassword validarPasswordUc, ICambiarPasswordTecnico cambiarPasswordTecnicoUc, IAvisoCambioPassword avisoCambioPasswordUc)
         {
             this.agregarTecnicoUc = agregarTecnicoUc;
             this.obtenerTodosLosTecnicosUc = obtenerTodosLosTecnicosUc;
             this.obtenerTecnicoPorEmailUc = obtenerTecnicoPorEmailUc;
             this.validarPasswordUc = validarPasswordUc;
-            this.recuperarPasswordTecnicoUc = recuperarPasswordTecnicoUc;
+            this.cambiarPasswordTecnicoUc = cambiarPasswordTecnicoUc;
             this.avisoCambioPasswordUc = avisoCambioPasswordUc;
 
         }
@@ -86,9 +86,7 @@ namespace ProyectoService.ApiRest.Controllers
                 if (tecnico == null) throw new Exception("No existe un tecnico con ese Email");
                 string passwordRandom = Seguridad.GenerarPasswordRandom();
                 Seguridad.CrearPasswordHash(passwordRandom, out byte[] passwordHash, out byte[] passwordSalt);
-                tecnico.PasswordHash = passwordHash;
-                tecnico.PasswordSalt = passwordSalt;
-                bool response = await recuperarPasswordTecnicoUc.Ejecutar(tecnico);
+                bool response = await cambiarPasswordTecnicoUc.Ejecutar(email, passwordHash, passwordSalt);
                 if (!response) throw new Exception("No se pudo cambiar contraseña");
                 await avisoCambioPasswordUc.Ejecutar(tecnico, passwordRandom);
                 return Ok();
@@ -100,6 +98,29 @@ namespace ProyectoService.ApiRest.Controllers
                 return BadRequest(ex.Message);
             }
 
+
+        }
+
+        [HttpPut("CambiarPassword")]
+        public async Task<ActionResult> CambiarPassword(string email, string nuevoPassword)
+        {
+            try
+            {
+                if (email == null) throw new Exception("Debe ingresar email de tecnico");
+                if (nuevoPassword == "") throw new Exception("Debe ingresar la nueva contraseña");
+                if (!validarPasswordUc.Ejecutar(nuevoPassword)) throw new Exception("El formato de la contraseña no es correcto");
+                Tecnico tecnico = await obtenerTecnicoPorEmailUc.Ejecutar(email);
+                if (tecnico == null) throw new Exception("No existe un tecnico con ese Email");
+                Seguridad.CrearPasswordHash(nuevoPassword, out byte[] passwordHash, out byte[] passwordSalt);
+                bool response = await cambiarPasswordTecnicoUc.Ejecutar(email, passwordHash, passwordSalt);
+                if (!response) throw new Exception("No se pudo cambiar contraseña");
+                return Ok();
+
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
         }
 

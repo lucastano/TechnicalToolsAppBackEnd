@@ -10,6 +10,6 @@ namespace ProyectoService.Aplicacion.ICasosUso
 {
     public interface IAvisoNuevoPresupuesto
     {
-        Task Ejecutar(Reparacion entity,Empresa emp);
+        Task Ejecutar(Reparacion entity);
     }
 }

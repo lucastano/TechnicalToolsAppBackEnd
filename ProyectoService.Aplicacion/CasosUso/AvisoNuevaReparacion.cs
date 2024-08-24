@@ -17,9 +17,9 @@ namespace ProyectoService.Aplicacion.CasosUso
             this.repoEmail = repoEmail;
         }
 
-        public async Task<byte[]> Ejecutar(Reparacion entity, Empresa emp)
+        public async Task<byte[]> Ejecutar(Reparacion entity)
         {
-            return await  repoEmail.EnviarEmailNuevaReparacion(entity,emp);
+            return await  repoEmail.EnviarEmailNuevaReparacion(entity);
         }
     }
 }

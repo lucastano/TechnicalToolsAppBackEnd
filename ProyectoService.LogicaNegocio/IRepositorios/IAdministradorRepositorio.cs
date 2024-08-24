@@ -10,6 +10,6 @@ namespace ProyectoService.LogicaNegocio.IRepositorios
     public interface IAdministradorRepositorio:ICrudRepositorio<Administrador>
     {
         Task<Administrador> ObtenerAdministradorPorEmail(string email);
-        Task<bool> RecuperarPassword(string email ,byte[] passwordHash, byte[] passwordSalt);
+        Task<bool> CambiarPassword(string email ,byte[] passwordHash, byte[] passwordSalt);
     }
 }

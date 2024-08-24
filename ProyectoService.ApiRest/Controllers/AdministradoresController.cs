@@ -16,16 +16,16 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly IAgregarAdministrador agregarAdministradorUc;
         private readonly IObtenerAdministradores obtenerTodosLosAdministradoresUc;
         private readonly IValidarPassword validarPasswordUc; 
-        private readonly IRecuperarPasswordAdministrador recuperarPasswordUc;
+        private readonly ICambiarPasswordAdministrador cambiarPasswordUc;
         private readonly IObtenerAdministradorPorEmail obtenerAdministradorPorEmailUc;
         private readonly IAvisoCambioPassword avisoCambioPasswordUc;
 
-        public AdministradoresController(IAgregarAdministrador agregarAdministradorUc, IObtenerAdministradores obtenerTodosLosAdministradoresUc, IValidarPassword validarPasswordUc, IRecuperarPasswordAdministrador recuperarPasswordUc, IObtenerAdministradorPorEmail obtenerAdministradorPorEmailUc, IAvisoCambioPassword avisoCambioPasswordUc)
+        public AdministradoresController(IAgregarAdministrador agregarAdministradorUc, IObtenerAdministradores obtenerTodosLosAdministradoresUc, IValidarPassword validarPasswordUc, ICambiarPasswordAdministrador cambiarPasswordUc, IObtenerAdministradorPorEmail obtenerAdministradorPorEmailUc, IAvisoCambioPassword avisoCambioPasswordUc)
         {
             this.agregarAdministradorUc = agregarAdministradorUc;
             this.obtenerTodosLosAdministradoresUc = obtenerTodosLosAdministradoresUc;
             this.validarPasswordUc = validarPasswordUc;
-            this.recuperarPasswordUc = recuperarPasswordUc;
+            this.cambiarPasswordUc = cambiarPasswordUc;
             this.obtenerAdministradorPorEmailUc = obtenerAdministradorPorEmailUc;
             this.avisoCambioPasswordUc = avisoCambioPasswordUc;
 
@@ -143,11 +143,36 @@ namespace ProyectoService.ApiRest.Controllers
                 if (adminBuscado == null) throw new Exception("No existe administrador con ese email");
                 string passRandom = Seguridad.GenerarPasswordRandom();
                 Seguridad.CrearPasswordHash(passRandom,out byte[]passwordHash,out byte[]passwordSalt);
-                bool resultado =await  recuperarPasswordUc.Ejecutar(email, passwordHash, passwordSalt);
-                if (!resultado) throw new Exception("No existe administrador con esa contraseña");
+                bool resultado =await  cambiarPasswordUc.Ejecutar(email, passwordHash, passwordSalt);
+                if (!resultado) throw new Exception("No existe administrador con ese email");
                 await avisoCambioPasswordUc.Ejecutar(adminBuscado,passRandom);
                 return Ok();
            
+
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+        [HttpPut("CambiarPassword")]
+
+        public async Task<ActionResult> CambiarPassword(string email,string password)
+        {
+            //por ahora para cambiar el password solo se pasa el mail y el password, para mi deberia pedir el password actual, ya que este metodo solo se puede usar 
+            //estando logeado
+            try
+            {
+                Administrador adminBuscado = await obtenerAdministradorPorEmailUc.Ejecutar(email);
+                if (adminBuscado == null) throw new Exception("No existe administrador con ese email");
+                if (!validarPasswordUc.Ejecutar(password)) throw new Exception("formato de la contraseña invalido");
+                Seguridad.CrearPasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
+                bool resultado = await cambiarPasswordUc.Ejecutar(email, passwordHash, passwordSalt);
+                if (!resultado) throw new Exception("No existe administrador con ese email"); 
+                return Ok();
+
 
 
             }

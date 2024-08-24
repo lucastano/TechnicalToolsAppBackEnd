@@ -102,7 +102,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         }
 
-        public async Task<byte[]> EnviarEmailAvisoEntrega(Reparacion entity,Empresa emp)
+        public async Task<byte[]> EnviarEmailAvisoEntrega(Reparacion entity)
         {
             
             string reparada = "Reparada";
@@ -168,7 +168,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         }
 
-        public async Task EnviarEmailAvisoTerminada(Reparacion entity,Empresa emp)
+        public async Task EnviarEmailAvisoTerminada(Reparacion entity)
         {
            
 
@@ -206,7 +206,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 }
         }
 
-        public async Task<byte[]> EnviarEmailNuevaReparacion(Reparacion entity,Empresa emp)
+        public async Task<byte[]> EnviarEmailNuevaReparacion(Reparacion entity)
         {
 
             byte[] pdfContent = entity.GenerarPdfOrdenServicioEntrada(this.empresa);
@@ -265,7 +265,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         }
 
-        public async Task EnviarEmailNuevoPresupuesto(Reparacion entity,Empresa emp)
+        public async Task EnviarEmailNuevoPresupuesto(Reparacion entity)
         {
             byte[] pdfContent = entity.GenerarPdfOrdenServicioPresupuestada(this.empresa);
            

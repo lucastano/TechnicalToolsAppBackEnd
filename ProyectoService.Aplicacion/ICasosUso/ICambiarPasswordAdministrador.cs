@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.ICasosUso
 {
-    public interface IRecuperarPasswordTecnico
+    public interface ICambiarPasswordAdministrador
     {
-        Task<bool> Ejecutar(Tecnico tecnico);
+        Task<bool> Ejecutar(string email, byte[]passwordHash,byte []passwordSalt);
     }
 }

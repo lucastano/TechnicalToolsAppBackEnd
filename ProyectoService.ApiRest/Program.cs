@@ -78,9 +78,9 @@ public class Program
         builder.Services.AddScoped<IObtenerBaseFallaSegunDescripcion,ObtenerBaseFallaSegunDescripcion>();
         builder.Services.AddScoped<IAgregarABaseFallas, AgregarABaseFallas>();
         builder.Services.AddScoped<IObtenerBaseFallas,ObtenerBaseFallas>();
-        builder.Services.AddScoped<IRecuperarPasswordTecnico,RecuperarPasswordTecnico>();
+        builder.Services.AddScoped<ICambiarPasswordTecnico,CambiarPasswordTecnico>();
         builder.Services.AddScoped<IAvisoCambioPassword,AvisoCambioPassword>();
-        builder.Services.AddScoped<IRecuperarPasswordAdministrador,RecuperarPasswordAdministrador>();
+        builder.Services.AddScoped<ICambiarPasswordAdministrador,CambiarPasswordAdministrador>();
         builder.Services.AddScoped<IObtenerAdministradorPorEmail,ObtenerAdministradorPorEmail>();
         // Add services to the container.
 
