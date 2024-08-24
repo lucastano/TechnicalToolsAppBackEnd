@@ -34,11 +34,12 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly IObtenerHistoriaClinica obtenerHistoriaClinicaUc;
         private readonly IObtenerMontoTotalHistoriaClinica obtenerMontoTotalHistoriaClinicaUc;
         private readonly IObtenerProductoPorId obtenerProductoPorIdUc;
+        private readonly IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc;
         private Empresa emp;
 
 
 
-        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc, IObtenerReparacionesPorTecnico obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc, IAvisoNuevaReparacion avisoNuevaReparacionUc, IAvisoNuevoPresupuesto avisoNuevoPresupuestoUc, IAceptarPresupuesto aceptarPresupuestoUc, INoAceptarPresupuesto noAceptarPresupuestoUc, ITerminarReparacion terminarReparacionUc, IEntregarReparacion entregarReparacionUc, IAvisoEntregaReparacion avisoEntregarReparacionUc, IAvisoReparacionTerminada avisoReparacionTerminadaUc,  IConfiguration configuration, IObtenerReparacionPorId obtenerReparacionPorIdUc, IGenerarOrdenDeServicio generarOrdenDeServicioUc, IModificarPresupuestoReparacion modificarPresupuestoReparacionUc,IModificarDatosReparacion modificarDatosReparacionUc, IEliminarMensajesReparacion eliminarMensajesReparacionUc, IObtenerHistoriaClinica obtenerHistoriaClinicaUc, IObtenerMontoTotalHistoriaClinica obtenerMontoTotalHistoriaClinicaUc,IObtenerProductoPorId obtenerProductoPorIdUc)
+        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc,  IObtenerReparacionesPorTecnico obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc, IAvisoNuevaReparacion avisoNuevaReparacionUc, IAvisoNuevoPresupuesto avisoNuevoPresupuestoUc, IAceptarPresupuesto aceptarPresupuestoUc, INoAceptarPresupuesto noAceptarPresupuestoUc, ITerminarReparacion terminarReparacionUc, IEntregarReparacion entregarReparacionUc, IAvisoEntregaReparacion avisoEntregarReparacionUc, IAvisoReparacionTerminada avisoReparacionTerminadaUc,  IConfiguration configuration, IObtenerReparacionPorId obtenerReparacionPorIdUc, IGenerarOrdenDeServicio generarOrdenDeServicioUc, IModificarPresupuestoReparacion modificarPresupuestoReparacionUc,IModificarDatosReparacion modificarDatosReparacionUc, IEliminarMensajesReparacion eliminarMensajesReparacionUc, IObtenerHistoriaClinica obtenerHistoriaClinicaUc, IObtenerMontoTotalHistoriaClinica obtenerMontoTotalHistoriaClinicaUc,IObtenerProductoPorId obtenerProductoPorIdUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc)
         {
             this.agregarReparacionUc = agregarReparacionUc;
             this.obtenerTodasLasReparacionesUc = obtenerTodasLasReparacionesUc;
@@ -60,6 +61,7 @@ namespace ProyectoService.ApiRest.Controllers
             this.obtenerMontoTotalHistoriaClinicaUc = obtenerMontoTotalHistoriaClinicaUc;
             this.obtenerHistoriaClinicaUc = obtenerHistoriaClinicaUc;
             this.obtenerProductoPorIdUc = obtenerProductoPorIdUc;
+            this.obtenerReparacionesPorClienteUc = obtenerReparacionesPorClienteUc;
             this.configuration = configuration;
             //CONFIGURACION ENTIDAD EMPRESA
             var configNombreEmpresa = configuration.GetSection("EmpresaSettings:NombreEmpresa").Value!;
@@ -285,6 +287,62 @@ namespace ProyectoService.ApiRest.Controllers
                 return BadRequest(response);
             }
 
+
+        }
+
+        [HttpGet("ReparacionesDeClienteCedula")]
+
+        public async Task<ActionResult> ObtenerReparacionesClientePorCedula(string cedula)
+        {
+            try
+            {
+                if (cedula == "") throw new Exception("Debe ingresar un email");
+                List<Reparacion> reparacionesDeCliente = await obtenerReparacionesPorClienteUc.Ejecutar(cedula);
+                if (!reparacionesDeCliente.Any())
+                {
+                    return Ok("No tiene reparaciones");
+
+                }
+                else
+                {
+                    IEnumerable<ReparacionEnTallerDTO> rep = reparacionesDeCliente.Select(r => new ReparacionEnTallerDTO()
+                    {
+                        Id = r.Id,
+                        ClienteNombre = r.Cliente.Nombre,
+                        ClienteApellido = r.Cliente.Apellido,
+                        ClienteTelefono = r.Cliente.Telefono,
+                        ClienteDireccion = r.Cliente.Direccion,
+                        ClienteEmail = r.Cliente.Email.Value,
+                        ClienteCedula = r.Cliente.Ci,
+                        TecnicoId = r.Tecnico.Id,
+                        Producto = new ProductoDTO()
+                        {
+                            Id = r.Producto.Id,
+                            Marca = r.Producto.Marca,
+                            Modelo = r.Producto.Modelo,
+                            Version = r.Producto.Version
+                        },
+                        NumeroSerie = r.NumeroSerie,
+                        Descripcion = r.Descripcion,
+                        Fecha = r.Fecha,
+                        Estado = r.Estado,
+                        DescripcionPresupuesto = r.DescripcionPresupuesto,
+                        Costo = r.CostoFinal,
+                        FechaPromesaPresupuesto = r.FechaPromesaPresupuesto,
+                        FechaPromesaEntrega = r.FechaPromesaEntrega
+
+
+
+                    });
+                    return Ok(rep);
+
+                }
+
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
         }
 

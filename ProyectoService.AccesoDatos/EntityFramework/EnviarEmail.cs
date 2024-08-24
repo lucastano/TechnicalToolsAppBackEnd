@@ -11,16 +11,21 @@ using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using Mailjet.Client;
+using Newtonsoft.Json.Linq;
+using Mailjet.Client.Resources;
+using Mailjet.Client;
 
 
 namespace ProyectoService.AccesoDatos.EntityFramework
 {
     public class EnviarEmail : IEnviarEmail
     {
-        //private  MailService _mailService;
+       
         private readonly IConfiguration configuration;
         SmtpClient smtpClient;
         private Empresa empresa;
+        
         
         
         public  EnviarEmail( IConfiguration configuration)
@@ -33,6 +38,9 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             var configPassword = configuration.GetSection("EmpresaSettings:EmailPassword").Value!;
             var configPoliticasEmpresa = configuration.GetSection("EmpresaSettings:PoliticasEmpresa").Value!;
             var emailServer = configuration.GetSection("EmpresaSettings:EmailServer").Value!;
+            var apiKey= configuration.GetSection("EmpresaSettings:APIKEY").Value!;
+            var secretKey = configuration.GetSection("EmpresaSettings:SECRETKEY").Value!;
+
             Empresa empresaConfig = new Empresa()
             {
                 Nombre = configNombreEmpresa,
@@ -43,18 +51,20 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 PoliticasEmpresa = configPoliticasEmpresa
             };
             this.empresa = empresaConfig;
-            smtpClient = new SmtpClient(emailServer.ToString())
+           
+            smtpClient = new SmtpClient("in.mailjet.com")
             {
                 Port = 587,
+                Credentials = new NetworkCredential(apiKey, secretKey),
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(empresaConfig.Email, empresaConfig.EmailPassword)
+                
 
             };
 
-
             
+
         }
 
         public async Task AvisoCambioPassword(Usuario usu,string password)
@@ -63,18 +73,18 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             string fromEmail = this.empresa.Email;
             string toName = usu.Nombre;
             string toEmail = usu.Email.Value;
-            string subject = "RECUPERACION DE PASSWORD: " + usu.Email.Value;
+            string subject = "RECUPERACION DE CONTRASEÑA: " + usu.Email.Value;
             //string body = "Nuevo Password generado para inicio de session "
             //            + "Para mantener la proteccion de su usuario, por favor cambie el password luego de iniciar"
             //            + ": " + password.ToString();
             string body = $@"
-            <html>
-            <body>
-                <p>Nuevo Password generado para inicio de session.</p>
-                <p>Para mantener la proteccion de su usuario, por favor cambie el password luego de iniciar.</p>
-                <p><strong>Contraseña:</strong> <strong>{password}</strong></p>
-            </body>
-            </html>";
+             <html>
+             <body>
+                 <p>Nueva contraseña generado para inicio de sesión.</p>
+                 <p>Para mantener la proteccion de su usuario, por favor cambie la contraseña luego de iniciar.</p>
+                 <p><strong>Contraseña:</strong> <strong>{password}</strong></p>
+             </body>
+             </html>";
 
             bool isHtml = true;
 
