@@ -111,16 +111,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 string toName = entity.Cliente.Nombre;
                 string toEmail = entity.Cliente.Email.Value;
                 string subject = "REPARACION Entregada Nro: " + entity.Id;
-                //string body = "Se entrego el producto " + entity.Producto.Marca + " " + entity.Producto.Modelo + " " + entity.Producto.Version + "\n"
-                //            +"Número de serie: " + entity.NumeroSerie +"\n"
-                //            +"Número de orden es: " + entity.Id+"\n"
-                //            +"Problema reportado: "+entity.Descripcion+"\n"
-                //            +"Presupuesto: "+entity.DescripcionPresupuesto+"\n"
-                //            +"Estado de la reparacion: "+reparada+"\n"
-                //            +"Fecha y hora de entrega: "+entity.FechaEntrega+"\n"
-                //            +"Importe abonado: "+entity.CostoFinal+"\n"
-                //            +"Muchas gracias por confiar en nuestro servicio.";
-                //bool isHtml = false;
+                
 
                 string body = $@"
              <html>
@@ -183,13 +174,25 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             // Verifica si el PDF se generó correctamente
             
                 // Ver los datos de la empresa de donde obtenerlos, al igual que el email de envio
-                string fromName = this.empresa.Nombre;
-                string fromEmail = this.empresa.Email;
-                string toName = entity.Cliente.Nombre;
-                string toEmail = entity.Cliente.Email.Value;
-                string subject = "REPARACION TERMINADA ORDEN DE SERVICIO Nro: " + entity.Id;
-                string body = "La reparacion de " + entity.Producto.Marca + " " + entity.Producto.Modelo + " " + entity.Producto.Version + ". Número de serie: " + entity.NumeroSerie + ". Su número de orden es: " + entity.Id+" fue terminada y esta lista para ser retirada, Muchas gracias.";
-                bool isHtml = false;
+            string fromName = this.empresa.Nombre;
+            string fromEmail = this.empresa.Email;
+            string toName = entity.Cliente.Nombre;
+            string toEmail = entity.Cliente.Email.Value;
+            string subject = "REPARACION TERMINADA ORDEN DE SERVICIO Nro: " + entity.Id;
+               
+                
+
+            string body = $@"
+             <html>
+             <body>
+                 <p>Reparacione Nro: <strong>{entity.Id}</strong></p>
+                 <p>Producto: <strong>{entity.Producto.Marca+" "+entity.Producto.Modelo+" "+entity.Producto.Version}</strong></p>
+                 <p>Numero de serie: <strong>{entity.NumeroSerie}</strong></p>
+                 <p><strong>Se encuentra lista para ser retirada</strong></p>
+
+             </body>
+             </html>";
+            bool isHtml = true;
 
             // Configura el mensaje de correo electrónico
             MailMessage mailMessage = new MailMessage()
