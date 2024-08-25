@@ -1,20 +1,10 @@
 ﻿using ProyectoService.LogicaNegocio.IRepositorios;
 using ProyectoService.LogicaNegocio.Modelo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Mail;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using QuestPDF.Fluent;
-using QuestPDF.Infrastructure;
-using System.IO;
 using Microsoft.Extensions.Configuration;
-using Mailjet.Client;
-using Newtonsoft.Json.Linq;
-using Mailjet.Client.Resources;
-using Mailjet.Client;
+
+
 
 
 namespace ProyectoService.AccesoDatos.EntityFramework
@@ -121,16 +111,34 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 string toName = entity.Cliente.Nombre;
                 string toEmail = entity.Cliente.Email.Value;
                 string subject = "REPARACION Entregada Nro: " + entity.Id;
-                string body = "Se entrego el producto " + entity.Producto.Marca + " " + entity.Producto.Modelo + " " + entity.Producto.Version + "\n"
-                            +"Número de serie: " + entity.NumeroSerie +"\n"
-                            +"Número de orden es: " + entity.Id+"\n"
-                            +"Problema reportado: "+entity.Descripcion+"\n"
-                            +"Presupuesto: "+entity.DescripcionPresupuesto+"\n"
-                            +"Estado de la reparacion: "+reparada+"\n"
-                            +"Fecha y hora de entrega: "+entity.FechaEntrega+"\n"
-                            +"Importe abonado: "+entity.CostoFinal+"\n"
-                            +"Muchas gracias por confiar en nuestro servicio.";
-                bool isHtml = false;
+                //string body = "Se entrego el producto " + entity.Producto.Marca + " " + entity.Producto.Modelo + " " + entity.Producto.Version + "\n"
+                //            +"Número de serie: " + entity.NumeroSerie +"\n"
+                //            +"Número de orden es: " + entity.Id+"\n"
+                //            +"Problema reportado: "+entity.Descripcion+"\n"
+                //            +"Presupuesto: "+entity.DescripcionPresupuesto+"\n"
+                //            +"Estado de la reparacion: "+reparada+"\n"
+                //            +"Fecha y hora de entrega: "+entity.FechaEntrega+"\n"
+                //            +"Importe abonado: "+entity.CostoFinal+"\n"
+                //            +"Muchas gracias por confiar en nuestro servicio.";
+                //bool isHtml = false;
+
+                string body = $@"
+             <html>
+             <body>
+                 <p>Se entrego el producto <strong>{entity.Producto.Marca}  {entity.Producto.Modelo} {entity.Producto.Version} </strong></p>
+                 <p>Número de serie: <strong>{ entity.NumeroSerie} </strong></p>
+                 <p>Número de orden:<strong> {entity.Id}</strong></p>
+                 <p>Problema reportado: <strong> {entity.Descripcion}</strong></p>
+                 <p>Presupuesto: <strong> {entity.DescripcionPresupuesto}</strong></p>
+                 <p>Estado de la reparacion: <strong> {reparada}</strong></p>
+                 <p>Fecha y hora de entrega: <strong> {entity.FechaEntrega}</strong></p>
+                 <p>Importe abonado: <strong> {entity.CostoFinal}</strong></p>
+                 <p>Muchas gracias por confiar en nuestro servicio</p>
+
+             </body>
+             </html>";
+               bool isHtml = true;
+
 
                 // Configura el mensaje de correo electrónico
                 MailMessage mailMessage = new MailMessage()
@@ -221,10 +229,19 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 string toName = entity.Cliente.Nombre;
                 string toEmail = entity.Cliente.Email.Value;
                 string subject = "ORDEN DE SERVICIO REPARACION Nro: " + entity.Id;
-                string body = "Se dejó para service el aparato " +entity.Producto.Marca+" " +entity.Producto.Modelo +" "+entity.Producto.Version+" "+ ". Número de serie: " + entity.NumeroSerie + "\n"
-                    + "Número de orden: " + entity.Id + "\n"
-                    + "Fecha aproximada del presupuesto: " + entity.FechaPromesaPresupuesto;
-                bool isHtml = false;
+
+                string body = $@"
+             <html>
+             <body>
+                 <p>Se dejó para service el aparato <strong>{entity.Producto.Marca + " " + entity.Producto.Modelo + " " + entity.Producto.Version}</strong></p>
+                 <p>Numero de serie: <strong>{entity.NumeroSerie}</strong></p>
+                 <p>Numero de orden: <strong>{entity.Id}</strong></p>
+                 <p>Fecha aproximada del presupuesto: <strong>{entity.FechaPromesaPresupuesto.ToString("dd-MM-yyyy")}</strong></p>
+
+             </body>
+             </html>";
+                bool isHtml = true;
+
                 // Configura el mensaje de correo electrónico
                 MailMessage mailMessage = new MailMessage()
                 {
@@ -236,11 +253,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 };
                 mailMessage.To.Add(new MailAddress(toEmail, toName));
 
-                //mailMessage.From = new MailAddress(fromEmail, fromName);
-                //mailMessage.To.Add(new MailAddress(toEmail, toName));
-                //mailMessage.Subject = subject;
-                //mailMessage.Body = body;
-                //mailMessage.IsBodyHtml = isHtml;
+                
                 mailMessage.ReplyToList.Add(new MailAddress("soporte@tudominio.com", "Soporte Técnico")); // Agrega un Reply-To
                 mailMessage.Headers.Add("X-Mailer", "Microsoft Outlook 16.0"); // Cabecera para ayudar a la clasificación
                 mailMessage.Headers.Add("X-Priority", "3");

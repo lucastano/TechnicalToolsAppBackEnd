@@ -321,11 +321,11 @@ namespace ProyectoService.Test
             // Arrange
             //BUSCO EL TECNICO POR EMAIL
             string email = "juan@example.com";
-            Tecnico tecnico = await _tecnicoEFRepositorio.ObtenerTecnicoPorEmail(email);
+            Tecnico? tecnico = await _tecnicoEFRepositorio.ObtenerTecnicoPorEmail(email);
             Producto producto2 = await _productoRepositorio.ObtenerProductoPorId(2);
             //BUSCO EL CLIENTE POR CI 
             string ciCliente = "48161123";
-            Cliente cliente = await _clienteEFRepositorio.GetClienteByCi(ciCliente);
+            Cliente? cliente = await _clienteEFRepositorio.GetClienteByCi(ciCliente);
 
             Reparacion reparacion = new Reparacion()
             {
