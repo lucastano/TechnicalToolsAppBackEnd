@@ -55,17 +55,6 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             bool estadoMensaje= ValidacionesMensajeria.ValidarUsuariosReparacion(reparacion,usuarioEmisor,usuarioDestinatario);
             if (!estadoMensaje) throw new Exception("Algun integrante del mensaje no corresponde a la reparacion");
 
-            //lo uso para cambiar la hora en el servidor
-            //int hora = msg.FechaHoraEnvio.Hour;
-            //int minuto = msg.FechaHoraEnvio.Minute;
-            //int sec = msg.FechaHoraEnvio.Second;
-            //int year = msg.FechaHoraEnvio.Year;
-            //int month = msg.FechaHoraEnvio.Month;
-            //int day = msg.FechaHoraEnvio.Day;
-            //hora -= 3;
-            //DateTime fechaFormat = new DateTime(year, month, day, hora, minuto, sec);
-            //msg.FechaHoraEnvio = fechaFormat;
-
             await _context.Mensajes.AddAsync(msg);
             await _context.SaveChangesAsync();
 
