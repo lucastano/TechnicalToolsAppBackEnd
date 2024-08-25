@@ -63,6 +63,7 @@ namespace ProyectoService.ApiRest.Controllers
                     Id=b.Id,
                     Producto= new ProductoDTO()
                     {
+                        Id=b.Id,
                         Marca=b.Producto.Marca,
                         Modelo=b.Producto.Modelo,
                         Version=b.Producto.Version
