@@ -179,9 +179,6 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             string toName = entity.Cliente.Nombre;
             string toEmail = entity.Cliente.Email.Value;
             string subject = "REPARACION TERMINADA ORDEN DE SERVICIO Nro: " + entity.Id;
-               
-                
-
             string body = $@"
              <html>
              <body>
@@ -294,13 +291,22 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 string toName = entity.Cliente.Nombre;
                 string toEmail = entity.Cliente.Email.Value;
                 string subject = "PRESUPUESTO ORDEN DE SERVICIO REPARACION Nro: " + entity.Id;
-                string body = "El presupuesto para" + entity.Producto.Marca + " " + entity.Producto.Modelo + " " + entity.Producto.Version + " Número de serie: " + entity.NumeroSerie + " Con número de orden  " + entity.Id+"\n"
-                               +"Descripcion del problema: "+entity.Descripcion+"\n"
-                               +"Presupuesto: "+entity.DescripcionPresupuesto+"\n"
-                               +"Costo: "+entity.CostoFinal+"\n"
-                               +"Fecha prometida de entrega aproximada: "+entity.FechaPromesaEntrega+"\n"
-                               +"Para aceptar el presupuesto comuniquese con la empresa. Gracias";
-                bool isHtml = false;
+                string body = $@"
+             <html>
+             <body>
+                 <p>Presupeusto para la orden Nro: {entity.Id}</p>
+                 <p>Producto: <strong>{entity.Producto.Marca + " " + entity.Producto.Modelo + " " + entity.Producto.Version}</strong></p>
+                 <p>Numero de serie: <strong>{entity.NumeroSerie}</strong></p>
+                 <p>Descripcion del problema: <strong>{entity.Descripcion}</strong></p>
+                 <p>Descripcion de presupuesto: <strong>{entity.DescripcionPresupuesto}</strong></p>
+                 <p>Costo de reparacion: <strong>{entity.CostoFinal}</strong></p>
+                 <p>Fecha aproximada de entrega: <strong>{entity.FechaPromesaEntrega}</strong></p>
+                 <p><strong>Para aceptar el presupuesto comuniquese con la empresa. Gracias</strong></p>
+
+
+             </body>
+             </html>";
+                bool isHtml = true;
 
                 // Configura el mensaje de correo electrónico
                 MailMessage mailMessage = new MailMessage()

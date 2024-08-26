@@ -43,17 +43,19 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             return await _context.Administradores.ToListAsync();
         }
 
-        public async Task<Administrador> ObtenerAdministradorPorEmail(string email)
+        public async Task<Administrador> ObtenerAdministradorPorEmail(string emailRecibido)
         {
+            string email = emailRecibido.ToLower();
             if (email == null) throw new AdministradorException("Debe ingresar un email");
             var administradores =await _context.Administradores.ToListAsync();
             return administradores.FirstOrDefault(a => a.Email.Value.Equals(email));
         }
 
-        public async Task<bool> CambiarPassword(string email ,byte[]passwordHash,byte[]passwordSalt)
+        public async Task<bool> CambiarPassword(string emailRecibido ,byte[]passwordHash,byte[]passwordSalt)
         {
             try
             {
+                string email=emailRecibido.ToLower();
                 if (email == "") throw new AdministradorException("Debe ingresar un email");
                 if (passwordHash == null || passwordHash.Length == 0) throw new AdministradorException("Password no valido");
                 if (passwordSalt == null || passwordSalt.Length == 0) throw new AdministradorException("Password no valido");

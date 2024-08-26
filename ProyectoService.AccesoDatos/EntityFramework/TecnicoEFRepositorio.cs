@@ -45,8 +45,9 @@ namespace ProyectoService.AccesoDatos.EntityFramework
              return await _context.Tecnicos.ToListAsync();
         }
 
-        public async Task<Tecnico?> ObtenerTecnicoPorEmail(string email)
+        public async Task<Tecnico?> ObtenerTecnicoPorEmail(string emailRecibido)
         {
+            string email = emailRecibido.ToLower();
             if (email == null) throw new TecnicoException("Debe ingresar un email");
             //lo hice de esta forma porque daba error el equals en una query 
             var tecnicos = await _context.Tecnicos.ToListAsync();
@@ -62,10 +63,11 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
 
         //solamente actualiza el password
-        public async Task<bool> CambiarPassword(string email,byte[]passwordHash,byte[]passwordSalt)
+        public async Task<bool> CambiarPassword(string emailRecibido,byte[]passwordHash,byte[]passwordSalt)
         {
             try
             {
+                string email =emailRecibido.ToLower();
                 if (email == "") throw new TecnicoException("Falta email");
                 if (passwordHash==null || passwordHash.Length==0) throw new TecnicoException("Contraseña no puede ser vacia");
                 if (passwordSalt == null|| passwordSalt.Length==0) throw new TecnicoException("Contraseña no puede ser vacia");
