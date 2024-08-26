@@ -27,7 +27,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             if (entity.Email.Value == null) throw new TecnicoException("Debe ingresar email del tecnico");
             entity.Nombre=ValidacionesTexto.FormatearTexto(entity.Nombre);
             entity.Apellido=ValidacionesTexto.FormatearTexto(entity.Apellido);
-            Tecnico tecnicoBuscado= await ObtenerTecnicoPorEmail(entity.Email.Value);
+            Tecnico? tecnicoBuscado= await ObtenerTecnicoPorEmail(entity.Email.Value);
             if (tecnicoBuscado != null) throw new TecnicoException("Ya existe este tecnico");   
            await _context.Tecnicos.AddAsync(entity);
            await _context.SaveChangesAsync();
@@ -55,7 +55,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         }
 
-        public async Task<Tecnico> ObtenerTecnicoPorId(int id)
+        public async Task<Tecnico?> ObtenerTecnicoPorId(int id)
         {
             var tecnicos= await _context.Tecnicos.ToListAsync();
             return tecnicos.FirstOrDefault(t => t.Id == id);
@@ -71,7 +71,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 if (email == "") throw new TecnicoException("Falta email");
                 if (passwordHash==null || passwordHash.Length==0) throw new TecnicoException("Contraseña no puede ser vacia");
                 if (passwordSalt == null|| passwordSalt.Length==0) throw new TecnicoException("Contraseña no puede ser vacia");
-                Tecnico tecnicoBuscado = await ObtenerTecnicoPorEmail(email);
+                Tecnico? tecnicoBuscado = await ObtenerTecnicoPorEmail(email);
                 if (tecnicoBuscado == null) throw new TecnicoException("No existe un tecnico con ese email");
                 tecnicoBuscado.PasswordHash = passwordHash;
                 tecnicoBuscado.PasswordSalt = passwordSalt;

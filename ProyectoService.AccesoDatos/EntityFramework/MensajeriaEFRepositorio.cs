@@ -38,6 +38,10 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public async Task NuevoMensaje(Mensaje msg)
         {
+            //HAY QUE FORMATEAR LA FECHA 3 HS ANTES PARA SETEAR LA H
+            DateTime fechaHoraServidor = msg.FechaHoraEnvio;
+            msg.FechaHoraEnvio = fechaHoraServidor.AddHours(-3);
+            //TODO:PROBAR
             if (msg.DestinatarioId == msg.EmisorId) throw new Exception("Emisor y destinatario no pueden ser el mismo");
             if (msg == null) throw new Exception("Debe ingresar un mensaje");
             if (msg.Texto == null || msg.Texto==" ") throw new Exception("Falta el cuerpo del mensaje");
