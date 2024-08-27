@@ -37,8 +37,8 @@ namespace ProyectoService.ApiRest.Controllers
                 BaseFalla bf = new BaseFalla()
                 {
                     Producto = producto,
-                    Falla=dto.Falla,
-                    Solucion=dto.Solucion
+                    Falla=dto.Falla.ToLower(),
+                    Solucion=dto.Solucion.ToLower()
                     
 
                 };
@@ -88,7 +88,7 @@ namespace ProyectoService.ApiRest.Controllers
         {
             try
             {
-                List<BaseFalla> bf = await obtenerBaseFallaSegunDescripcionUc.Ejecutar(descripcion);
+                List<BaseFalla> bf = await obtenerBaseFallaSegunDescripcionUc.Ejecutar(descripcion.ToLower());
                 IEnumerable<BaseFallaDTO> bfDTO = bf.Select(b => new BaseFallaDTO()
                 {
                     Id = b.Id,
