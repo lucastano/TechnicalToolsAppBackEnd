@@ -43,7 +43,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public async Task<List<BaseFalla>> ObtenerSegunDescripcion(string Descripcion)
         {
-            return await _context.BaseFallas.Include(f=>f.Producto).Where(r => r.Falla.Contains(Descripcion)).ToListAsync();
+            return await _context.BaseFallas.Include(f=>f.Producto).Where(r => r.Falla.Contains(Descripcion.ToLower())).ToListAsync();
            
         }
 
