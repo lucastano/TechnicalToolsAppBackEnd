@@ -43,7 +43,7 @@ namespace ProyectoService.LogicaNegocio.Modelo
 			this.ManoDeObra = 0;
 			this.CostoFinal = 0;
 			this.RazonNoAceptada = string.Empty;
-			//QuestPDF.Settings.License = LicenseType.Community;
+			QuestPDF.Settings.License = LicenseType.Community;
 		}
 
 
