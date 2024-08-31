@@ -69,11 +69,11 @@ namespace ProyectoService.LogicaNegocio.Modelo
 		}
 		public void Terminar(bool reparada)
 		{
-			if (!reparada)
-			{
-				//si no se realizo la reparacion, el costo final es 0, se mantiene la mano de obra para tener esa info
-				this.CostoFinal = 0;
-			}
+			//if (!reparada)
+			//{
+				
+			//	this.CostoFinal = 0;
+			//}
 			this.Estado = "Terminada";
 			this.Reparada = reparada;
 

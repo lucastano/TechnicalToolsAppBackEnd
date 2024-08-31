@@ -24,6 +24,11 @@ namespace ProyectoService.AccesoDatos.Servicios
             {
                 usuario = await _context.Clientes.FirstOrDefaultAsync(t => t.Id == id);
             }
+            if (usuario == null)
+            {
+                usuario = await _context.Administradores.FirstOrDefaultAsync(t => t.Id == id);
+
+            }
 
             return usuario;
         }

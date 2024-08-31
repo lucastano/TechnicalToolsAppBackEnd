@@ -56,8 +56,8 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             if (usuarioDestinatario==null) throw new Exception(" Destinatario no existe");
             if (reparacion==null) throw new Exception("Reparacion no existe");
 
-            bool estadoMensaje= ValidacionesMensajeria.ValidarUsuariosReparacion(reparacion,usuarioEmisor,usuarioDestinatario);
-            if (!estadoMensaje) throw new Exception("Algun integrante del mensaje no corresponde a la reparacion");
+            //bool estadoMensaje= ValidacionesMensajeria.ValidarUsuariosReparacion(reparacion,usuarioEmisor,usuarioDestinatario);
+            //if (!estadoMensaje) throw new Exception("Algun integrante del mensaje no corresponde a la reparacion");
 
             await _context.Mensajes.AddAsync(msg);
             await _context.SaveChangesAsync();
