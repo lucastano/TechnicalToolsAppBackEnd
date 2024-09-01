@@ -38,11 +38,9 @@ namespace ProyectoService.ApiRest.Controllers
 
             try
             {
-                //passwordhash y salt no se crea con una password, ya que el cliente lo agrega el mismo tecnico, entonce se utiliza 
-                // la cedula del cliente para autogenerar el passwordhash y salt
-                //el cliente a futuro puede cambiar el password
+                
                 Seguridad.CrearPasswordHash(dto.Ci, out byte[] passwordHash, out byte[] passwordSalt);
-                //TODO: ver controles necesarios en crear el cliente
+                
                 Cliente cli = new Cliente()
                 {
                     Nombre=dto.Nombre,
@@ -75,7 +73,7 @@ namespace ProyectoService.ApiRest.Controllers
                     Error=ex.Message
 
                 };
-                //return BadRequest(response);
+                
                 return BadRequest(response);
             }
             

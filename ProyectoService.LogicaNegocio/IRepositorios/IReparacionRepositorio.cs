@@ -15,7 +15,7 @@ namespace ProyectoService.LogicaNegocio.IRepositorios
         Task NoAceptarPresupuesto(int id,double costo,string razon);
         Task<Reparacion> Terminar(int id, bool reparada);
 
-        //estas reparaciones son todas las reparaciones sin ver su estado
+        
         Task<Reparacion>ObtenerReparacionPorId(int id);
         Task<List<Reparacion>> ObtenerReparacionesPorCliente(string Ci);
         Task<List<Reparacion>> ObtenerReparacionesPorTecnico(string EmailTecnico);

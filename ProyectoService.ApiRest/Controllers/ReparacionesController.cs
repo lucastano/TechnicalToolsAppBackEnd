@@ -66,7 +66,7 @@ namespace ProyectoService.ApiRest.Controllers
             this.obtenerProductoPorIdUc = obtenerProductoPorIdUc;
             this.obtenerReparacionesPorClienteUc = obtenerReparacionesPorClienteUc;
             this.configuration = configuration;
-            //CONFIGURACION ENTIDAD EMPRESA
+           
             var configNombreEmpresa = configuration.GetSection("EmpresaSettings:NombreEmpresa").Value!;
             var configDireccionEmpresa = configuration.GetSection("EmpresaSettings:DireccionEmpresa").Value!;
             var configTelefonoEmpresa = configuration.GetSection("EmpresaSettings:TelefonoEmpresa").Value!;
@@ -93,15 +93,11 @@ namespace ProyectoService.ApiRest.Controllers
             if (!ModelState.IsValid) throw new Exception("Debe ingresar datos de la reparacion");
             try
             {
-                //PARA OBTENER EL TECNICO UTILIZO DATOS DE LA SESSION
+                
                 
                 Tecnico tecnico = await obtenerTecnicoPorIdUc.Ejecutar(dto.IdTecnico);
                 if (tecnico == null) throw new Exception("Tecnico no existe");
-                //el ccliente debe existir, en la realidad, no se van a agregar clientes individualmente,
-                //sino que con cada servicio, se ingresan los datos del cliente y ahi se agrega
-                // la idea es al crear un nuevo servicio, ingresar LA CI DEL CLIENTE, lo busca por ci, si encuentra, retorna los datos del cliente.
-                // si no, pide que ingrese los datos, TODO ESO LO MANEJA EL FRONT.
-                // ESTE ENDPOINT REQUIERE QUE EL FRONT, LE DE LA CI DEL CLIENTE EXISTENTE.  
+                
                 Cliente cliente = await obtenerClientePorCiUc.Ejecutar(dto.CiCliente);
                 Reparacion reparacion = new Reparacion()
                 {
@@ -116,7 +112,7 @@ namespace ProyectoService.ApiRest.Controllers
 
                Reparacion rep= await agregarReparacionUc.Ejecutar(reparacion);
                byte []pdf=  await avisoNuevaReparacionUc.Ejecutar(rep);
-                //ACA TENGO QUE RESOLVER QUE RETORNAR
+               
                 ResponseNuevaReparacionDTO response = new ResponseNuevaReparacionDTO()
                 {
                     StatusCode = 200,
@@ -145,7 +141,7 @@ namespace ProyectoService.ApiRest.Controllers
                 if (dto.Id == 0) throw new Exception("No existe reparacion con ese id");
                 if (dto.Descripcion == null) throw new Exception("Debe ingresar una descripcio");
                 Reparacion rep=await presupuestarReparacionUc.Ejecutar(dto.Id,dto.ManoObra,dto.Descripcion,dto.FechaPromesaEntrega);
-                await avisoNuevoPresupuestoUc.Ejecutar(rep);//caso de uso 
+                await avisoNuevoPresupuestoUc.Ejecutar(rep); 
                 return StatusCode(200);    
 
             }

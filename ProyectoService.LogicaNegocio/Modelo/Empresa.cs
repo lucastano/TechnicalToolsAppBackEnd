@@ -15,7 +15,7 @@ namespace ProyectoService.LogicaNegocio.Modelo
         public string Telefono { get; set; }
         public string Direccion {  get; set; }
         public string Email { get; set; }
-        //HAY QUE CIFRARLO, POR EL MOMENTO LO DEJAMOS ASI
+        
         public string EmailPassword { get; set; }
         public string PoliticasEmpresa {  get; set; }
         public byte []? Foto { get; set; }

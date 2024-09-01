@@ -19,27 +19,7 @@ namespace ProyectoService.LogicaNegocio.Validaciones
             int tecnico = reparacion.Tecnico.Id;
             int cliente = reparacion.Cliente.Id;
             bool participantesValidos = false;
-            //if(usuarioEmisor !=tecnico) 
-            //{
-            //    if (usuarioEmisor != cliente)
-            //    {
-
-            //        emisorValido = false;
-            //    }
-            //}
-
-            //if (usuarioDestinatario != tecnico)
-            //{
-            //    if(usuarioDestinatario != cliente)
-            //    {
-
-            //        destinatarioValido = false;
-
-            //    }
-            //}
-
-
-
+  
             if (usuarioEmisor!=cliente)
             {
                 if (usuarioDestinatario == cliente)

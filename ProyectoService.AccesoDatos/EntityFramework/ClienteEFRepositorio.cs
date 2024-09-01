@@ -40,7 +40,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public async Task Delete(Cliente entity)
         {
-            //Eliminar cliente no se hasta donde es valido, ya que el cliente va a tener historicos de servicios 
+            
             throw new NotImplementedException();
         }
 
@@ -50,7 +50,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             
         }
 
-        //PUEDE DEVOLVER NULL
+        
         public async Task<Cliente?> GetClienteByCi(string ci)
         {
             if (ci == null) throw new ClienteException("Debe ingresar una ci");

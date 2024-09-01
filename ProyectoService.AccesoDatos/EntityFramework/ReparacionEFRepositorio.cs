@@ -20,8 +20,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
            
             
         }
-        //TODO: EN ESTE REPOSITORIO NO SE USA, YA QUE AL HACER EL ADD NECESITO RETORNAR EL ENTITY, Y ESTE METODO AL SER GENERICO NO 
-        // LO DEVUELVE, VER SI LO MEJOR ES HACER QUE EL GENERICO DEVUELVA, ESO LLEVA UN CAMBIO MAS GRANDE
+       
         public async Task Add(Reparacion entity)
         {
             if (entity == null) throw new ReparacionException("Debe ingresar una reparacion");
@@ -87,7 +86,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             return reparacion;
         }
 
-        //TODO:NO NECESITA DEVOLVER NADA, YA QUE NO TENGO QUE IMPRIMIR PDF
+      
         public async Task AceptarPresupuesto(int id)
         {
             
@@ -100,7 +99,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             
         }
 
-        //TODO:NO NECESITA DEVOLVER NADA, YA QUE NO TENGO QUE IMPRIMIR PDF
+        
 
         public async Task NoAceptarPresupuesto(int id, double costo,string razon)
         {
@@ -115,7 +114,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public async Task<Reparacion> Terminar(int id, bool reparada)
         {
-            //SOLO SE ACEPTAN REPARACIONES ACEPTADAS O NOACEPTADAS
+            
             
             Reparacion reparacion = await ObtenerReparacionPorId(id);
             if (reparacion == null) throw new ReparacionException("Reparacion no existe");
@@ -125,29 +124,29 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             reparacion.Terminar(reparada);
             await _context.SaveChangesAsync();
             return reparacion;
-            //TODO: ACA DEBERIA AVISAR AL CLIENTE
+            
         }
 
 
 
 
-        //todas las reparaciones por cliente
+        
         public async Task<List<Reparacion>> ObtenerReparacionesPorCliente(string Ci)
         {
-            //TODO:CHEQUEAR OBTENERREPARACIONESPORCLIENTE
+            
             List<Reparacion> reparaciones = await getAll();
             return reparaciones.Where(r => r.Cliente.Ci == Ci).ToList();
         }
 
-        //todas las reparaciones por tecnico
+       
         public async Task<List<Reparacion>> ObtenerReparacionesPorTecnico(string EmailTecnico)
         {
-            //TODO:CHEQUEAR ObtenerReparacionesPorTecnico
+            
             List<Reparacion> reparaciones = await getAll();
             return reparaciones.Where(r=>r.Tecnico.Email.Value.Equals(EmailTecnico)).ToList();
         }
 
-        //esta devuelve la reparacion por su id, involuntariamente de su estado
+        
         public async Task<Reparacion> ObtenerReparacionPorId(int id)
         {
             var reparaciones = await getAll();
@@ -166,7 +165,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             byte[] pdf= rep.GenerarOrdenDeServicio(emp);
             return pdf;
         }
-        //ESTA MODIFICACION NO SE PUEDE REALIZAR EN REPARACIONES QUE AUN NO FUERON PRESUPUESTADAS
+       
         public async Task<Reparacion> ModificarPresupuestoReparacion(int id, double costo, string descripcion)
         {
             Reparacion rep = await ObtenerReparacionPorId(id);
@@ -214,7 +213,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         }
 
 
-        //HISTORIA CLINICA SOLO OBTIENE EL HISTORIAL DE REPARACIONES TERMINADAS y que fueron reparadas
+       
         public async Task<List<Reparacion>> HistoriaClinicaPorNumeroSerie(string numeroSerie)
         {
             List<Reparacion>HistoriaClinica= await _context.Reparaciones.Where(r=>r.NumeroSerie==numeroSerie && r.Estado=="Entregada" &&r.Reparada).ToListAsync();

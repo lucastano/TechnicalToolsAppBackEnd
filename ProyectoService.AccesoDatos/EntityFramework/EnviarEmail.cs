@@ -64,9 +64,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             string toName = usu.Nombre;
             string toEmail = usu.Email.Value;
             string subject = "RECUPERACION DE CONTRASEÑA: " + usu.Email.Value;
-            //string body = "Nuevo Password generado para inicio de session "
-            //            + "Para mantener la proteccion de su usuario, por favor cambie el password luego de iniciar"
-            //            + ": " + password.ToString();
+            
             string body = $@"
              <html>
              <body>
@@ -78,7 +76,6 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
             bool isHtml = true;
 
-            // Configura el mensaje de correo electrónico
             MailMessage mailMessage = new MailMessage()
             {
                 From = new MailAddress(fromEmail, fromName),
@@ -131,7 +128,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                bool isHtml = true;
 
 
-                // Configura el mensaje de correo electrónico
+                
                 MailMessage mailMessage = new MailMessage()
                 {
                     From = new MailAddress(fromEmail, fromName),
@@ -143,7 +140,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 mailMessage.To.Add(new MailAddress(toEmail, toName));
 
 
-            // Adjunta el PDF al correo electrónico
+           
             using (MemoryStream stream = new MemoryStream(pdfContent))
                 {
                     mailMessage.Attachments.Add(new Attachment(stream, "orden_de_servicio_"+entity.Id+".pdf", "application/pdf"));
@@ -171,9 +168,6 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         {
            
 
-            // Verifica si el PDF se generó correctamente
-            
-                // Ver los datos de la empresa de donde obtenerlos, al igual que el email de envio
             string fromName = this.empresa.Nombre;
             string fromEmail = this.empresa.Email;
             string toName = entity.Cliente.Nombre;
@@ -191,7 +185,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
              </html>";
             bool isHtml = true;
 
-            // Configura el mensaje de correo electrónico
+          
             MailMessage mailMessage = new MailMessage()
             {
                 From = new MailAddress(fromEmail, fromName),
@@ -201,7 +195,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
             };
             mailMessage.To.Add(new MailAddress(toEmail, toName));
-            // Envía el correo electrónico
+            
 
                 try
                 {
@@ -254,10 +248,10 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 mailMessage.To.Add(new MailAddress(toEmail, toName));
 
                 
-                mailMessage.ReplyToList.Add(new MailAddress("soporte@tudominio.com", "Soporte Técnico")); // Agrega un Reply-To
-                mailMessage.Headers.Add("X-Mailer", "Microsoft Outlook 16.0"); // Cabecera para ayudar a la clasificación
+                mailMessage.ReplyToList.Add(new MailAddress("soporte@tudominio.com", "Soporte Técnico")); 
+                mailMessage.Headers.Add("X-Mailer", "Microsoft Outlook 16.0"); 
                 mailMessage.Headers.Add("X-Priority", "3");
-                // Adjunta el PDF al correo electrónico
+               
                 using (MemoryStream stream = new MemoryStream(pdfContent))
                 {
                     mailMessage.Attachments.Add(new Attachment(stream, "orden_de_servicio_" + entity.Id + ".pdf", "application/pdf"));

@@ -153,12 +153,11 @@ namespace ProyectoService.ApiRest.Controllers
         }
         [Authorize]
         [HttpPut("CambiarPassword")]
-#pragma warning disable CS1591 // Falta el comentario XML para el tipo o miembro visible públicamente
+
         public async Task<ActionResult> CambiarPassword(string email,string password)
-#pragma warning restore CS1591 // Falta el comentario XML para el tipo o miembro visible públicamente
+
         {
-            //por ahora para cambiar el password solo se pasa el mail y el password, para mi deberia pedir el password actual, ya que este metodo solo se puede usar 
-            //estando logeado
+           
             try
             {
                 Administrador adminBuscado = await obtenerAdministradorPorEmailUc.Ejecutar(email);

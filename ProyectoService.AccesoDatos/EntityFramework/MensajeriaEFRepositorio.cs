@@ -38,10 +38,10 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public async Task NuevoMensaje(Mensaje msg)
         {
-            //HAY QUE FORMATEAR LA FECHA 3 HS ANTES PARA SETEAR LA H
+           
             DateTime fechaHoraServidor = msg.FechaHoraEnvio;
             msg.FechaHoraEnvio = fechaHoraServidor.AddHours(-3);
-            //TODO:PROBAR
+            
             if (msg.DestinatarioId == msg.EmisorId) throw new Exception("Emisor y destinatario no pueden ser el mismo");
             if (msg == null) throw new Exception("Debe ingresar un mensaje");
             if (msg.Texto == null || msg.Texto==" ") throw new Exception("Falta el cuerpo del mensaje");
@@ -56,8 +56,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             if (usuarioDestinatario==null) throw new Exception(" Destinatario no existe");
             if (reparacion==null) throw new Exception("Reparacion no existe");
 
-            //bool estadoMensaje= ValidacionesMensajeria.ValidarUsuariosReparacion(reparacion,usuarioEmisor,usuarioDestinatario);
-            //if (!estadoMensaje) throw new Exception("Algun integrante del mensaje no corresponde a la reparacion");
+            
 
             await _context.Mensajes.AddAsync(msg);
             await _context.SaveChangesAsync();

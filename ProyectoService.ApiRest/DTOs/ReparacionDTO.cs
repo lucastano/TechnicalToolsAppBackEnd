@@ -6,11 +6,11 @@ namespace ProyectoService.ApiRest.DTOs
     {
         public int Id { get; set; }
         public DateTime Fecha { get; set; } 
-        public ProductoDTO Producto { get; set; }//esto va a pasar a ser un objeto
+        public ProductoDTO Producto { get; set; }
         public string NumeroSerie { get; set; }
         public string Descripcion { get; set; }
        
-        public string Estado { get; set; }//ver de hacer un enum
+        public string Estado { get; set; }
         
     }
 }

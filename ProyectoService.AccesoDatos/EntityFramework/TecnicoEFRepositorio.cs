@@ -49,7 +49,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         {
             string email = emailRecibido.ToLower();
             if (email == null) throw new TecnicoException("Debe ingresar un email");
-            //lo hice de esta forma porque daba error el equals en una query 
+          
             var tecnicos = await _context.Tecnicos.ToListAsync();
             return tecnicos.FirstOrDefault(t=>t.Email.Value.Equals(email));
 
@@ -62,7 +62,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         }
 
 
-        //solamente actualiza el password
+      
         public async Task<bool> CambiarPassword(string emailRecibido,byte[]passwordHash,byte[]passwordSalt)
         {
             try
