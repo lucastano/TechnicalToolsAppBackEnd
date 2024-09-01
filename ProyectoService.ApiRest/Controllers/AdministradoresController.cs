@@ -32,7 +32,7 @@ namespace ProyectoService.ApiRest.Controllers
             this.avisoCambioPasswordUc = avisoCambioPasswordUc;
 
         }
-        [Authorize]
+        
         [HttpPost]
         public async Task<ActionResult> AgregarAdministrador(AgregarAdministradorDTO dto)
         {

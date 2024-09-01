@@ -12,7 +12,7 @@ using ProyectoService.AccesoDatos;
 namespace ProyectoService.AccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoServiceContext))]
-    [Migration("20240818181719_nuevabd")]
+    [Migration("20240901200520_nuevabd")]
     partial class nuevabd
     {
         /// <inheritdoc />

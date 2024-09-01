@@ -21,7 +21,7 @@ namespace ProyectoService.LogicaNegocio.Modelo
 		public string NumeroSerie { get; set; }
 		public string Descripcion { get; set; }
 		public DateTime FechaPromesaPresupuesto { get; set; }
-		public string Estado { get; set; }//ver de hacer un enum
+		public string Estado { get; set; }
 		public string DescripcionPresupuesto { get; set; }
 		public string RazonNoAceptada { get; set; }
 		public DateTime FechaPresupuesto { get; set; }

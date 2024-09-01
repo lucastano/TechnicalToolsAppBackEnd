@@ -294,7 +294,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
                 string body = $@"
              <html>
              <body>
-                 <p>Presupeusto para la orden Nro: {entity.Id}</p>
+                 <p>Presupuesto para la orden Nro: {entity.Id}</p>
                  <p>Producto: <strong>{entity.Producto.Marca + " " + entity.Producto.Modelo + " " + entity.Producto.Version}</strong></p>
                  <p>Numero de serie: <strong>{entity.NumeroSerie}</strong></p>
                  <p>Descripcion del problema: <strong>{entity.Descripcion}</strong></p>
