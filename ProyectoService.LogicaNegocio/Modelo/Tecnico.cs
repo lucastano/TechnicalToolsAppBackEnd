@@ -11,6 +11,8 @@ namespace ProyectoService.LogicaNegocio.Modelo
     [Table("tecnicos")]
     public class Tecnico:Usuario
     {
+        public Empresa Empresa { get; set; }
+        //public string Foto { get; set; }
 
         public Tecnico()
         {

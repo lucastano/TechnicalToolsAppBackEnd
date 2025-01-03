@@ -24,7 +24,7 @@ public class Program
         {
             option.UseSqlServer(builder.Configuration.GetConnectionString("ProyectoServiceContext"));
         });
-        
+       
         //repositorios 
         builder.Services.AddScoped<IClienteRepositorio, ClienteEFRepositorio>();
         builder.Services.AddScoped<IAuthService, AuthService>();
@@ -37,6 +37,7 @@ public class Program
         builder.Services.AddScoped<IReparacionServicio,ReparacionServicio>();
         builder.Services.AddScoped<IProductoRepositorio,ProductoRepositorio>();
         builder.Services.AddScoped<IBaseFallaRepositorio, BaseFallaEFRepositorio>();
+        builder.Services.AddScoped<IEmpresaRepositorio, EmpresaEFRepositorio>();
         // casos de uso
         builder.Services.AddScoped<IAgregarClienteUC, AgregarClienteUC>();
         builder.Services.AddScoped<IObtenerTodosLosClientesUC, ObtenerTodosLosClientesUC>();
@@ -82,6 +83,11 @@ public class Program
         builder.Services.AddScoped<IAvisoCambioPassword,AvisoCambioPassword>();
         builder.Services.AddScoped<ICambiarPasswordAdministrador,CambiarPasswordAdministrador>();
         builder.Services.AddScoped<IObtenerAdministradorPorEmail,ObtenerAdministradorPorEmail>();
+        builder.Services.AddScoped<IObtenerEmpresaPorId,ObtenerEmpresaPorId>();
+        builder.Services.AddScoped<IAgregarEmpresa,AgregarEmpresa>();
+        builder.Services.AddScoped<IObtenerEmpresa,ObtenerEmpresa>();
+        builder.Services.AddScoped<IModificarEmpresa, ModificarEmpresa>();
+        builder.Services.AddScoped<IGenerarOrdenServicioEntrada,GenerarOrdenServicioEntrada>();
         // Add services to the container.
 
         builder.Services.AddControllers();
@@ -102,7 +108,11 @@ public class Program
                 Name = "Authorization",
                 Type = SecuritySchemeType.ApiKey
             });
-
+            opciones.MapType<IFormFile>(() => new OpenApiSchema
+            {
+                Type = "string",
+                Format = "binary"
+            });
             opciones.OperationFilter<SecurityRequirementsOperationFilter>();
 
         });
@@ -139,7 +149,7 @@ public class Program
 
         //app.UseSwagger();
         //app.UseSwaggerUI();
-
+        app.UseStaticFiles();
         app.UseHttpsRedirection();
         app.UseCors("nuevaPolitica");
         app.UseAuthorization();

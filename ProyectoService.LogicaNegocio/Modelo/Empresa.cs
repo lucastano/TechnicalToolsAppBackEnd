@@ -18,7 +18,7 @@ namespace ProyectoService.LogicaNegocio.Modelo
         
         public string EmailPassword { get; set; }
         public string PoliticasEmpresa {  get; set; }
-        public byte []? Foto { get; set; }
+        public string Foto { get; set; }
 
 
         

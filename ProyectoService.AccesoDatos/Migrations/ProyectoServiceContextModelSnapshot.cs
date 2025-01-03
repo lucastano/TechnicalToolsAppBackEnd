@@ -50,6 +50,47 @@ namespace ProyectoService.AccesoDatos.Migrations
                     b.ToTable("baseFallas");
                 });
 
+            modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Empresa", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Direccion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmailPassword")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Foto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PoliticasEmpresa")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Empresas");
+                });
+
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Mensaje", b =>
                 {
                     b.Property<int>("Id")
@@ -229,6 +270,11 @@ namespace ProyectoService.AccesoDatos.Migrations
                 {
                     b.HasBaseType("ProyectoService.LogicaNegocio.Modelo.Usuario");
 
+                    b.Property<int>("EmpresaId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("EmpresaId");
+
                     b.ToTable("administradores", (string)null);
                 });
 
@@ -258,6 +304,11 @@ namespace ProyectoService.AccesoDatos.Migrations
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Tecnico", b =>
                 {
                     b.HasBaseType("ProyectoService.LogicaNegocio.Modelo.Usuario");
+
+                    b.Property<int>("EmpresaId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("EmpresaId");
 
                     b.ToTable("tecnicos", (string)null);
                 });
@@ -325,6 +376,28 @@ namespace ProyectoService.AccesoDatos.Migrations
                     b.Navigation("Producto");
 
                     b.Navigation("Tecnico");
+                });
+
+            modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Administrador", b =>
+                {
+                    b.HasOne("ProyectoService.LogicaNegocio.Modelo.Empresa", "Empresa")
+                        .WithMany()
+                        .HasForeignKey("EmpresaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Empresa");
+                });
+
+            modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Tecnico", b =>
+                {
+                    b.HasOne("ProyectoService.LogicaNegocio.Modelo.Empresa", "Empresa")
+                        .WithMany()
+                        .HasForeignKey("EmpresaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Empresa");
                 });
 
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Reparacion", b =>

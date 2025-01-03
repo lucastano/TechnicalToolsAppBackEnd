@@ -1,12 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProyectoService.LogicaNegocio.IRepositorios;
 using ProyectoService.LogicaNegocio.Modelo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ProyectoService.AccesoDatos.EntityFramework
 {
@@ -27,19 +22,19 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             Usuario user = null;
             if (rol == "Administrador")
             {
-                var listaAdministradores = await _context.Administradores.ToListAsync();
+                var listaAdministradores = await _context.Administradores.Include(a=> a.Empresa).ToListAsync();
                 
                 Administrador admin = listaAdministradores.FirstOrDefault(c => c.Email.Value.Equals(email));
 
-                if (admin == null) throw new Exception("Email  incorrectos");
+                if (admin == null) throw new Exception("No existe usuario para Administrador con ese email");
                 user = admin;
 
             }
             if (rol == "Tecnico")
             {
-                var listaTecnicos = await _context.Tecnicos.ToListAsync();
+                var listaTecnicos = await _context.Tecnicos.Include(t=>t.Empresa).ToListAsync();
                 Tecnico tecnico = listaTecnicos.FirstOrDefault(c => c.Email.Value.Equals(email));
-                if (tecnico == null) throw new Exception("Email  incorrectos");
+                if (tecnico == null) throw new Exception("No existe usuario para Tecnico con ese email");
                 user= tecnico;
             }
 
@@ -47,7 +42,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             {
                 var listaClientes= await _context.Clientes.ToListAsync();
                 Cliente cliente = listaClientes.FirstOrDefault(c => c.Email.Value.Equals(email));
-                if (cliente == null) throw new Exception("Email incorrectos");
+                if (cliente == null) throw new Exception("No existe usuario para Cliente con ese email");
                 user= cliente;
             }
 

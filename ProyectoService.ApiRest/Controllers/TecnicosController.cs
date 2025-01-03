@@ -21,8 +21,8 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly IValidarPassword validarPasswordUc;
         private readonly ICambiarPasswordTecnico cambiarPasswordTecnicoUc;
         private readonly IAvisoCambioPassword avisoCambioPasswordUc;
-
-        public TecnicosController(IAgregarTecnico agregarTecnicoUc, IObtenerTodosLosTecnicos obtenerTodosLosTecnicosUc, IObtenerTecnicoPorEmail obtenerTecnicoPorEmailUc, IValidarPassword validarPasswordUc, ICambiarPasswordTecnico cambiarPasswordTecnicoUc, IAvisoCambioPassword avisoCambioPasswordUc)
+        private readonly IObtenerEmpresaPorId obtenerEmpresaUc;
+        public TecnicosController(IAgregarTecnico agregarTecnicoUc, IObtenerTodosLosTecnicos obtenerTodosLosTecnicosUc, IObtenerTecnicoPorEmail obtenerTecnicoPorEmailUc, IValidarPassword validarPasswordUc, ICambiarPasswordTecnico cambiarPasswordTecnicoUc, IAvisoCambioPassword avisoCambioPasswordUc, IObtenerEmpresaPorId obtenerEmpresaUc)
         {
             this.agregarTecnicoUc = agregarTecnicoUc;
             this.obtenerTodosLosTecnicosUc = obtenerTodosLosTecnicosUc;
@@ -30,9 +30,9 @@ namespace ProyectoService.ApiRest.Controllers
             this.validarPasswordUc = validarPasswordUc;
             this.cambiarPasswordTecnicoUc = cambiarPasswordTecnicoUc;
             this.avisoCambioPasswordUc = avisoCambioPasswordUc;
-
+            this.obtenerEmpresaUc = obtenerEmpresaUc;
         }
-        [Authorize]
+        //[Authorize]
         [HttpPost]
 
         public async Task<ActionResult<ResponseAgregarTecnicoDTO>> AgregarTecnico(AgregarTecnicoDTO dto)
@@ -51,13 +51,15 @@ namespace ProyectoService.ApiRest.Controllers
             try
             {
                 Seguridad.CrearPasswordHash(dto.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                Empresa empresa = await obtenerEmpresaUc.Ejecutar(dto.EmpresaId);
                 Tecnico tecnico = new Tecnico()
                 {
                     Nombre = dto.Nombre,
                     Apellido = dto.Apellido,
                     Email = EmailVO.Crear(dto.Email),
                     PasswordHash = passwordHash,
-                    PasswordSalt = passwordSalt
+                    PasswordSalt = passwordSalt,
+                    Empresa = empresa
                 };
                 await agregarTecnicoUc.Ejecutar(tecnico);
                 ResponseAgregarTecnicoDTO response = new ResponseAgregarTecnicoDTO()

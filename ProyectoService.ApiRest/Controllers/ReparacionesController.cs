@@ -10,7 +10,7 @@ namespace ProyectoService.ApiRest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
 
     public class ReparacionesController : ControllerBase
     {
@@ -38,11 +38,14 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly IObtenerMontoTotalHistoriaClinica obtenerMontoTotalHistoriaClinicaUc;
         private readonly IObtenerProductoPorId obtenerProductoPorIdUc;
         private readonly IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc;
+        private readonly IGenerarOrdenServicioEntrada generarOrdSrvEntradaUc;
+        private readonly IObtenerEmpresaPorId obtenerEmpresaPorIdUc;
+        private readonly IWebHostEnvironment _env;
         private Empresa emp;
 
 
 
-        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc,  IObtenerReparacionesPorTecnico obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc, IAvisoNuevaReparacion avisoNuevaReparacionUc, IAvisoNuevoPresupuesto avisoNuevoPresupuestoUc, IAceptarPresupuesto aceptarPresupuestoUc, INoAceptarPresupuesto noAceptarPresupuestoUc, ITerminarReparacion terminarReparacionUc, IEntregarReparacion entregarReparacionUc, IAvisoEntregaReparacion avisoEntregarReparacionUc, IAvisoReparacionTerminada avisoReparacionTerminadaUc,  IConfiguration configuration, IObtenerReparacionPorId obtenerReparacionPorIdUc, IGenerarOrdenDeServicio generarOrdenDeServicioUc, IModificarPresupuestoReparacion modificarPresupuestoReparacionUc,IModificarDatosReparacion modificarDatosReparacionUc, IEliminarMensajesReparacion eliminarMensajesReparacionUc, IObtenerHistoriaClinica obtenerHistoriaClinicaUc, IObtenerMontoTotalHistoriaClinica obtenerMontoTotalHistoriaClinicaUc,IObtenerProductoPorId obtenerProductoPorIdUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc)
+        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc,  IObtenerReparacionesPorTecnico obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc, IAvisoNuevaReparacion avisoNuevaReparacionUc, IAvisoNuevoPresupuesto avisoNuevoPresupuestoUc, IAceptarPresupuesto aceptarPresupuestoUc, INoAceptarPresupuesto noAceptarPresupuestoUc, ITerminarReparacion terminarReparacionUc, IEntregarReparacion entregarReparacionUc, IAvisoEntregaReparacion avisoEntregarReparacionUc, IAvisoReparacionTerminada avisoReparacionTerminadaUc,  IConfiguration configuration, IObtenerReparacionPorId obtenerReparacionPorIdUc, IGenerarOrdenDeServicio generarOrdenDeServicioUc, IModificarPresupuestoReparacion modificarPresupuestoReparacionUc,IModificarDatosReparacion modificarDatosReparacionUc, IEliminarMensajesReparacion eliminarMensajesReparacionUc, IObtenerHistoriaClinica obtenerHistoriaClinicaUc, IObtenerMontoTotalHistoriaClinica obtenerMontoTotalHistoriaClinicaUc,IObtenerProductoPorId obtenerProductoPorIdUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc, IGenerarOrdenServicioEntrada generarOrdSrvEntradaUc, IObtenerEmpresaPorId obtenerEmpresaPorIdUc, IWebHostEnvironment _env)
         {
             this.agregarReparacionUc = agregarReparacionUc;
             this.obtenerTodasLasReparacionesUc = obtenerTodasLasReparacionesUc;
@@ -66,7 +69,10 @@ namespace ProyectoService.ApiRest.Controllers
             this.obtenerProductoPorIdUc = obtenerProductoPorIdUc;
             this.obtenerReparacionesPorClienteUc = obtenerReparacionesPorClienteUc;
             this.configuration = configuration;
-           
+            this.generarOrdSrvEntradaUc = generarOrdSrvEntradaUc;
+            this.obtenerEmpresaPorIdUc = obtenerEmpresaPorIdUc;
+
+            this._env = _env;
             var configNombreEmpresa = configuration.GetSection("EmpresaSettings:NombreEmpresa").Value!;
             var configDireccionEmpresa = configuration.GetSection("EmpresaSettings:DireccionEmpresa").Value!;
             var configTelefonoEmpresa = configuration.GetSection("EmpresaSettings:TelefonoEmpresa").Value!;
@@ -96,8 +102,8 @@ namespace ProyectoService.ApiRest.Controllers
                 
                 
                 Tecnico tecnico = await obtenerTecnicoPorIdUc.Ejecutar(dto.IdTecnico);
-                if (tecnico == null) throw new Exception("Tecnico no existe");
-                
+                Empresa emp = await obtenerEmpresaPorIdUc.Ejecutar(dto.IdEmpresa);
+                if (tecnico == null ) throw new Exception("Tecnico no existe");
                 Cliente cliente = await obtenerClientePorCiUc.Ejecutar(dto.CiCliente);
                 Reparacion reparacion = new Reparacion()
                 {
@@ -109,10 +115,13 @@ namespace ProyectoService.ApiRest.Controllers
                     FechaPromesaPresupuesto=dto.FechaPromesaPresupuesto
 
                 };
-
-               Reparacion rep= await agregarReparacionUc.Ejecutar(reparacion);
-               byte []pdf=  await avisoNuevaReparacionUc.Ejecutar(rep);
                
+                Reparacion rep= await agregarReparacionUc.Ejecutar(reparacion);
+                var fotoUrl = Url.Content($"~{emp.Foto}"); // Genera una URL relativa
+                var filePath = Path.Combine(_env.WebRootPath, fotoUrl.TrimStart('~', '/'));
+                byte[] fotoBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+                byte[] pdf = await generarOrdSrvEntradaUc.Ejecutar(rep,emp,fotoBytes);
+
                 ResponseNuevaReparacionDTO response = new ResponseNuevaReparacionDTO()
                 {
                     StatusCode = 200,
@@ -241,6 +250,7 @@ namespace ProyectoService.ApiRest.Controllers
                 IEnumerable<ReparacionEnTallerDTO> rep = reparaciones.Select(r => new ReparacionEnTallerDTO()
                 {
                     Id = r.Id,
+                    ClienteId = r.Cliente.Id,
                     ClienteNombre = r.Cliente.Nombre,
                     ClienteApellido = r.Cliente.Apellido,
                     ClienteTelefono = r.Cliente.Telefono,
@@ -345,21 +355,22 @@ namespace ProyectoService.ApiRest.Controllers
 
         }
 
-        [HttpGet("GenerarOrdenDeServicio")]
-        public async Task<ActionResult>GenerarOrdenDeServicio(int id)
+        [HttpGet("GenerarOrdSrv")]
+        public async Task<ActionResult>GenerarOrdSrv(int idReparacion,int idEmpresa)
         {
             try
             {
-                if (id == 0) throw new Exception("Numero de orden incorrecto");
-                Reparacion rep = await obtenerReparacionPorIdUc.Ejecutar(id);
-                byte[]pdf= generarOrdenDeServicioUc.Ejecutar(rep,emp);
-
-                ResponseGenerarOrdenDeServicioDTO response = new ResponseGenerarOrdenDeServicioDTO()
-                {
-                    statusCode = 200,
-                    OrdenDeServicio = pdf,
-                };
-                return Ok(response); 
+                if (idReparacion == 0) throw new Exception("Numero de orden incorrecto");
+                if (idEmpresa == 0) throw new Exception("Numero de empresa incorrecta");
+                Empresa emp = await obtenerEmpresaPorIdUc.Ejecutar(idEmpresa);
+                var fotoUrl = Url.Content($"~{emp.Foto}"); // Genera una URL relativa
+                var filePath = Path.Combine(_env.WebRootPath, fotoUrl.TrimStart('~', '/'));
+                // Leer el archivo como byte[]
+                byte[] fotoBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+                Reparacion rep = await obtenerReparacionPorIdUc.Ejecutar(idReparacion);
+                byte[]pdf= await generarOrdSrvEntradaUc.Ejecutar(rep, emp, fotoBytes);
+               
+                return Ok(pdf); 
             }
             catch (Exception ex)
             {

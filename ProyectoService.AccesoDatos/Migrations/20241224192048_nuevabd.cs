@@ -15,23 +15,6 @@ namespace ProyectoService.AccesoDatos.Migrations
                 name: "UsuarioSequence");
 
             migrationBuilder.CreateTable(
-                name: "administradores",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [UsuarioSequence]"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    Rol = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_administradores", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "clientes",
                 columns: table => new
                 {
@@ -52,6 +35,25 @@ namespace ProyectoService.AccesoDatos.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Empresas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Telefono = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Direccion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EmailPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PoliticasEmpresa = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Foto = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Empresas", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "productos",
                 columns: table => new
                 {
@@ -67,6 +69,30 @@ namespace ProyectoService.AccesoDatos.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "administradores",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [UsuarioSequence]"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Rol = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EmpresaId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_administradores", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_administradores_Empresas_EmpresaId",
+                        column: x => x.EmpresaId,
+                        principalTable: "Empresas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "tecnicos",
                 columns: table => new
                 {
@@ -76,11 +102,18 @@ namespace ProyectoService.AccesoDatos.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    Rol = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Rol = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EmpresaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_tecnicos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tecnicos_Empresas_EmpresaId",
+                        column: x => x.EmpresaId,
+                        principalTable: "Empresas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -174,6 +207,11 @@ namespace ProyectoService.AccesoDatos.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_administradores_EmpresaId",
+                table: "administradores",
+                column: "EmpresaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_baseFallas_ProductoId",
                 table: "baseFallas",
                 column: "ProductoId");
@@ -220,6 +258,11 @@ namespace ProyectoService.AccesoDatos.Migrations
                 name: "IX_reparaciones_TecnicoId",
                 table: "reparaciones",
                 column: "TecnicoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tecnicos_EmpresaId",
+                table: "tecnicos",
+                column: "EmpresaId");
         }
 
         /// <inheritdoc />
@@ -245,6 +288,9 @@ namespace ProyectoService.AccesoDatos.Migrations
 
             migrationBuilder.DropTable(
                 name: "tecnicos");
+
+            migrationBuilder.DropTable(
+                name: "Empresas");
 
             migrationBuilder.DropSequence(
                 name: "UsuarioSequence");

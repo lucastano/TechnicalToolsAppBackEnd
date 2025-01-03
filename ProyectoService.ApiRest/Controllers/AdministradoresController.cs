@@ -21,8 +21,8 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly ICambiarPasswordAdministrador cambiarPasswordUc;
         private readonly IObtenerAdministradorPorEmail obtenerAdministradorPorEmailUc;
         private readonly IAvisoCambioPassword avisoCambioPasswordUc;
-
-        public AdministradoresController(IAgregarAdministrador agregarAdministradorUc, IObtenerAdministradores obtenerTodosLosAdministradoresUc, IValidarPassword validarPasswordUc, ICambiarPasswordAdministrador cambiarPasswordUc, IObtenerAdministradorPorEmail obtenerAdministradorPorEmailUc, IAvisoCambioPassword avisoCambioPasswordUc)
+        private readonly IObtenerEmpresaPorId obtenerEmpresaUc;
+        public AdministradoresController(IAgregarAdministrador agregarAdministradorUc, IObtenerAdministradores obtenerTodosLosAdministradoresUc, IValidarPassword validarPasswordUc, ICambiarPasswordAdministrador cambiarPasswordUc, IObtenerAdministradorPorEmail obtenerAdministradorPorEmailUc, IAvisoCambioPassword avisoCambioPasswordUc, IObtenerEmpresaPorId obtenerEmpresaUc)
         {
             this.agregarAdministradorUc = agregarAdministradorUc;
             this.obtenerTodosLosAdministradoresUc = obtenerTodosLosAdministradoresUc;
@@ -30,6 +30,7 @@ namespace ProyectoService.ApiRest.Controllers
             this.cambiarPasswordUc = cambiarPasswordUc;
             this.obtenerAdministradorPorEmailUc = obtenerAdministradorPorEmailUc;
             this.avisoCambioPasswordUc = avisoCambioPasswordUc;
+            this.obtenerEmpresaUc = obtenerEmpresaUc;
 
         }
         
@@ -42,13 +43,16 @@ namespace ProyectoService.ApiRest.Controllers
                 if (!ModelState.IsValid) throw new Exception("Debe llenar todos los campos");
                 if (!validarPasswordUc.Ejecutar(dto.Password)) throw new Exception("Contraseña no valida");
                 Seguridad.CrearPasswordHash(dto.Password, out byte[] PasswordHash, out byte[] PasswordSalt);
+                Empresa empresa = await obtenerEmpresaUc.Ejecutar(dto.EmpresaId);
                 Administrador admin = new Administrador()
                 {
                     Nombre = dto.Nombre,
                     Apellido = dto.Apellido,
                     Email = EmailVO.Crear(dto.Email),
-                    PasswordHash= PasswordHash,
-                    PasswordSalt= PasswordSalt
+                    PasswordHash = PasswordHash,
+                    PasswordSalt = PasswordSalt,
+                    Empresa = empresa
+
 
 
                 };

@@ -10,7 +10,8 @@ namespace ProyectoService.LogicaNegocio.Modelo
     [Table("Administrador")]
     public class Administrador:Usuario
     {
-
+        public Empresa Empresa { get; set; }
+        //public string Foto { get; set; }
         public Administrador() 
         {
             this.Rol = "Administrador";

@@ -10,5 +10,6 @@
         public string Telefono { get; set; }
         public string Ci {  get; set; }
         public string Rol { get; set; }
+        public int IdEmpresa { get; set; }
     }
 }

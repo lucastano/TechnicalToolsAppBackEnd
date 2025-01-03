@@ -17,5 +17,7 @@ namespace ProyectoService.ApiRest.DTOs
         [Required]
 
         public string Password { get; set; }
+        [Required]
+        public int EmpresaId { get; set; }
     }
 }

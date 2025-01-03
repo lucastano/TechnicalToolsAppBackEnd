@@ -14,7 +14,6 @@ namespace ProyectoService.LogicaNegocio.Modelo
 
 		public int Id { get; set; }
 		public DateTime Fecha { get; set; } = DateTime.Now;
-
 		public Tecnico Tecnico { get; set; }
 		public Cliente Cliente { get; set; }
 		public Producto Producto { get; set; }

@@ -11,7 +11,7 @@ namespace ProyectoService.ApiRest.DTOs
         public string CiCliente { get; set; }
         [Required]
         public int IdTecnico { get; set; }
-        
+        public int IdEmpresa { get; set; }
 
         public int IdProducto { get; set; }
         [Required]

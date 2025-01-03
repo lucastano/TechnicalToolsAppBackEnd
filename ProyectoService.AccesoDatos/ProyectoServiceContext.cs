@@ -22,7 +22,7 @@ namespace ProyectoService.AccesoDatos
         public DbSet<BaseFalla>BaseFallas { get; set; }
         public DbSet<Producto>Productos { get; set; }
 
-
+        public DbSet<Empresa>Empresas { get; set; }
         public ProyectoServiceContext(DbContextOptions<ProyectoServiceContext> options) : base(options)
         {
 
