@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.ICasosUso
 {
-    public interface IAvisoCambioPassword
+    public interface IObtenerSucursalesPorEmpresa
     {
-        Task Ejecutar(Usuario usu, string password);
+        Task<List<Sucursal>> Ejecutar(int id);
     }
 }

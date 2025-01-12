@@ -9,7 +9,7 @@ namespace ProyectoService.ApiRest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class EmpresasController : ControllerBase
     {
         private readonly IAgregarEmpresa agregarEmpresaUc;
@@ -35,7 +35,6 @@ namespace ProyectoService.ApiRest.Controllers
             {
                 return BadRequest(400);
             }
-
             try
             {
                 var uploadsPath = Path.Combine(_env.WebRootPath, "uploads");
@@ -46,16 +45,14 @@ namespace ProyectoService.ApiRest.Controllers
                 {
                     await dto.Foto.CopyToAsync(stream);
                 }
+
                 Empresa empresa = new Empresa
                 {
-                    Nombre = dto.Nombre,
-                    Telefono = dto.Telefono,
-                    Direccion = dto.Direccion,
-                    Email = dto.Email,
-                    EmailPassword = dto.EmailPassword,
+                    NombreFantasia = dto.NombreFantasia,
+                    RazonSocial = dto.RazonSocial,
+                    NumeroRUT = dto.NumeroRUT,
                     Foto = $"/uploads/{fileName}",
-                    PoliticasEmpresa = "empty"
-
+                    PoliticasEmpresa = dto.PoliticasEmpresa
                 };
                 Empresa emp = await agregarEmpresaUc.Ejecutar(empresa);
                 return Ok(emp);
@@ -63,8 +60,6 @@ namespace ProyectoService.ApiRest.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex);
-
-
             }
         }
 
@@ -76,82 +71,43 @@ namespace ProyectoService.ApiRest.Controllers
             {
                 return BadRequest(400);
             }
-
             try
             {
                 Empresa emp = await obtenerEmpresaPorIdUc.Ejecutar(id);
                 var fotoUrl = Url.Content($"~{emp.Foto}"); // Genera una URL relativa
-
                 ResponseEmpresaDTO empresa = new ResponseEmpresaDTO
                 {
                     Id = emp.Id,
-                    Nombre = emp.Nombre,
-                    Telefono = emp.Telefono,
-                    Direccion = emp.Direccion,
-                    Email = emp.Email,
-                    EmailPassword = emp.EmailPassword,
-                    Foto = fotoUrl
-
+                    NombreFantasia = emp.NombreFantasia,
+                    RazonSocial = emp.RazonSocial,
+                    Foto = fotoUrl,
+                    NumeroRUT = emp.NumeroRUT,
+                    
+                    PoliticasEmpresa = emp.PoliticasEmpresa
                 };
-               
                 return Ok(empresa);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex);
-
-
-            }
-        }
-
-        [HttpGet("ObtenerEmpresa")]
-        public async Task<ActionResult> ObtenerEmpresa()
-        {
-            try
-            {
-                Empresa emp = await obtenerEmpresaUc.Ejecutar();
-                var fotoUrl = Url.Content($"~{emp.Foto}"); // Genera una URL relativa
-                ResponseEmpresaDTO empresa = new ResponseEmpresaDTO
-                {
-                    Id = emp.Id,
-                    Nombre = emp.Nombre,
-                    Telefono = emp.Telefono,
-                    Direccion = emp.Direccion,
-                    Email = emp.Email,
-                    EmailPassword = emp.EmailPassword,
-                    Foto = fotoUrl
-
-                };
-
-                return Ok(empresa);
-            }
-
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-
             }
         }
 
         [HttpPut]
         [Consumes("multipart/form-data")]
-        public async Task<ActionResult> ModificarEmpresa([FromForm]ModificarEmpresaDTO dto)
+        public async Task<ActionResult> ModificarEmpresa([FromForm] ModificarEmpresaDTO dto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(400);
             }
-
             try
             {
-                // Buscar la empresa existente
                 Empresa empresaExistente = await obtenerEmpresaPorIdUc.Ejecutar(dto.Id);
                 if (empresaExistente == null)
                 {
                     return NotFound($"No se encontró la empresa con ID {dto.Id}");
                 }
-
-                // Eliminar la foto anterior si se envía una nueva
                 if (dto.Foto != null)
                 {
                     var fotoAnteriorPath = Path.Combine(_env.WebRootPath, empresaExistente.Foto.TrimStart('/'));
@@ -171,14 +127,10 @@ namespace ProyectoService.ApiRest.Controllers
                     }
                     empresaExistente.Foto = $"/uploads/{fileName}";
                 }
-
-                // Actualizar los demás campos
-                empresaExistente.Nombre = dto.Nombre ?? empresaExistente.Nombre;
-                empresaExistente.Telefono = dto.Telefono ?? empresaExistente.Telefono;
-                empresaExistente.Direccion = dto.Direccion ?? empresaExistente.Direccion;
-                empresaExistente.Email = dto.Email ?? empresaExistente.Email;
-
-                // Guardar los cambios
+                empresaExistente.NombreFantasia = dto.NombreFantasia ?? empresaExistente.NombreFantasia;
+                empresaExistente.RazonSocial = dto.RazonSocial ?? empresaExistente.RazonSocial;
+                empresaExistente.NumeroRUT = dto.NumeroRUT ?? empresaExistente.NumeroRUT;
+                empresaExistente.PoliticasEmpresa = dto.PoliticasEmpresa ?? empresaExistente.PoliticasEmpresa;
                 Empresa empresaActualizada = await modificarEmpresaUc.Ejecutar(empresaExistente);
                 return Ok(empresaActualizada);
             }
@@ -186,7 +138,6 @@ namespace ProyectoService.ApiRest.Controllers
             {
                 return BadRequest(ex.Message);
             }
-
         }
     }
 }

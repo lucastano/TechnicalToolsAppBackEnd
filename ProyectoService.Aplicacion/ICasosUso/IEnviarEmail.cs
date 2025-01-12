@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.ICasosUso
 {
-    public interface IAvisoReparacionTerminada
+    public interface IEnviarEmail
     {
-        Task Ejecutar(Reparacion entity);
+        Task Ejecutar(Reparacion rep,Empresa emp,Sucursal suc, byte[] pdf);
     }
 }

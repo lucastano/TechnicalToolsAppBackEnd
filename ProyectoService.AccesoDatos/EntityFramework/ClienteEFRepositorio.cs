@@ -20,22 +20,37 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             _context = context;
 
         }
+
+        //DEPRECADO
         public async Task Add(Cliente entity)
         {
-            
-          
-                if (entity.Nombre == null) throw new ClienteException("Debe ingresar nombre de cliente");
-                entity.Nombre=ValidacionesTexto.FormatearTexto(entity.Nombre); 
-                if (entity.Apellido == null) throw new ClienteException("Debe ingresar apellido de cliente");
-                entity.Apellido=ValidacionesTexto.FormatearTexto(entity.Apellido);
-                if (entity.Telefono == null) throw new ClienteException("Debe ingresar telefono de cliente");
-                if (entity.Ci == null)  throw new ClienteException("cedula no valida"); 
-                if (!entity.validarCi())  throw new ClienteException("Número de documento inválido"); 
-                Cliente cliBuscado = await GetClienteByCi(entity.Ci);
-                if (cliBuscado != null)  throw new ClienteException("Cliente ya existe"); 
-                await _context.Clientes.AddAsync(entity);
-                await _context.SaveChangesAsync();
+            if (entity.Nombre == null) throw new ClienteException("Debe ingresar nombre de cliente");
+            entity.Nombre=ValidacionesTexto.FormatearTexto(entity.Nombre); 
+            if (entity.Apellido == null) throw new ClienteException("Debe ingresar apellido de cliente");
+            entity.Apellido=ValidacionesTexto.FormatearTexto(entity.Apellido);
+            if (entity.Telefono == null) throw new ClienteException("Debe ingresar telefono de cliente");
+            if (entity.Ci == null)  throw new ClienteException("cedula no valida"); 
+            if (!entity.validarCi())  throw new ClienteException("Número de documento inválido"); 
+            Cliente cliBuscado = await GetClienteByCi(entity.Ci);
+            if (cliBuscado != null)  throw new ClienteException("Cliente ya existe"); 
+            await _context.Clientes.AddAsync(entity);
+            await _context.SaveChangesAsync();
+        }
 
+        public async Task<Cliente> Agregar(Cliente cliente)
+        {
+            if (cliente.Nombre == null) throw new ClienteException("Debe ingresar nombre de cliente");
+            cliente.Nombre = ValidacionesTexto.FormatearTexto(cliente.Nombre);
+            if (cliente.Apellido == null) throw new ClienteException("Debe ingresar apellido de cliente");
+            cliente.Apellido = ValidacionesTexto.FormatearTexto(cliente.Apellido);
+            if (cliente.Telefono == null) throw new ClienteException("Debe ingresar telefono de cliente");
+            if (cliente.Ci == null) throw new ClienteException("cedula no valida");
+            if (!cliente.validarCi()) throw new ClienteException("Número de documento inválido");
+            Cliente cliBuscado = await GetClienteByCi(cliente.Ci);
+            if (cliBuscado != null) throw new ClienteException("Cliente ya existe");
+            await _context.Clientes.AddAsync(cliente);
+            await _context.SaveChangesAsync();
+            return cliente;
         }
 
         public async Task Delete(Cliente entity)

@@ -23,6 +23,7 @@ namespace ProyectoService.AccesoDatos
         public DbSet<Producto>Productos { get; set; }
 
         public DbSet<Empresa>Empresas { get; set; }
+        public DbSet<Sucursal> Sucursales { get; set; } 
         public ProyectoServiceContext(DbContextOptions<ProyectoServiceContext> options) : base(options)
         {
 
@@ -57,6 +58,11 @@ namespace ProyectoService.AccesoDatos
                 .HasOne(m=>m.Destinatario)
                 .WithMany()
                 .HasForeignKey(m=>m.DestinatarioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Sucursal>()
+                .HasOne(s => s.Empresa)
+                .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);

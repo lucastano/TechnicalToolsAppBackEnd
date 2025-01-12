@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.CasosUso
 {
-    public class AvisoCambioPassword : IAvisoCambioPassword
+    public class ObtenerTodasLasSucursales : IObtenerTodasLasSucursales
     {
-        private readonly IEnviarEmail enviarEmail;
-        public AvisoCambioPassword(IEnviarEmail enviarEmail)
+        private readonly ISucursalRepositorio repo;
+        public ObtenerTodasLasSucursales(ISucursalRepositorio repo)
         {
-            this.enviarEmail = enviarEmail;
+            this.repo = repo;
         }
 
-        public async Task Ejecutar(Usuario usu, string password)
+        public async Task<List<Sucursal>> Ejecutar()
         {
-            await enviarEmail.AvisoCambioPassword(usu, password);
+            return await repo.getAll();
         }
     }
 }

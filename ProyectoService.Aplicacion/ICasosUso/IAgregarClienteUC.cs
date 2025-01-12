@@ -9,6 +9,6 @@ namespace ProyectoService.Aplicacion.ICasosUso
 {
     public interface IAgregarClienteUC
     {
-        Task Ejecutar(Cliente cli);
+        Task<Cliente?> Ejecutar(Cliente cli);
     }
 }

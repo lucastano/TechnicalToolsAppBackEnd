@@ -12,7 +12,7 @@ namespace ProyectoService.ApiRest.DTOs
         [Required]
         public int IdTecnico { get; set; }
         public int IdEmpresa { get; set; }
-
+        public int IdSucursal { get; set; }
         public int IdProducto { get; set; }
         [Required]
         public string NumeroSerie { get; set; }

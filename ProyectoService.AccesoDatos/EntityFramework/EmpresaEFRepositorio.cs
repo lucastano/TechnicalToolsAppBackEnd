@@ -19,6 +19,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public async Task<Empresa> AgregarEmpresa(Empresa emp)
         {
+            //TODO: faltan validaciones
             await _context.Empresas.AddAsync(emp);
             await _context.SaveChangesAsync();
             return emp;
@@ -32,10 +33,10 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         public async Task<Empresa> ModificarEmpresa(Empresa emp)
         {
             Empresa empresa = await ObtenerEmpresaPorId(emp.Id);
-            empresa.Direccion = emp.Direccion;
-            empresa.Telefono = emp.Telefono;
-            empresa.Foto = emp.Foto;
-            empresa.Email = emp.Email;
+            empresa.NombreFantasia = emp.NombreFantasia;
+            empresa.RazonSocial = emp.RazonSocial;
+            empresa.NumeroRUT = emp.NumeroRUT;
+            empresa.PoliticasEmpresa = emp.PoliticasEmpresa;
             await _context.SaveChangesAsync();
             return empresa;
         }

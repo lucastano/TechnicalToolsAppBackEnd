@@ -19,7 +19,7 @@ namespace ProyectoService.LogicaNegocio.IRepositorios
         Task<Reparacion>ObtenerReparacionPorId(int id);
         Task<List<Reparacion>> ObtenerReparacionesPorCliente(string Ci);
         Task<List<Reparacion>> ObtenerReparacionesPorTecnico(string EmailTecnico);
-        byte[] GenerarOrdenDeServicio(Reparacion rep,Empresa emp);
+    
         Task<Reparacion> AddAlternativo(Reparacion entity);
         Task<Reparacion> ModificarPresupuestoReparacion(int id, double costo, string descripcion);
         Task<Reparacion> ModificarDatosReparacion(int id, DateTime fechaPromesaPresupuesto,string numeroSerie,string descripcion);

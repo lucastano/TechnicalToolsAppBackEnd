@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.CasosUso
 {
-    public class GenerarOrdenDeServicio : IGenerarOrdenDeServicio
+    public class ObtenerSucursalPorId : IObtenerSucursalPorId
     {
-        private readonly IReparacionRepositorio repo;
-        public GenerarOrdenDeServicio(IReparacionRepositorio repo)
+        private readonly ISucursalRepositorio repo;
+        public ObtenerSucursalPorId(ISucursalRepositorio repo)
         {
             this.repo = repo;
         }
 
-        public byte[] Ejecutar(Reparacion rep, Empresa emp)
+        public async Task<Sucursal?> Ejecutar(int id)
         {
-           return repo.GenerarOrdenDeServicio(rep, emp);
+            return await repo.ObtenerPorId(id);
         }
     }
 }

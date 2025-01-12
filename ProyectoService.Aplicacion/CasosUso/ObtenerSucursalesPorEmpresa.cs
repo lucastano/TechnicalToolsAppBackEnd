@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.CasosUso
 {
-    public class AvisoEntregaReparacion : IAvisoEntregaReparacion
+    public class ObtenerSucursalesPorEmpresa : IObtenerSucursalesPorEmpresa
     {
-        private readonly IEnviarEmail repo;
-        public AvisoEntregaReparacion(IEnviarEmail repo)
+        private readonly ISucursalRepositorio repo;
+        public ObtenerSucursalesPorEmpresa(ISucursalRepositorio repo)
         {
             this.repo = repo;
         }
 
-        public async Task<byte[]> Ejecutar(Reparacion entity)
+        public async Task<List<Sucursal>> Ejecutar(int id)
         {
-            return await repo.EnviarEmailAvisoEntrega(entity);
+            return await repo.obtenerSucursalesPorEmpresa(id);
         }
     }
 }

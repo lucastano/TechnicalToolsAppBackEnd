@@ -4,14 +4,11 @@ namespace ProyectoService.ApiRest.DTOs
 {
     public class AgregarEmpresaDTO
     {
-        
-        public string Nombre { get; set; }
-        public string Telefono { get; set; }
-        public string Direccion { get; set; }
-        public string Email { get; set; }
-        public string EmailPassword { get; set; }
-
+        public string NombreFantasia { get; set; }
+        public string RazonSocial { get; set; }
+        public string NumeroRUT { get; set; }
         [FromForm(Name = "Foto")]
         public IFormFile Foto { get; set; }
+        public string? PoliticasEmpresa { get; set; }
     }
 }

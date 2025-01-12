@@ -7,22 +7,15 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.LogicaNegocio.Modelo
 {
-    
+
     public class Empresa
     {
         public int Id { get; set; }
-        public string Nombre { get; set; }
-        public string Telefono { get; set; }
-        public string Direccion {  get; set; }
-        public string Email { get; set; }
-        
-        public string EmailPassword { get; set; }
-        public string PoliticasEmpresa {  get; set; }
-        public string Foto { get; set; }
-
-
-        
-        
+        public string NombreFantasia { get; set; }
+        public string RazonSocial { get; set; }
+        public string NumeroRUT { get; set; }
+        public string? Foto { get; set; }
+        public string? PoliticasEmpresa { get; set; }
 
     }
 }

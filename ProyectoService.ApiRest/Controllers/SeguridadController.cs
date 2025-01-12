@@ -79,6 +79,7 @@ namespace ProyectoService.ApiRest.Controllers
                         usuarioLogeado.Email = tecnico.Email.Value;
                         usuarioLogeado.Rol = tecnico.Rol;
                         usuarioLogeado.IdEmpresa = tecnico.Empresa.Id;
+                        usuarioLogeado.IdSucursal = tecnico.Sucursal.Id;
 
                 }
                     else
@@ -90,9 +91,10 @@ namespace ProyectoService.ApiRest.Controllers
                         usuarioLogeado.Email = administrador.Email.Value;
                         usuarioLogeado.Rol = administrador.Rol;
                         usuarioLogeado.IdEmpresa = administrador.Empresa.Id;
+                        usuarioLogeado.IdSucursal = administrador.Sucursal.Id;
 
 
-                    }
+                }
                     ResponseLoginDTO responseCorrecto = new ResponseLoginDTO()
                     {
                         StatusCode = 200,

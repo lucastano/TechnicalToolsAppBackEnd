@@ -5,6 +5,7 @@ using ProyectoService.ApiRest.DTOs;
 using ProyectoService.Aplicacion.ICasosUso;
 using ProyectoService.LogicaNegocio.Modelo;
 using ProyectoService.LogicaNegocio.Modelo.ValueObjects;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProyectoService.ApiRest.Controllers
 {
@@ -30,18 +31,11 @@ namespace ProyectoService.ApiRest.Controllers
 
         public async Task<ActionResult<ResponseAgregarClienteDTO>> AltaCliente(AgregarClienteDTO dto)
         {
-            
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Datos invalidos");
-            }
-
             try
             {
-                
+                if (!ModelState.IsValid) throw new Exception("Datos ingresados no validos");
                 Seguridad.CrearPasswordHash(dto.Ci, out byte[] passwordHash, out byte[] passwordSalt);
-                
-                Cliente cli = new Cliente()
+                Cliente cliPost = new Cliente()
                 {
                     Nombre=dto.Nombre,
                     Apellido=dto.Apellido,
@@ -53,28 +47,25 @@ namespace ProyectoService.ApiRest.Controllers
                     PasswordSalt=passwordSalt
 
                 };
-                
-               await agregarClienteUC.Ejecutar(cli);
+                Cliente cli = await agregarClienteUC.Ejecutar(cliPost);
+                if (cli == null) throw new Exception("No se pudo agregar cliente");
                 ResponseAgregarClienteDTO response = new ResponseAgregarClienteDTO()
                 {
-                    StatusCode = 201,
-                    Cliente = dto
+                    Id = cli.Id,
+                    Nombre = cli.Nombre,
+                    Apellido=cli.Apellido,
+                    Telefono=cli.Telefono,
+                    Direccion = cli.Direccion,
+                    Email = cli.Email.Value,
+                    Ci = cli.Ci
+
                 };
-                return StatusCode(201,response);
-
-
+                return Ok(response);
             }
             catch(Exception ex)
             {
-                ResponseAgregarClienteDTO response = new ResponseAgregarClienteDTO()
-                {
-                    StatusCode =400,
-                    Cliente = null,
-                    Error=ex.Message
-
-                };
                 
-                return BadRequest(response);
+                return BadRequest(new { success = false, message = ex.Message });
             }
             
         }

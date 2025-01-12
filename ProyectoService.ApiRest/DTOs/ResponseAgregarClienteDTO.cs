@@ -2,8 +2,12 @@
 {
     public class ResponseAgregarClienteDTO
     {
-        public int StatusCode { get; set; }
-        public AgregarClienteDTO Cliente { get; set; }
-        public string Error { get; set; }
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
+        public string Telefono { get; set; }
+        public string Direccion { get; set; }
+        public string Email { get; set; }
+        public string Ci { get; set; }
     }
 }

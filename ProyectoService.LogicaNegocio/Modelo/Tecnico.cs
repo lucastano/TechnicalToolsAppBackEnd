@@ -12,7 +12,8 @@ namespace ProyectoService.LogicaNegocio.Modelo
     public class Tecnico:Usuario
     {
         public Empresa Empresa { get; set; }
-        //public string Foto { get; set; }
+        public Sucursal Sucursal { get; set; }
+        public string Foto { get; set; } = string.Empty;
 
         public Tecnico()
         {

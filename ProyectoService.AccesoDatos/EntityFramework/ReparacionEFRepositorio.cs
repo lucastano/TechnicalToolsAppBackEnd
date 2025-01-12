@@ -159,12 +159,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             throw new NotImplementedException();
         }
 
-        public byte[] GenerarOrdenDeServicio(Reparacion rep,Empresa emp)
-        {
-            if (rep == null) throw new ReparacionException("Reparaicon no existe");
-            byte[] pdf= rep.GenerarOrdenDeServicio(emp);
-            return pdf;
-        }
+       
        
         public async Task<Reparacion> ModificarPresupuestoReparacion(int id, double costo, string descripcion)
         {

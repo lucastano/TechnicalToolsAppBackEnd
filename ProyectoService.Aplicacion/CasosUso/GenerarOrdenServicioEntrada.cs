@@ -21,7 +21,7 @@ namespace ProyectoService.Aplicacion.CasosUso
             this.repoEmpresa = repoEmpresa;
         }
 
-        public async Task<byte[]> Ejecutar(Reparacion rep, Empresa emp, byte[] foto)
+        public async Task<byte[]> Ejecutar(Reparacion rep,Empresa emp, Sucursal suc, byte[] foto)
         {
             byte[] imageData = foto;
             var data = Document.Create(document =>
@@ -34,10 +34,10 @@ namespace ProyectoService.Aplicacion.CasosUso
                         row.ConstantItem(150).Image(imageData);
                         row.RelativeItem().Column(col =>
                         { // estos van a ser datos de la empresa. 
-                            col.Item().AlignCenter().Text(emp.Nombre.ToUpper()).Bold().FontSize(14);
-                            col.Item().AlignCenter().Text(emp.Direccion).FontSize(9);
-                            col.Item().AlignCenter().Text(emp.Telefono).FontSize(9);
-                            col.Item().AlignCenter().Text(emp.Email).FontSize(9);
+                            col.Item().AlignCenter().Text(emp.NombreFantasia.ToUpper()).Bold().FontSize(14);
+                            col.Item().AlignCenter().Text(suc.Direccion).FontSize(9);
+                            col.Item().AlignCenter().Text(suc.Telefono).FontSize(9);
+                            col.Item().AlignCenter().Text(suc.Email).FontSize(9);
                         });
                         row.RelativeItem().Column(col =>
                         {

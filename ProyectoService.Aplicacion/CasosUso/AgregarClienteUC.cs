@@ -18,10 +18,9 @@ namespace ProyectoService.Aplicacion.CasosUso
             this.repo = repo;
         }
 
-        public async Task Ejecutar(Cliente cli)
-        {
-            
-              await repo.Add(cli);
+        public async Task<Cliente?> Ejecutar(Cliente cli)
+        {   
+             return await repo.Agregar(cli);
         }
     }
 }

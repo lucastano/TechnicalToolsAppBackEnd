@@ -40,7 +40,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
 
         public async Task<List<Administrador>> getAll()
         {
-            return await _context.Administradores.ToListAsync();
+            return await _context.Administradores.Include(a=>a.Sucursal).Include(a=>a.Empresa).ToListAsync();
         }
 
         public async Task<Administrador> ObtenerAdministradorPorEmail(string emailRecibido)

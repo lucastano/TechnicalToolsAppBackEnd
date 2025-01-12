@@ -12,7 +12,7 @@ using ProyectoService.AccesoDatos;
 namespace ProyectoService.AccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoServiceContext))]
-    [Migration("20241224192048_nuevabd")]
+    [Migration("20250105171507_nuevabd")]
     partial class nuevabd
     {
         /// <inheritdoc />
@@ -61,31 +61,18 @@ namespace ProyectoService.AccesoDatos.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Direccion")
+                    b.Property<string>("NombreFantasia")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EmailPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Foto")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nombre")
+                    b.Property<string>("NumeroRUT")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PoliticasEmpresa")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Telefono")
+                    b.Property<string>("RazonSocial")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -229,6 +216,58 @@ namespace ProyectoService.AccesoDatos.Migrations
                     b.ToTable("reparaciones");
                 });
 
+            modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Sucursal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CodigoSucursal")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Direccion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmailServer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EmpresaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Foto")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("apiKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("avisosEmail")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("avisosWsp")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("secretKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmpresaId");
+
+                    b.ToTable("Sucursales");
+                });
+
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -276,7 +315,16 @@ namespace ProyectoService.AccesoDatos.Migrations
                     b.Property<int>("EmpresaId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Foto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SucursalId")
+                        .HasColumnType("int");
+
                     b.HasIndex("EmpresaId");
+
+                    b.HasIndex("SucursalId");
 
                     b.ToTable("administradores", (string)null);
                 });
@@ -311,7 +359,16 @@ namespace ProyectoService.AccesoDatos.Migrations
                     b.Property<int>("EmpresaId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Foto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SucursalId")
+                        .HasColumnType("int");
+
                     b.HasIndex("EmpresaId");
+
+                    b.HasIndex("SucursalId");
 
                     b.ToTable("tecnicos", (string)null);
                 });
@@ -381,6 +438,17 @@ namespace ProyectoService.AccesoDatos.Migrations
                     b.Navigation("Tecnico");
                 });
 
+            modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Sucursal", b =>
+                {
+                    b.HasOne("ProyectoService.LogicaNegocio.Modelo.Empresa", "Empresa")
+                        .WithMany()
+                        .HasForeignKey("EmpresaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Empresa");
+                });
+
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Administrador", b =>
                 {
                     b.HasOne("ProyectoService.LogicaNegocio.Modelo.Empresa", "Empresa")
@@ -389,7 +457,15 @@ namespace ProyectoService.AccesoDatos.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ProyectoService.LogicaNegocio.Modelo.Sucursal", "Sucursal")
+                        .WithMany()
+                        .HasForeignKey("SucursalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Empresa");
+
+                    b.Navigation("Sucursal");
                 });
 
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Tecnico", b =>
@@ -400,7 +476,15 @@ namespace ProyectoService.AccesoDatos.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ProyectoService.LogicaNegocio.Modelo.Sucursal", "Sucursal")
+                        .WithMany()
+                        .HasForeignKey("SucursalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Empresa");
+
+                    b.Navigation("Sucursal");
                 });
 
             modelBuilder.Entity("ProyectoService.LogicaNegocio.Modelo.Reparacion", b =>

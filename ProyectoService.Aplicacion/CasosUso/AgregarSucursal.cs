@@ -9,18 +9,17 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.CasosUso
 {
-    public class AvisoReparacionTerminada : IAvisoReparacionTerminada
+    public class AgregarSucursal : IAgregarSucursal
     {
-        private readonly IEnviarEmail repo;
-
-        public AvisoReparacionTerminada(IEnviarEmail repo)
+        private readonly ISucursalRepositorio repo;
+        public AgregarSucursal(ISucursalRepositorio repo)
         {
             this.repo = repo;
         }
 
-        public async Task Ejecutar(Reparacion entity)
+        public async Task<Sucursal> Ejecutar(Sucursal suc)
         {
-            await repo.EnviarEmailAvisoTerminada(entity);
+           return await repo.Agregar(suc);
         }
     }
 }

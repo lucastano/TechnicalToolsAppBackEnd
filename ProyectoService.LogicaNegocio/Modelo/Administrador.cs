@@ -11,6 +11,8 @@ namespace ProyectoService.LogicaNegocio.Modelo
     public class Administrador:Usuario
     {
         public Empresa Empresa { get; set; }
+        public Sucursal Sucursal { get; set; }
+        public string Foto { get; set; } = string.Empty;
         //public string Foto { get; set; }
         public Administrador() 
         {

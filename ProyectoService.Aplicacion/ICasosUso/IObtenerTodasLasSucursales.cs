@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.ICasosUso
 {
-    public interface IGenerarOrdenDeServicio
+    public interface IObtenerTodasLasSucursales
     {
-        byte[] Ejecutar(Reparacion rep, Empresa emp);
+        Task<List<Sucursal>> Ejecutar();
     }
 }

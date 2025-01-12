@@ -11,7 +11,8 @@ namespace ProyectoService.LogicaNegocio.IRepositorios
     {
        
        Task<Cliente> GetClienteByCi(string ci);
-        Task<Cliente> GetClienteById(int id); 
+        Task<Cliente> GetClienteById(int id);
+        Task<Cliente> Agregar(Cliente cliente);
 
 
     }

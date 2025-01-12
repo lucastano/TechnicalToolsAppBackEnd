@@ -14,6 +14,7 @@ namespace ProyectoService.ApiRest.Controllers
 
     public class ReparacionesController : ControllerBase
     {
+        private readonly IEnviarEmail enviarEmailUc;
         private readonly IAgregarReparacion agregarReparacionUc;
         private readonly IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc;
         private readonly IObtenerReparacionPorId obtenerReparacionPorIdUc;
@@ -21,17 +22,12 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly IAgregarClienteUC agregarClienteUc;
         private readonly IObtenerClientePorCI obtenerClientePorCiUc;
         private readonly IObtenerTecnicoPorId obtenerTecnicoPorIdUc;
-        private readonly IAvisoNuevaReparacion avisoNuevaReparacionUc;
-        private readonly IAvisoNuevoPresupuesto avisoNuevoPresupuestoUc;
-        private readonly IAvisoEntregaReparacion avisoEntregarReparacionUc;
-        private readonly IAvisoReparacionTerminada avisoReparacionTerminadaUc;
         private readonly IAceptarPresupuesto aceptarPresupuestoUc;
         private readonly INoAceptarPresupuesto noAceptarPresupuestoUc;
         private readonly ITerminarReparacion terminarReparacionUc;
         private readonly IEntregarReparacion entregarReparacionUc;
         private readonly IModificarPresupuestoReparacion modificarPresupuestoReparacionUc;
         private readonly IModificarDatosReparacion modificarDatosReparacionUc;
-        private readonly IGenerarOrdenDeServicio generarOrdenDeServicioUc;
         private readonly IConfiguration configuration;
         private readonly IEliminarMensajesReparacion eliminarMensajesReparacionUc;
         private readonly IObtenerHistoriaClinica obtenerHistoriaClinicaUc;
@@ -40,12 +36,14 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc;
         private readonly IGenerarOrdenServicioEntrada generarOrdSrvEntradaUc;
         private readonly IObtenerEmpresaPorId obtenerEmpresaPorIdUc;
+        private readonly IObtenerSucursalPorId obtenerSucursalPorIdUc;
         private readonly IWebHostEnvironment _env;
+
         private Empresa emp;
 
 
 
-        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc,  IObtenerReparacionesPorTecnico obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc, IAvisoNuevaReparacion avisoNuevaReparacionUc, IAvisoNuevoPresupuesto avisoNuevoPresupuestoUc, IAceptarPresupuesto aceptarPresupuestoUc, INoAceptarPresupuesto noAceptarPresupuestoUc, ITerminarReparacion terminarReparacionUc, IEntregarReparacion entregarReparacionUc, IAvisoEntregaReparacion avisoEntregarReparacionUc, IAvisoReparacionTerminada avisoReparacionTerminadaUc,  IConfiguration configuration, IObtenerReparacionPorId obtenerReparacionPorIdUc, IGenerarOrdenDeServicio generarOrdenDeServicioUc, IModificarPresupuestoReparacion modificarPresupuestoReparacionUc,IModificarDatosReparacion modificarDatosReparacionUc, IEliminarMensajesReparacion eliminarMensajesReparacionUc, IObtenerHistoriaClinica obtenerHistoriaClinicaUc, IObtenerMontoTotalHistoriaClinica obtenerMontoTotalHistoriaClinicaUc,IObtenerProductoPorId obtenerProductoPorIdUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc, IGenerarOrdenServicioEntrada generarOrdSrvEntradaUc, IObtenerEmpresaPorId obtenerEmpresaPorIdUc, IWebHostEnvironment _env)
+        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc,  IObtenerReparacionesPorTecnico obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc,  IAceptarPresupuesto aceptarPresupuestoUc, INoAceptarPresupuesto noAceptarPresupuestoUc, ITerminarReparacion terminarReparacionUc, IEntregarReparacion entregarReparacionUc,IConfiguration configuration, IObtenerReparacionPorId obtenerReparacionPorIdUc,  IModificarPresupuestoReparacion modificarPresupuestoReparacionUc,IModificarDatosReparacion modificarDatosReparacionUc, IEliminarMensajesReparacion eliminarMensajesReparacionUc, IObtenerHistoriaClinica obtenerHistoriaClinicaUc, IObtenerMontoTotalHistoriaClinica obtenerMontoTotalHistoriaClinicaUc,IObtenerProductoPorId obtenerProductoPorIdUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc, IGenerarOrdenServicioEntrada generarOrdSrvEntradaUc, IObtenerEmpresaPorId obtenerEmpresaPorIdUc, IWebHostEnvironment _env, IEnviarEmail enviarEmailUc, IObtenerSucursalPorId obtenerSucursalPorIdUc)
         {
             this.agregarReparacionUc = agregarReparacionUc;
             this.obtenerTodasLasReparacionesUc = obtenerTodasLasReparacionesUc;
@@ -53,14 +51,10 @@ namespace ProyectoService.ApiRest.Controllers
             this.presupuestarReparacionUc = presupuestarReparacionUc;
             this.obtenerClientePorCiUc = obtenerClientePorCiUc;
             this.obtenerTecnicoPorIdUc = obtenerTecnicoPorIdUc;
-            this.avisoNuevaReparacionUc = avisoNuevaReparacionUc;
-            this.avisoNuevoPresupuestoUc = avisoNuevoPresupuestoUc;
             this.aceptarPresupuestoUc = aceptarPresupuestoUc;
             this.noAceptarPresupuestoUc = noAceptarPresupuestoUc;
             this.terminarReparacionUc = terminarReparacionUc;
             this.entregarReparacionUc = entregarReparacionUc;
-            this.avisoEntregarReparacionUc = avisoEntregarReparacionUc;
-            this.avisoReparacionTerminadaUc = avisoReparacionTerminadaUc;
             this.modificarPresupuestoReparacionUc = modificarPresupuestoReparacionUc;
             this.modificarDatosReparacionUc = modificarDatosReparacionUc;
             this.eliminarMensajesReparacionUc = eliminarMensajesReparacionUc;
@@ -71,25 +65,9 @@ namespace ProyectoService.ApiRest.Controllers
             this.configuration = configuration;
             this.generarOrdSrvEntradaUc = generarOrdSrvEntradaUc;
             this.obtenerEmpresaPorIdUc = obtenerEmpresaPorIdUc;
-
-            this._env = _env;
-            var configNombreEmpresa = configuration.GetSection("EmpresaSettings:NombreEmpresa").Value!;
-            var configDireccionEmpresa = configuration.GetSection("EmpresaSettings:DireccionEmpresa").Value!;
-            var configTelefonoEmpresa = configuration.GetSection("EmpresaSettings:TelefonoEmpresa").Value!;
-            var configEmail = configuration.GetSection("EmpresaSettings:Email").Value!;
-            var configPassword = configuration.GetSection("EmpresaSettings:EmailPassword").Value!;
-            var configPoliticasEmpresa = configuration.GetSection("EmpresaSettings:PoliticasEmpresa").Value!;
-            Empresa empresaConfig = new Empresa()
-            {
-                Nombre = configNombreEmpresa,
-                Direccion = configDireccionEmpresa,
-                Telefono = configTelefonoEmpresa,
-                Email = configEmail,
-                EmailPassword = configPassword,
-                PoliticasEmpresa= configPoliticasEmpresa
-            };
-            this.emp = empresaConfig;
-            this.generarOrdenDeServicioUc = generarOrdenDeServicioUc;
+            this.enviarEmailUc = enviarEmailUc;
+            this.obtenerSucursalPorIdUc = obtenerSucursalPorIdUc;
+            this._env = _env; 
         }
 
         [HttpPost]
@@ -103,6 +81,7 @@ namespace ProyectoService.ApiRest.Controllers
                 
                 Tecnico tecnico = await obtenerTecnicoPorIdUc.Ejecutar(dto.IdTecnico);
                 Empresa emp = await obtenerEmpresaPorIdUc.Ejecutar(dto.IdEmpresa);
+                Sucursal suc = await obtenerSucursalPorIdUc.Ejecutar(dto.IdSucursal);
                 if (tecnico == null ) throw new Exception("Tecnico no existe");
                 Cliente cliente = await obtenerClientePorCiUc.Ejecutar(dto.CiCliente);
                 Reparacion reparacion = new Reparacion()
@@ -116,22 +95,47 @@ namespace ProyectoService.ApiRest.Controllers
 
                 };
                
-                Reparacion rep= await agregarReparacionUc.Ejecutar(reparacion);
+                Reparacion r= await agregarReparacionUc.Ejecutar(reparacion);
                 var fotoUrl = Url.Content($"~{emp.Foto}"); // Genera una URL relativa
                 var filePath = Path.Combine(_env.WebRootPath, fotoUrl.TrimStart('~', '/'));
                 byte[] fotoBytes = await System.IO.File.ReadAllBytesAsync(filePath);
-                byte[] pdf = await generarOrdSrvEntradaUc.Ejecutar(rep,emp,fotoBytes);
-
-                ResponseNuevaReparacionDTO response = new ResponseNuevaReparacionDTO()
+                byte[] pdf = await generarOrdSrvEntradaUc.Ejecutar(r,emp,suc,fotoBytes);
+                if (suc.avisosEmail)
                 {
-                    StatusCode = 200,
-                    OrdenDeServicio=pdf
+                    enviarEmailUc.Ejecutar(r, emp,suc, pdf);
+                }
+                //aca agregar a futuro implementacion para dar aviso por wsp
+                 ReparacionEnTallerDTO repdto = new ReparacionEnTallerDTO()
+                 {
+                    Id = r.Id,
+                    ClienteId = r.Cliente.Id,
+                    ClienteNombre = r.Cliente.Nombre,
+                    ClienteApellido = r.Cliente.Apellido,
+                    ClienteTelefono = r.Cliente.Telefono,
+                    ClienteDireccion = r.Cliente.Direccion,
+                    ClienteEmail = r.Cliente.Email.Value,
+                    ClienteCedula = r.Cliente.Ci,
+                    TecnicoId = r.Tecnico.Id,
+                    Producto = new ProductoDTO()
+                    {
+                        Id = r.Producto.Id,
+                        Marca = r.Producto.Marca,
+                        Modelo = r.Producto.Modelo,
+                        Version = r.Producto.Version
+                    },
+                    NumeroSerie = r.NumeroSerie,
+                    Descripcion = r.Descripcion,
+                    Fecha = r.Fecha,
+                    Estado = r.Estado,
+                    DescripcionPresupuesto = r.DescripcionPresupuesto,
+                    Costo = r.CostoFinal,
+                    FechaPromesaPresupuesto = r.FechaPromesaPresupuesto,
+                    FechaPromesaEntrega = r.FechaPromesaEntrega
+
+
+
                 };
-                return Ok(response);
-
-
-
-
+                return Ok(repdto);
             }
             catch (Exception ex)
             {
@@ -150,7 +154,6 @@ namespace ProyectoService.ApiRest.Controllers
                 if (dto.Id == 0) throw new Exception("No existe reparacion con ese id");
                 if (dto.Descripcion == null) throw new Exception("Debe ingresar una descripcio");
                 Reparacion rep=await presupuestarReparacionUc.Ejecutar(dto.Id,dto.ManoObra,dto.Descripcion,dto.FechaPromesaEntrega);
-                await avisoNuevoPresupuestoUc.Ejecutar(rep); 
                 return StatusCode(200);    
 
             }
@@ -200,7 +203,6 @@ namespace ProyectoService.ApiRest.Controllers
                 if (id == 0) throw new Exception("Numero de orden incorrecto");
                 Reparacion reparacion = await terminarReparacionUc.Ejecutar(id,reparada);
                 if (reparacion == null) throw new Exception("No se pudo terminar esta reparacion");
-                await avisoReparacionTerminadaUc.Ejecutar(reparacion);
                 return Ok();
             }
             catch (Exception ex)
@@ -220,11 +222,10 @@ namespace ProyectoService.ApiRest.Controllers
                 if (id == 0) throw new Exception("Numero de orden incorrecto");
                 Reparacion reparacion = await entregarReparacionUc.Ejecutar(id);
                 if (reparacion == null) throw new Exception("No se pudo entregar esta reparacion");
-                byte[] pdf=await avisoEntregarReparacionUc.Ejecutar(reparacion);
                 ResponseEntregarReparacionDTO response = new ResponseEntregarReparacionDTO()
                 {
-                    StatusCode = 200,
-                    OrdenDeServicio=pdf
+                    StatusCode = 200
+                   
 
                 };
 
@@ -356,19 +357,20 @@ namespace ProyectoService.ApiRest.Controllers
         }
 
         [HttpGet("GenerarOrdSrv")]
-        public async Task<ActionResult>GenerarOrdSrv(int idReparacion,int idEmpresa)
+        public async Task<ActionResult>GenerarOrdSrv(int idReparacion,int idEmpresa,int idSucursal)
         {
             try
             {
                 if (idReparacion == 0) throw new Exception("Numero de orden incorrecto");
                 if (idEmpresa == 0) throw new Exception("Numero de empresa incorrecta");
                 Empresa emp = await obtenerEmpresaPorIdUc.Ejecutar(idEmpresa);
+                Sucursal suc = await obtenerSucursalPorIdUc.Ejecutar(idSucursal);
                 var fotoUrl = Url.Content($"~{emp.Foto}"); // Genera una URL relativa
                 var filePath = Path.Combine(_env.WebRootPath, fotoUrl.TrimStart('~', '/'));
                 // Leer el archivo como byte[]
                 byte[] fotoBytes = await System.IO.File.ReadAllBytesAsync(filePath);
                 Reparacion rep = await obtenerReparacionPorIdUc.Ejecutar(idReparacion);
-                byte[]pdf= await generarOrdSrvEntradaUc.Ejecutar(rep, emp, fotoBytes);
+                byte[]pdf= await generarOrdSrvEntradaUc.Ejecutar(rep, emp,suc, fotoBytes);
                
                 return Ok(pdf); 
             }

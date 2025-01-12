@@ -9,17 +9,18 @@ using System.Threading.Tasks;
 
 namespace ProyectoService.Aplicacion.CasosUso
 {
-    public class AvisoNuevoPresupuesto : IAvisoNuevoPresupuesto
+    public class ModificarSucursal : IModificarSucursal
     {
-        private readonly IEnviarEmail repoEmail;
-        public AvisoNuevoPresupuesto(IEnviarEmail repoEmail)
+
+        private readonly ISucursalRepositorio repo;
+        public ModificarSucursal(ISucursalRepositorio repo)
         {
-            this.repoEmail = repoEmail;
+            this.repo = repo;
         }
 
-        public async Task Ejecutar(Reparacion entity)
+        public async Task<Sucursal> Ejecutar(Sucursal entity)
         {
-            await repoEmail.EnviarEmailNuevoPresupuesto(entity);
+            return await repo.Modificar(entity);
         }
     }
 }

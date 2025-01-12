@@ -24,20 +24,20 @@ public class Program
         {
             option.UseSqlServer(builder.Configuration.GetConnectionString("ProyectoServiceContext"));
         });
-       
+        QuestPDF.Settings.License = LicenseType.Community;
         //repositorios 
         builder.Services.AddScoped<IClienteRepositorio, ClienteEFRepositorio>();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<ITecnicoRepositorio, TecnicoEFRepositorio>();
         builder.Services.AddScoped<IAdministradorRepositorio, AdministradorEFRepositorio>();
         builder.Services.AddScoped<IReparacionRepositorio, ReparacionEFRepositorio>();
-        builder.Services.AddScoped<IEnviarEmail,EnviarEmail>();
         builder.Services.AddScoped<IMensajeriaRepositorio, MensajeriaEFRepositorio>();
         builder.Services.AddScoped<IUsuarioServicio, UsuarioServicio>();
         builder.Services.AddScoped<IReparacionServicio,ReparacionServicio>();
         builder.Services.AddScoped<IProductoRepositorio,ProductoRepositorio>();
         builder.Services.AddScoped<IBaseFallaRepositorio, BaseFallaEFRepositorio>();
         builder.Services.AddScoped<IEmpresaRepositorio, EmpresaEFRepositorio>();
+        builder.Services.AddScoped<ISucursalRepositorio, SucursalEFRepositorio>();
         // casos de uso
         builder.Services.AddScoped<IAgregarClienteUC, AgregarClienteUC>();
         builder.Services.AddScoped<IObtenerTodosLosClientesUC, ObtenerTodosLosClientesUC>();
@@ -54,13 +54,8 @@ public class Program
         builder.Services.AddScoped<IObtenerTodasLasReparaciones,ObtenerTodasLasReparaciones>();
         builder.Services.AddScoped<IObtenerReparacionesPorCliente,ObtenerReparacionesPorCliente>();
         builder.Services.AddScoped<IObtenerReparacionesPorTecnico, ObtenerReparacionesPorTecnico>();
-        builder.Services.AddScoped<IGenerarOrdenDeServicio,GenerarOrdenDeServicio>();
         builder.Services.AddScoped<IObtenerReparacionPorId,ObtenerReparacionPorId>();
         builder.Services.AddScoped<IPresupuestarReparacion, PresupuestarReparacion>(); 
-        builder.Services.AddScoped<IAvisoNuevaReparacion,AvisoNuevaReparacion>();
-        builder.Services.AddScoped<IAvisoNuevoPresupuesto,AvisoNuevoPresupuesto>();
-        builder.Services.AddScoped<IAvisoEntregaReparacion, AvisoEntregaReparacion>();
-        builder.Services.AddScoped<IAvisoReparacionTerminada,AvisoReparacionTerminada>();
         builder.Services.AddScoped<IAceptarPresupuesto, AceptarPresupuesto>();
         builder.Services.AddScoped<ITerminarReparacion, TerminarReparacion>();
         builder.Services.AddScoped<IEntregarReparacion,EntregarReparacion>();
@@ -80,7 +75,6 @@ public class Program
         builder.Services.AddScoped<IAgregarABaseFallas, AgregarABaseFallas>();
         builder.Services.AddScoped<IObtenerBaseFallas,ObtenerBaseFallas>();
         builder.Services.AddScoped<ICambiarPasswordTecnico,CambiarPasswordTecnico>();
-        builder.Services.AddScoped<IAvisoCambioPassword,AvisoCambioPassword>();
         builder.Services.AddScoped<ICambiarPasswordAdministrador,CambiarPasswordAdministrador>();
         builder.Services.AddScoped<IObtenerAdministradorPorEmail,ObtenerAdministradorPorEmail>();
         builder.Services.AddScoped<IObtenerEmpresaPorId,ObtenerEmpresaPorId>();
@@ -88,6 +82,12 @@ public class Program
         builder.Services.AddScoped<IObtenerEmpresa,ObtenerEmpresa>();
         builder.Services.AddScoped<IModificarEmpresa, ModificarEmpresa>();
         builder.Services.AddScoped<IGenerarOrdenServicioEntrada,GenerarOrdenServicioEntrada>();
+        builder.Services.AddScoped<IEnviarEmail, EnviarEmail>();
+        builder.Services.AddScoped<IAgregarSucursal,AgregarSucursal>();
+        builder.Services.AddScoped<IObtenerSucursalPorId,ObtenerSucursalPorId>();
+        builder.Services.AddScoped<IObtenerTodasLasSucursales,ObtenerTodasLasSucursales>();
+        builder.Services.AddScoped<IModificarSucursal,ModificarSucursal>();
+        builder.Services.AddScoped<IObtenerSucursalesPorEmpresa, ObtenerSucursalesPorEmpresa>();
         // Add services to the container.
 
         builder.Services.AddControllers();

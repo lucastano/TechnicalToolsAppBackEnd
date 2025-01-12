@@ -20,17 +20,17 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly IObtenerTecnicoPorEmail obtenerTecnicoPorEmailUc;
         private readonly IValidarPassword validarPasswordUc;
         private readonly ICambiarPasswordTecnico cambiarPasswordTecnicoUc;
-        private readonly IAvisoCambioPassword avisoCambioPasswordUc;
         private readonly IObtenerEmpresaPorId obtenerEmpresaUc;
-        public TecnicosController(IAgregarTecnico agregarTecnicoUc, IObtenerTodosLosTecnicos obtenerTodosLosTecnicosUc, IObtenerTecnicoPorEmail obtenerTecnicoPorEmailUc, IValidarPassword validarPasswordUc, ICambiarPasswordTecnico cambiarPasswordTecnicoUc, IAvisoCambioPassword avisoCambioPasswordUc, IObtenerEmpresaPorId obtenerEmpresaUc)
+        private readonly IObtenerSucursalPorId obtenerSucursalPorIdUc;
+        public TecnicosController(IAgregarTecnico agregarTecnicoUc, IObtenerTodosLosTecnicos obtenerTodosLosTecnicosUc, IObtenerTecnicoPorEmail obtenerTecnicoPorEmailUc, IValidarPassword validarPasswordUc, ICambiarPasswordTecnico cambiarPasswordTecnicoUc, IObtenerEmpresaPorId obtenerEmpresaUc, IObtenerSucursalPorId obtenerSucursalPorIdUc)
         {
             this.agregarTecnicoUc = agregarTecnicoUc;
             this.obtenerTodosLosTecnicosUc = obtenerTodosLosTecnicosUc;
             this.obtenerTecnicoPorEmailUc = obtenerTecnicoPorEmailUc;
             this.validarPasswordUc = validarPasswordUc;
             this.cambiarPasswordTecnicoUc = cambiarPasswordTecnicoUc;
-            this.avisoCambioPasswordUc = avisoCambioPasswordUc;
             this.obtenerEmpresaUc = obtenerEmpresaUc;
+            this.obtenerSucursalPorIdUc = obtenerSucursalPorIdUc;
         }
         //[Authorize]
         [HttpPost]
@@ -52,6 +52,7 @@ namespace ProyectoService.ApiRest.Controllers
             {
                 Seguridad.CrearPasswordHash(dto.Password, out byte[] passwordHash, out byte[] passwordSalt);
                 Empresa empresa = await obtenerEmpresaUc.Ejecutar(dto.EmpresaId);
+                Sucursal sucursal = await obtenerSucursalPorIdUc.Ejecutar(dto.SucursalId);
                 Tecnico tecnico = new Tecnico()
                 {
                     Nombre = dto.Nombre,
@@ -59,7 +60,8 @@ namespace ProyectoService.ApiRest.Controllers
                     Email = EmailVO.Crear(dto.Email),
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt,
-                    Empresa = empresa
+                    Empresa = empresa,
+                    Sucursal = sucursal 
                 };
                 await agregarTecnicoUc.Ejecutar(tecnico);
                 ResponseAgregarTecnicoDTO response = new ResponseAgregarTecnicoDTO()
@@ -92,7 +94,6 @@ namespace ProyectoService.ApiRest.Controllers
                 Seguridad.CrearPasswordHash(passwordRandom, out byte[] passwordHash, out byte[] passwordSalt);
                 bool response = await cambiarPasswordTecnicoUc.Ejecutar(email, passwordHash, passwordSalt);
                 if (!response) throw new Exception("No se pudo cambiar contraseña");
-                await avisoCambioPasswordUc.Ejecutar(tecnico, passwordRandom);
                 return Ok();
 
 

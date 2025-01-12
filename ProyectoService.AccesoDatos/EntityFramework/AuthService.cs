@@ -22,7 +22,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             Usuario user = null;
             if (rol == "Administrador")
             {
-                var listaAdministradores = await _context.Administradores.Include(a=> a.Empresa).ToListAsync();
+                var listaAdministradores = await _context.Administradores.Include(a=> a.Empresa).Include(a=>a.Sucursal).ToListAsync();
                 
                 Administrador admin = listaAdministradores.FirstOrDefault(c => c.Email.Value.Equals(email));
 
@@ -32,7 +32,7 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             }
             if (rol == "Tecnico")
             {
-                var listaTecnicos = await _context.Tecnicos.Include(t=>t.Empresa).ToListAsync();
+                var listaTecnicos = await _context.Tecnicos.Include(t=>t.Empresa).Include(t=>t.Sucursal).ToListAsync();
                 Tecnico tecnico = listaTecnicos.FirstOrDefault(c => c.Email.Value.Equals(email));
                 if (tecnico == null) throw new Exception("No existe usuario para Tecnico con ese email");
                 user= tecnico;

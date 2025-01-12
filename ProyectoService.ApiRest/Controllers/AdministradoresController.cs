@@ -20,18 +20,17 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly IValidarPassword validarPasswordUc; 
         private readonly ICambiarPasswordAdministrador cambiarPasswordUc;
         private readonly IObtenerAdministradorPorEmail obtenerAdministradorPorEmailUc;
-        private readonly IAvisoCambioPassword avisoCambioPasswordUc;
         private readonly IObtenerEmpresaPorId obtenerEmpresaUc;
-        public AdministradoresController(IAgregarAdministrador agregarAdministradorUc, IObtenerAdministradores obtenerTodosLosAdministradoresUc, IValidarPassword validarPasswordUc, ICambiarPasswordAdministrador cambiarPasswordUc, IObtenerAdministradorPorEmail obtenerAdministradorPorEmailUc, IAvisoCambioPassword avisoCambioPasswordUc, IObtenerEmpresaPorId obtenerEmpresaUc)
+        private readonly IObtenerSucursalPorId obtenerSucursalPorIdUc;
+        public AdministradoresController(IAgregarAdministrador agregarAdministradorUc, IObtenerAdministradores obtenerTodosLosAdministradoresUc, IValidarPassword validarPasswordUc, ICambiarPasswordAdministrador cambiarPasswordUc, IObtenerAdministradorPorEmail obtenerAdministradorPorEmailUc, IObtenerEmpresaPorId obtenerEmpresaUc, IObtenerSucursalPorId obtenerSucursalPorIdUc)
         {
             this.agregarAdministradorUc = agregarAdministradorUc;
             this.obtenerTodosLosAdministradoresUc = obtenerTodosLosAdministradoresUc;
             this.validarPasswordUc = validarPasswordUc;
             this.cambiarPasswordUc = cambiarPasswordUc;
             this.obtenerAdministradorPorEmailUc = obtenerAdministradorPorEmailUc;
-            this.avisoCambioPasswordUc = avisoCambioPasswordUc;
+            this.obtenerSucursalPorIdUc = obtenerSucursalPorIdUc;
             this.obtenerEmpresaUc = obtenerEmpresaUc;
-
         }
         
         [HttpPost]
@@ -44,6 +43,7 @@ namespace ProyectoService.ApiRest.Controllers
                 if (!validarPasswordUc.Ejecutar(dto.Password)) throw new Exception("Contraseña no valida");
                 Seguridad.CrearPasswordHash(dto.Password, out byte[] PasswordHash, out byte[] PasswordSalt);
                 Empresa empresa = await obtenerEmpresaUc.Ejecutar(dto.EmpresaId);
+                Sucursal sucursal = await obtenerSucursalPorIdUc.Ejecutar(dto.SucursalId);
                 Administrador admin = new Administrador()
                 {
                     Nombre = dto.Nombre,
@@ -51,10 +51,8 @@ namespace ProyectoService.ApiRest.Controllers
                     Email = EmailVO.Crear(dto.Email),
                     PasswordHash = PasswordHash,
                     PasswordSalt = PasswordSalt,
-                    Empresa = empresa
-
-
-
+                    Empresa = empresa,
+                    Sucursal = sucursal
                 };
                 await agregarAdministradorUc.Ejecutar(admin);
                 ResponseAgregarAdministradorDTO response = new ResponseAgregarAdministradorDTO()
@@ -65,7 +63,6 @@ namespace ProyectoService.ApiRest.Controllers
                     
                 };
                 return Ok(response);
-
             }
             catch (Exception ex)
             {
@@ -74,16 +71,9 @@ namespace ProyectoService.ApiRest.Controllers
                     StatusCode = 400,
                     administradorDTO = null,
                     Error = ex.Message
-
                 };
-
                 return BadRequest(response);
-
             }
-
-            
-
-
         }
         [Authorize]
         [HttpGet]
@@ -99,8 +89,8 @@ namespace ProyectoService.ApiRest.Controllers
                     Nombre = a.Nombre,
                     Apellido = a.Apellido,
                     Email = a.Email.Value,
-                  
-
+                    IdEmpresa = a.Empresa.Id,
+                    IdSucursal = a.Sucursal.Id
                 }).ToList();
 
                 ResponseObtenerAdministradoresDTO response = new ResponseObtenerAdministradoresDTO()
@@ -143,7 +133,7 @@ namespace ProyectoService.ApiRest.Controllers
                 Seguridad.CrearPasswordHash(passRandom,out byte[]passwordHash,out byte[]passwordSalt);
                 bool resultado =await  cambiarPasswordUc.Ejecutar(email, passwordHash, passwordSalt);
                 if (!resultado) throw new Exception("No existe administrador con ese email");
-                await avisoCambioPasswordUc.Ejecutar(adminBuscado,passRandom);
+               
                 return Ok();
            
 

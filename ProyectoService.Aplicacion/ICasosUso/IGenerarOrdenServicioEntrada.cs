@@ -9,6 +9,6 @@ namespace ProyectoService.Aplicacion.ICasosUso
 {
     public interface IGenerarOrdenServicioEntrada
     {
-        Task<byte[]> Ejecutar(Reparacion rep,Empresa emp, byte[] foto);
+        Task<byte[]> Ejecutar(Reparacion rep,Empresa emp,Sucursal suc, byte[] foto);
     }
 }

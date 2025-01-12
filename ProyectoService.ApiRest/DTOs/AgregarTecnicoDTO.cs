@@ -7,5 +7,6 @@
         public string Email { get; set; }
         public string Password { get; set; }
         public int EmpresaId { get; set; }
+        public int SucursalId { get; set; }
     }
 }
