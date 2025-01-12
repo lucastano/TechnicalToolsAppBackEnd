@@ -25,6 +25,7 @@ namespace ProyectoService.LogicaNegocio.IRepositorios
         Task<Reparacion> ModificarDatosReparacion(int id, DateTime fechaPromesaPresupuesto,string numeroSerie,string descripcion);
         Task<List<Reparacion>> HistoriaClinicaPorNumeroSerie(string numeroSerie);
         Task<double> ObtenerMontoTotalReparaciones(string numeroSerie);
+        Task<bool> TransferirReparacion(Reparacion reparacion);
 
 
     }

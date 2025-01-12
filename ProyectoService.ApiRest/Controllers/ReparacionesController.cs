@@ -5,6 +5,7 @@ using ProyectoService.ApiRest.DTOs;
 using ProyectoService.Aplicacion.CasosUso;
 using ProyectoService.Aplicacion.ICasosUso;
 using ProyectoService.LogicaNegocio.Modelo;
+using System.Data;
 
 namespace ProyectoService.ApiRest.Controllers
 {
@@ -37,13 +38,14 @@ namespace ProyectoService.ApiRest.Controllers
         private readonly IGenerarOrdenServicioEntrada generarOrdSrvEntradaUc;
         private readonly IObtenerEmpresaPorId obtenerEmpresaPorIdUc;
         private readonly IObtenerSucursalPorId obtenerSucursalPorIdUc;
+        private readonly ITransferirReparacion transferirReparacionUc;
         private readonly IWebHostEnvironment _env;
 
         private Empresa emp;
 
 
 
-        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc,  IObtenerReparacionesPorTecnico obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc,  IAceptarPresupuesto aceptarPresupuestoUc, INoAceptarPresupuesto noAceptarPresupuestoUc, ITerminarReparacion terminarReparacionUc, IEntregarReparacion entregarReparacionUc,IConfiguration configuration, IObtenerReparacionPorId obtenerReparacionPorIdUc,  IModificarPresupuestoReparacion modificarPresupuestoReparacionUc,IModificarDatosReparacion modificarDatosReparacionUc, IEliminarMensajesReparacion eliminarMensajesReparacionUc, IObtenerHistoriaClinica obtenerHistoriaClinicaUc, IObtenerMontoTotalHistoriaClinica obtenerMontoTotalHistoriaClinicaUc,IObtenerProductoPorId obtenerProductoPorIdUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc, IGenerarOrdenServicioEntrada generarOrdSrvEntradaUc, IObtenerEmpresaPorId obtenerEmpresaPorIdUc, IWebHostEnvironment _env, IEnviarEmail enviarEmailUc, IObtenerSucursalPorId obtenerSucursalPorIdUc)
+        public ReparacionesController(IAgregarReparacion agregarReparacionUc, IObtenerTodasLasReparaciones obtenerTodasLasReparacionesUc,  IObtenerReparacionesPorTecnico obtenerReparacionesPorTecnicoUc, IPresupuestarReparacion presupuestarReparacionUc, IObtenerClientePorCI obtenerClientePorCiUc, IObtenerTecnicoPorId obtenerTecnicoPorIdUc,  IAceptarPresupuesto aceptarPresupuestoUc, INoAceptarPresupuesto noAceptarPresupuestoUc, ITerminarReparacion terminarReparacionUc, IEntregarReparacion entregarReparacionUc,IConfiguration configuration, IObtenerReparacionPorId obtenerReparacionPorIdUc,  IModificarPresupuestoReparacion modificarPresupuestoReparacionUc,IModificarDatosReparacion modificarDatosReparacionUc, IEliminarMensajesReparacion eliminarMensajesReparacionUc, IObtenerHistoriaClinica obtenerHistoriaClinicaUc, IObtenerMontoTotalHistoriaClinica obtenerMontoTotalHistoriaClinicaUc,IObtenerProductoPorId obtenerProductoPorIdUc, IObtenerReparacionesPorCliente obtenerReparacionesPorClienteUc, IGenerarOrdenServicioEntrada generarOrdSrvEntradaUc, IObtenerEmpresaPorId obtenerEmpresaPorIdUc, IWebHostEnvironment _env, IEnviarEmail enviarEmailUc, IObtenerSucursalPorId obtenerSucursalPorIdUc, ITransferirReparacion transferirReparacionUc)
         {
             this.agregarReparacionUc = agregarReparacionUc;
             this.obtenerTodasLasReparacionesUc = obtenerTodasLasReparacionesUc;
@@ -67,6 +69,7 @@ namespace ProyectoService.ApiRest.Controllers
             this.obtenerEmpresaPorIdUc = obtenerEmpresaPorIdUc;
             this.enviarEmailUc = enviarEmailUc;
             this.obtenerSucursalPorIdUc = obtenerSucursalPorIdUc;
+            this.transferirReparacionUc = transferirReparacionUc;
             this._env = _env; 
         }
 
@@ -463,6 +466,30 @@ namespace ProyectoService.ApiRest.Controllers
             {
                 return BadRequest(ex.Message);
             }
+
+        }
+        [HttpPut("TransferirReparacion")]
+        public async Task<ActionResult> TransferirReparacion(int idReparacion,int idTecnico)
+        {
+            try
+            {
+                Reparacion reparacion = await obtenerReparacionPorIdUc.Ejecutar(idReparacion);
+                if (reparacion == null) throw new Exception("No existe reparacion");
+                Tecnico tecnico = await obtenerTecnicoPorIdUc.Ejecutar(idTecnico);
+                if (tecnico == null) throw new Exception("No existe tecnico");
+                reparacion.Tecnico = tecnico;
+                bool response = await transferirReparacionUc.Ejecutar(reparacion);
+                if (response == false) throw new Exception("No se pudo transferir la reparacion");
+                return Ok(response);
+
+            }
+            catch (Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            
+            }
+            
+
 
         }
 

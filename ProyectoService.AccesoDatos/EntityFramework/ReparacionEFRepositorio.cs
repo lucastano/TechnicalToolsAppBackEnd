@@ -34,20 +34,17 @@ namespace ProyectoService.AccesoDatos.EntityFramework
         }
 
         public async Task<Reparacion>AddAlternativo(Reparacion entity)
-        {
-           
-                if (entity == null) throw new ReparacionException("Debe ingresar una reparacion");
-                if (entity.Tecnico == null) throw new ReparacionException("Debe ingresar un tecnico");
-                if (entity.Cliente == null) throw new ReparacionException("Debe ingresar un cliente");
-                if (entity.Descripcion == null) throw new ReparacionException("Debe ingresar una descripcion");
-                if (entity.Producto == null) throw new ReparacionException("Debe ingresar un producto");
-                if (entity.FechaPromesaPresupuesto == DateTime.MinValue) throw new ReparacionException("Debe ingresar una fecha aproximada para el presupuesto");
-                if (entity.NumeroSerie == null) throw new ReparacionException("Debe ingresar numero de serie");
-                await _context.Reparaciones.AddAsync(entity);
-                await _context.SaveChangesAsync();
-                return entity;
-            
-            
+        {  
+            if (entity == null) throw new ReparacionException("Debe ingresar una reparacion");
+            if (entity.Tecnico == null) throw new ReparacionException("Debe ingresar un tecnico");
+            if (entity.Cliente == null) throw new ReparacionException("Debe ingresar un cliente");
+            if (entity.Descripcion == null) throw new ReparacionException("Debe ingresar una descripcion");
+            if (entity.Producto == null) throw new ReparacionException("Debe ingresar un producto");
+            if (entity.FechaPromesaPresupuesto == DateTime.MinValue) throw new ReparacionException("Debe ingresar una fecha aproximada para el presupuesto");
+            if (entity.NumeroSerie == null) throw new ReparacionException("Debe ingresar numero de serie");
+            await _context.Reparaciones.AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity;  
         }
 
         
@@ -98,8 +95,6 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             await _context.SaveChangesAsync();
             
         }
-
-        
 
         public async Task NoAceptarPresupuesto(int id, double costo,string razon)
         {
@@ -220,6 +215,15 @@ namespace ProyectoService.AccesoDatos.EntityFramework
             List<Reparacion>reparaciones = await HistoriaClinicaPorNumeroSerie(numeroSerie);
             double gastoTotal = reparaciones.Sum(r => r.CostoFinal);
             return gastoTotal;
+        }
+
+        public async Task<bool> TransferirReparacion(Reparacion reparacion)
+        {
+            Reparacion reparacionAModificar = await _context.Reparaciones.Include(r=>r.Tecnico).FirstOrDefaultAsync(r=>r.Id==reparacion.Id);
+            if (reparacionAModificar==null) throw new Exception("Reparacion no encontrada");
+            reparacionAModificar.Tecnico = reparacion.Tecnico;
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
