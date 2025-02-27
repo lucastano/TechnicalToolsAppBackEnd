@@ -90,6 +90,7 @@ public class Program
         builder.Services.AddScoped<IObtenerSucursalesPorEmpresa, ObtenerSucursalesPorEmpresa>();
         builder.Services.AddScoped<ITransferirReparacion,TransferirReparacion>();
         builder.Services.AddScoped<IEnviarWsp,EnviarWsp>();
+        builder.Services.AddScoped<IObtenerTecnicoReparacionesMensuales,ObtenerTecnicoReparacionesMensuales>();
         // Add services to the container.
 
         builder.Services.AddControllers();
