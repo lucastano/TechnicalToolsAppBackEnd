@@ -12,7 +12,7 @@ using ProyectoService.AccesoDatos;
 namespace ProyectoService.AccesoDatos.Migrations
 {
     [DbContext(typeof(ProyectoServiceContext))]
-    [Migration("20250105171507_nuevabd")]
+    [Migration("20250405070445_nuevabd")]
     partial class nuevabd
     {
         /// <inheritdoc />
@@ -60,6 +60,9 @@ namespace ProyectoService.AccesoDatos.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Foto")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NombreFantasia")
                         .IsRequired()
@@ -241,9 +244,6 @@ namespace ProyectoService.AccesoDatos.Migrations
 
                     b.Property<int>("EmpresaId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Foto")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Telefono")
                         .IsRequired()

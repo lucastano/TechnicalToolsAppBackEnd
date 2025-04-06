@@ -24,8 +24,7 @@ namespace ProyectoService.AccesoDatos
 
         public DbSet<Empresa>Empresas { get; set; }
         public DbSet<Sucursal> Sucursales { get; set; } 
-        public DbSet<Movimiento>Movimientos { get; set; }
-        public DbSet<MotivoMovimiento>MotivosMovimientos { get; set; }
+        
         public ProyectoServiceContext(DbContextOptions<ProyectoServiceContext> options) : base(options)
         {
 
@@ -67,15 +66,7 @@ namespace ProyectoService.AccesoDatos
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Movimiento>()
-                .HasOne(m => m.TecnicoDesasignado)
-                .WithMany();
-            modelBuilder.Entity<Movimiento>()
-                .HasOne(m => m.TecnicoAsigando)
-                .WithMany();
-            modelBuilder.Entity<Movimiento>()
-                .HasOne(m => m.Reparacion)
-                .WithMany();
+           
 
             base.OnModelCreating(modelBuilder);
 
