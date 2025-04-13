@@ -7,8 +7,6 @@ namespace ProyectoService.Aplicacion.CasosUso
 {
     public class EnviarEmail : IEnviarEmail
     {
-       
-       
         public async Task Ejecutar(Reparacion entity,Empresa empresa,Sucursal suc, byte[] pdf)
         {
            SmtpClient smtp = new SmtpClient("in.mailjet.com")
@@ -19,8 +17,6 @@ namespace ProyectoService.Aplicacion.CasosUso
                DeliveryMethod = SmtpDeliveryMethod.Network,
                UseDefaultCredentials = false,
            };
-           
-
             string fromName = empresa.NombreFantasia;
             string fromEmail = suc.Email;
             string toName = entity.Cliente.Nombre;
@@ -65,7 +61,6 @@ namespace ProyectoService.Aplicacion.CasosUso
                 {
                     reparada = "NO Reparada";
                 }
-
                 subject = "Ingreso reparacion Nro: " + entity.Id;
                  body = $@"
                  <html>
@@ -82,9 +77,7 @@ namespace ProyectoService.Aplicacion.CasosUso
 
                  </body>
                  </html>";
-
             }
-            
             bool isHtml = true;
             MailMessage mailMessage = new MailMessage()
             {
@@ -92,7 +85,6 @@ namespace ProyectoService.Aplicacion.CasosUso
                 Subject = subject,
                 Body = body,
                 IsBodyHtml = isHtml
-
             };
             mailMessage.To.Add(new MailAddress(toEmail, toName));
             if (pdf != null)
@@ -101,17 +93,13 @@ namespace ProyectoService.Aplicacion.CasosUso
                 {
                     stream.Position = 0;
                     mailMessage.Attachments.Add(new Attachment(stream, "Orden_de_servicio_" + entity.Id + ".pdf", "application/pdf"));
-
-                    // Envía el correo electrónico
-                     await smtp.SendMailAsync(mailMessage);
+                    await smtp.SendMailAsync(mailMessage);
                 }
             }
             else
             {
                 await smtp.SendMailAsync(mailMessage);
-
             }
-
         }
     }
 }

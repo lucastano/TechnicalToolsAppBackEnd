@@ -77,8 +77,7 @@ namespace ProyectoService.ApiRest.Controllers
             if (!ModelState.IsValid) throw new Exception("Debe ingresar datos de la reparacion");
             try
             {
-                
-                
+
                 Tecnico tecnico = await obtenerTecnicoPorIdUc.Ejecutar(dto.IdTecnico);
                 Empresa emp = await obtenerEmpresaPorIdUc.Ejecutar(dto.IdEmpresa);
                 Sucursal suc = await obtenerSucursalPorIdUc.Ejecutar(dto.IdSucursal);
@@ -92,7 +91,6 @@ namespace ProyectoService.ApiRest.Controllers
                     NumeroSerie = dto.NumeroSerie,
                     Descripcion = dto.Descripcion,
                     FechaPromesaPresupuesto=dto.FechaPromesaPresupuesto
-
                 };
                
                 Reparacion r= await agregarReparacionUc.Ejecutar(reparacion);
@@ -131,9 +129,6 @@ namespace ProyectoService.ApiRest.Controllers
                     Costo = r.CostoFinal,
                     FechaPromesaPresupuesto = r.FechaPromesaPresupuesto,
                     FechaPromesaEntrega = r.FechaPromesaEntrega
-
-
-
                 };
                 return Ok(repdto);
             }
@@ -141,9 +136,7 @@ namespace ProyectoService.ApiRest.Controllers
             {
                 return BadRequest(ex.Message);
 
-            }
-
-            
+            } 
         }
 
         [HttpPost("Presupuestar")]
@@ -155,12 +148,10 @@ namespace ProyectoService.ApiRest.Controllers
                 if (dto.Descripcion == null) throw new Exception("Debe ingresar una descripcio");
                 Reparacion rep=await presupuestarReparacionUc.Ejecutar(dto.Id,dto.ManoObra,dto.Descripcion,dto.FechaPromesaEntrega);
                 return StatusCode(200);    
-
             }
             catch(Exception ex)
             {
                 return BadRequest(ex.Message);
-
             }
         }
 
@@ -176,7 +167,6 @@ namespace ProyectoService.ApiRest.Controllers
             catch(Exception ex)
             {
                 return BadRequest(ex.Message);
-
             }
         }
         [HttpPost("NoAceptarPresupuesto")]
