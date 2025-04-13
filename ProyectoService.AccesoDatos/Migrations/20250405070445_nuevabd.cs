@@ -43,6 +43,7 @@ namespace ProyectoService.AccesoDatos.Migrations
                     NombreFantasia = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RazonSocial = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NumeroRUT = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Foto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PoliticasEmpresa = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -75,7 +76,6 @@ namespace ProyectoService.AccesoDatos.Migrations
                     Direccion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Telefono = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Foto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EmpresaId = table.Column<int>(type: "int", nullable: false),
                     EmailServer = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     apiKey = table.Column<string>(type: "nvarchar(max)", nullable: true),

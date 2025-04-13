@@ -24,7 +24,7 @@ public class Program
         {
             option.UseSqlServer(builder.Configuration.GetConnectionString("ProyectoServiceContext"));
         });
-        QuestPDF.Settings.License = LicenseType.Community;
+        //QuestPDF.Settings.License = LicenseType.Community;
         //repositorios 
         builder.Services.AddScoped<IClienteRepositorio, ClienteEFRepositorio>();
         builder.Services.AddScoped<IAuthService, AuthService>();
@@ -88,6 +88,9 @@ public class Program
         builder.Services.AddScoped<IObtenerTodasLasSucursales,ObtenerTodasLasSucursales>();
         builder.Services.AddScoped<IModificarSucursal,ModificarSucursal>();
         builder.Services.AddScoped<IObtenerSucursalesPorEmpresa, ObtenerSucursalesPorEmpresa>();
+        builder.Services.AddScoped<ITransferirReparacion,TransferirReparacion>();
+        builder.Services.AddScoped<IEnviarWsp,EnviarWsp>();
+        builder.Services.AddScoped<IObtenerTecnicoReparacionesMensuales,ObtenerTecnicoReparacionesMensuales>();
         // Add services to the container.
 
         builder.Services.AddControllers();

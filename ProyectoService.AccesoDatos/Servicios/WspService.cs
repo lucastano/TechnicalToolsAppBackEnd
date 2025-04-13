@@ -27,7 +27,7 @@ namespace ProyectoService.AccesoDatos.Servicios
             //}
 
             //throw new Exception($"Error al consumir API. Código: {response.StatusCode}");
-
+            throw new NotImplementedException();
         }
     }
 }

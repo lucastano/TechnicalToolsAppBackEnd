@@ -130,7 +130,6 @@ namespace ProyectoService.ApiRest.Controllers
 
         }
 
-        [Authorize]
         [HttpGet]
         public async  Task<ActionResult<ResponseObtenerTecnicosDTO>> ObtenerTecnicos()
         {

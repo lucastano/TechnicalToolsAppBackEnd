@@ -24,6 +24,7 @@ namespace ProyectoService.AccesoDatos
 
         public DbSet<Empresa>Empresas { get; set; }
         public DbSet<Sucursal> Sucursales { get; set; } 
+        
         public ProyectoServiceContext(DbContextOptions<ProyectoServiceContext> options) : base(options)
         {
 
@@ -64,6 +65,8 @@ namespace ProyectoService.AccesoDatos
                 .HasOne(s => s.Empresa)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
+
+           
 
             base.OnModelCreating(modelBuilder);
 

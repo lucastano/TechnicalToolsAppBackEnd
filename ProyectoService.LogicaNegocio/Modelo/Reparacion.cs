@@ -11,7 +11,6 @@ namespace ProyectoService.LogicaNegocio.Modelo
 	[Table("reparaciones")]
 	public class Reparacion
 	{
-
 		public int Id { get; set; }
 		public DateTime Fecha { get; set; } = DateTime.Now;
 		public Tecnico Tecnico { get; set; }
@@ -33,7 +32,6 @@ namespace ProyectoService.LogicaNegocio.Modelo
 		
 		public Reparacion()
 		{
-
 			this.Estado = "EnTaller";
 			this.DescripcionPresupuesto = string.Empty;
 			this.ManoDeObra = 0;
@@ -65,10 +63,8 @@ namespace ProyectoService.LogicaNegocio.Modelo
 		}
 		public void Terminar(bool reparada)
 		{
-			
 			this.Estado = "Terminada";
 			this.Reparada = reparada;
-
 		}
 
 		public void Entregar()
